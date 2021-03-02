@@ -39,6 +39,16 @@ class Import
     private ?string $author;
 
     /**
+     * @ORM\OneToMany(targetEntity=Data::class, mappedBy="import")
+     */
+    private $data;
+
+    public function __construct()
+    {
+        $this->data = new ArrayCollection();
+    }
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -94,6 +104,36 @@ class Import
     public function setAuthor(?string $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Data[]
+     */
+    public function getData(): Collection
+    {
+        return $this->data;
+    }
+
+    public function addData(Data $data): self
+    {
+        if (!$this->data->contains($data)) {
+            $this->data[] = $data;
+            $data->setImport($this);
+        }
+
+        return $this;
+    }
+
+    public function removeData(Data $data): self
+    {
+        if ($this->data->removeElement($data)) {
+            // set the owning side to null (unless already changed)
+            if ($data->getImport() === $this) {
+                $data->setImport(null);
+            }
+        }
 
         return $this;
     }

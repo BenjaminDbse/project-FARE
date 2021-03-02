@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\ImportType;
 use App\Entity\Import;
+use App\Entity\Data;
 
 class ImportController extends AbstractController
 {
@@ -25,6 +26,10 @@ class ImportController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $dataFile = $form->get('file')->getData();
+            $entityManager = $this->getDoctrine()->getManager();
+            $import->setTitle($form->get('title')->getData());
+            $entityManager->persist($import);
+            $entityManager->flush();
             if (!empty($dataFile)) {
                 $name = pathinfo($dataFile->getClientOriginalName(), PATHINFO_FILENAME);
                 move_uploaded_file(
@@ -36,6 +41,7 @@ class ImportController extends AbstractController
                 $numbOfThree = 1;
                 $count=0;
                 while (!feof($treatment)) {
+                    $blockData = new Data;
                     $line = fgets($treatment);
                     if (!stristr($line, '*********')) {
                         if ($numbOfThree == 1) {
@@ -59,10 +65,17 @@ class ImportController extends AbstractController
                             $array[$count]['data'] = $data;
                             $numbOfThree += 1;
                             for ($j = 0; $j < count($array[$count]['data']); $j += 2) {
-                                $dataClean[$j] = $array[$count]['data'][$j] + $array[$count]['data'][$j +1];
+                                $dataClean[$j] = ($array[$count]['data'][$j] + $array[$count]['data'][$j +1]) * 256;
                             }
-                                var_dump($dataClean);
-                            $entityManager = $this->getDoctrine()->getManager();
+                            $blockData->setDelta1($dataClean[0]);
+                            $blockData->setDelta2($dataClean[2]);
+                            $blockData->setFilterRatio($dataClean[4]);
+                            $blockData->setTemperatureCorrection($dataClean[6]);
+                            $blockData->setSlopeTemperatureCorrection($dataClean[8]);
+                            $blockData->setRawCo($dataClean[10]);
+                            $blockData->setCoCorrection($dataClean[12]);
+                            $blockData->setImport($import);
+                            $entityManager->persist($blockData);
                             if (!empty($dataClean)) {
                                 $dataClean = [];
                             }
@@ -73,6 +86,7 @@ class ImportController extends AbstractController
                         }
                     }
                 }
+                $entityManager->flush();
                 fclose($treatment);
             }
         }

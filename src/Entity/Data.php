@@ -60,6 +60,11 @@ class Data
      */
     private $datetime;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Import::class, inversedBy="data")
+     */
+    private $import;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -157,6 +162,18 @@ class Data
     public function setDatetime(?DateTimeInterface $datetime): self
     {
         $this->datetime = $datetime;
+
+        return $this;
+    }
+
+    public function getImport(): ?Import
+    {
+        return $this->import;
+    }
+
+    public function setImport(?Import $import): self
+    {
+        $this->import = $import;
 
         return $this;
     }

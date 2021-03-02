@@ -1,0 +1,182 @@
+***********************************  start ***********************************
+ 16/02/2021 12:13:40,6            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 9, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=111, pos=10)
+ 16/02/2021 12:13:41,5            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 9, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=106, pos=11)
+ 16/02/2021 12:13:42,2            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=111, pos=9)
+ 16/02/2021 12:13:43,0            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=111, pos=11)
+ 16/02/2021 12:13:43,7            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 20, 20, 0, 20, 100, 252, 255, 0, 20, 20, 14, 0, 14, 0 (signal=110, pos=11)
+ 16/02/2021 12:13:44,5            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 20, 0, 0, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=110, pos=11)
+ 16/02/2021 12:13:45,3            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 20, 0, 0, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=101, pos=9)
+ 16/02/2021 12:13:46,1            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 13, 0, 13, 0 (signal=105, pos=10)
+ 16/02/2021 12:13:46,8            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 13, 0, 13, 0 (signal=95, pos=11)
+ 16/02/2021 12:13:47,6            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 13, 0, 13, 0 (signal=95, pos=15)
+ 16/02/2021 12:13:48,3            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 61, 0, 19, 0, 100, 252, 255, 0, 0, 0, 15, 0, 15, 0 (signal=91, pos=12)
+ 16/02/2021 12:13:49,1            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 61, 0, 19, 0, 100, 252, 255, 0, 0, 0, 15, 0, 15, 0 (signal=93, pos=10)
+ 16/02/2021 12:13:49,8            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 92, 0, 19, 0, 100, 252, 255, 0, 0, 0, 12, 0, 12, 0 (signal=94, pos=10)
+ 16/02/2021 12:13:50,6            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 92, 0, 19, 0, 100, 252, 255, 0, 0, 0, 12, 0, 12, 0 (signal=90, pos=12)
+ 16/02/2021 12:13:51,3            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 992, 990, 919, 990, 100, 922, 255, 990, 990, 990, 912, 990, 912, 990 (signal=76, pos=12)
+                            16/02/2021 12:13:40,6            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 9, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=111, pos=10)
+ 16/02/2021 12:13:41,5            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 9, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=106, pos=11)
+ 16/02/2021 12:13:42,2            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=111, pos=9)
+ 16/02/2021 12:13:43,0            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=111, pos=11)
+ 16/02/2021 12:13:43,7            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 20, 20, 0, 20, 100, 252, 255, 0, 20, 20, 14, 0, 14, 0 (signal=110, pos=11)
+ 16/02/2021 12:13:44,5            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 20, 0, 0, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=110, pos=11)
+ 16/02/2021 12:13:45,3            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 20, 0, 0, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=101, pos=9)
+ 16/02/2021 12:13:46,1            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 13, 0, 13, 0 (signal=105, pos=10)
+ 16/02/2021 12:13:46,8            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 13, 0, 13, 0 (signal=95, pos=11)
+ 16/02/2021 12:13:47,6            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 13, 0, 13, 0 (signal=95, pos=15)
+ 16/02/2021 12:13:48,3            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 61, 0, 19, 0, 100, 252, 255, 0, 0, 0, 15, 0, 15, 0 (signal=91, pos=12)
+ 16/02/2021 12:13:49,1            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 61, 0, 19, 0, 100, 252, 255, 0, 0, 0, 15, 0, 15, 0 (signal=93, pos=10)
+ 16/02/2021 12:13:49,8            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 92, 0, 19, 0, 100, 252, 255, 0, 0, 0, 12, 0, 12, 0 (signal=94, pos=10)
+ 16/02/2021 12:13:50,6            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 92, 0, 19, 0, 100, 252, 255, 0, 0, 0, 12, 0, 12, 0 (signal=90, pos=12)
+ 16/02/2021 12:13:51,3            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 992, 990, 919, 990, 100, 922, 255, 990, 990, 990, 912, 990, 912, 990 (signal=76, pos=12)
+                            16/02/2021 12:13:40,6            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 9, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=111, pos=10)
+ 16/02/2021 12:13:41,5            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 9, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=106, pos=11)
+ 16/02/2021 12:13:42,2            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=111, pos=9)
+ 16/02/2021 12:13:43,0            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=111, pos=11)
+ 16/02/2021 12:13:43,7            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 20, 20, 0, 20, 100, 252, 255, 0, 20, 20, 14, 0, 14, 0 (signal=110, pos=11)
+ 16/02/2021 12:13:44,5            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 20, 0, 0, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=110, pos=11)
+ 16/02/2021 12:13:45,3            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 20, 0, 0, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=101, pos=9)
+ 16/02/2021 12:13:46,1            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 13, 0, 13, 0 (signal=105, pos=10)
+ 16/02/2021 12:13:46,8            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 13, 0, 13, 0 (signal=95, pos=11)
+ 16/02/2021 12:13:47,6            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 13, 0, 13, 0 (signal=95, pos=15)
+ 16/02/2021 12:13:48,3            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 61, 0, 19, 0, 100, 252, 255, 0, 0, 0, 15, 0, 15, 0 (signal=91, pos=12)
+ 16/02/2021 12:13:49,1            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 61, 0, 19, 0, 100, 252, 255, 0, 0, 0, 15, 0, 15, 0 (signal=93, pos=10)
+ 16/02/2021 12:13:49,8            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 92, 0, 19, 0, 100, 252, 255, 0, 0, 0, 12, 0, 12, 0 (signal=94, pos=10)
+ 16/02/2021 12:13:50,6            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 92, 0, 19, 0, 100, 252, 255, 0, 0, 0, 12, 0, 12, 0 (signal=90, pos=12)
+ 16/02/2021 12:13:51,3            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 992, 990, 919, 990, 100, 922, 255, 990, 990, 990, 912, 990, 912, 990 (signal=76, pos=12)
+                            16/02/2021 12:13:40,6            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 9, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=111, pos=10)
+ 16/02/2021 12:13:41,5            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 9, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=106, pos=11)
+ 16/02/2021 12:13:42,2            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=111, pos=9)
+ 16/02/2021 12:13:43,0            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=111, pos=11)
+ 16/02/2021 12:13:43,7            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 20, 20, 0, 20, 100, 252, 255, 0, 20, 20, 14, 0, 14, 0 (signal=110, pos=11)
+ 16/02/2021 12:13:44,5            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 20, 0, 0, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=110, pos=11)
+ 16/02/2021 12:13:45,3            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 20, 0, 0, 0, 100, 252, 255, 0, 0, 0, 14, 0, 14, 0 (signal=101, pos=9)
+ 16/02/2021 12:13:46,1            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 13, 0, 13, 0 (signal=105, pos=10)
+ 16/02/2021 12:13:46,8            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 13, 0, 13, 0 (signal=95, pos=11)
+ 16/02/2021 12:13:47,6            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 0, 0, 0, 0, 100, 252, 255, 0, 0, 0, 13, 0, 13, 0 (signal=95, pos=15)
+ 16/02/2021 12:13:48,3            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 61, 0, 19, 0, 100, 252, 255, 0, 0, 0, 15, 0, 15, 0 (signal=91, pos=12)
+ 16/02/2021 12:13:49,1            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 61, 0, 19, 0, 100, 252, 255, 0, 0, 0, 15, 0, 15, 0 (signal=93, pos=10)
+ 16/02/2021 12:13:49,8            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 92, 0, 19, 0, 100, 252, 255, 0, 0, 0, 12, 0, 12, 0 (signal=94, pos=10)
+ 16/02/2021 12:13:50,6            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 92, 0, 19, 0, 100, 252, 255, 0, 0, 0, 12, 0, 12, 0 (signal=90, pos=12)
+ 16/02/2021 12:13:51,3            <<<-- ADR=0,  trame multisegment:
+                           STATUS_SLAVE, 0
+                           FONCTIONAL_STATUS, 992, 990, 919, 990, 100, 922, 255, 990, 990, 990, 912, 990, 912, 990 (signal=76, pos=12)
+***********************************  stop  ***********************************
