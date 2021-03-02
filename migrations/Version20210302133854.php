@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20210302110944 extends AbstractMigration
+final class Version20210302133854 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -20,12 +20,16 @@ final class Version20210302110944 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE data ADD filter_ratio DOUBLE PRECISION DEFAULT NULL, ADD temperature_correction DOUBLE PRECISION DEFAULT NULL, ADD slope_temperature_correction DOUBLE PRECISION DEFAULT NULL, ADD raw_co DOUBLE PRECISION DEFAULT NULL, ADD co_correction DOUBLE PRECISION DEFAULT NULL, ADD datetime DATETIME DEFAULT NULL');
+        $this->addSql('ALTER TABLE data ADD import_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE data ADD CONSTRAINT FK_ADF3F36392113199 FOREIGN KEY (import_id) REFERENCES import (id)');
+        $this->addSql('CREATE INDEX IDX_ADF3F36392113199 ON data (import_id)');
     }
 
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE data DROP filter_ratio, DROP temperature_correction, DROP slope_temperature_correction, DROP raw_co, DROP co_correction, DROP datetime');
+        $this->addSql('ALTER TABLE data DROP FOREIGN KEY FK_ADF3F36392113199');
+        $this->addSql('DROP INDEX IDX_ADF3F36392113199 ON data');
+        $this->addSql('ALTER TABLE data DROP import_id');
     }
 }

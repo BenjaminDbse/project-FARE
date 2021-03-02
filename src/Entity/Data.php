@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\DataRepository;
+use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -146,12 +149,12 @@ class Data
         return $this;
     }
 
-    public function getDatetime(): ?\DateTimeInterface
+    public function getDatetime(): ?DateTimeInterface
     {
         return $this->datetime;
     }
 
-    public function setDatetime(?\DateTimeInterface $datetime): self
+    public function setDatetime(?DateTimeInterface $datetime): self
     {
         $this->datetime = $datetime;
 

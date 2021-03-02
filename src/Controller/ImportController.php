@@ -58,10 +58,13 @@ class ImportController extends AbstractController
                             }
                             $array[$count]['data'] = $data;
                             $numbOfThree += 1;
-                            for ($i = 0; $i < count($array[$count]); $i++) {
-                                for ($j = 0; $j < count($array[$count]['data']); $j += 2) {
-                                    $dataClean[$i] = $array[$count]['data'][$j] + $array[$count]['data'][$j +1];
-                                }
+                            for ($j = 0; $j < count($array[$count]['data']); $j += 2) {
+                                $dataClean[$j] = $array[$count]['data'][$j] + $array[$count]['data'][$j +1];
+                            }
+                                var_dump($dataClean);
+                            $entityManager = $this->getDoctrine()->getManager();
+                            if (!empty($dataClean)) {
+                                $dataClean = [];
                             }
                         }
                         if ($numbOfThree == 4) {
