@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} Accueil{% endblock %}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('home') }}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav class="navbar navbar-dark bg-secondary mt-5 justify-content-around">
+            <div class="dropdown">
+                        <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownMenuLink"
+                           role="button" data-toggle="dropdown" aria-expanded="false">
+                            Import de fichiers
+                        </a>
+                        <ul class="dropdown-menu bg-secondary" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item bg-secondary text-light" href="{{ path('import') }}">Fichier
+                                    d'enregistrement</a></li>
+                            <li><a class="dropdown-item bg-secondary text-light" href="#">Contexte d'alarme</a></li>
+                        </ul>
+            </div>
+            <div class="trait"></div>
+                    <a class="text-light" href="#">Archives</a>
+        </nav>
+    </div>
+{% endblock %}

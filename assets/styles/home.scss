@@ -1,0 +1,13 @@
+@import "app.scss";
+@import "variable.scss";
+
+.dropdown-menu {
+  position: center;
+}
+
+.trait {
+  background-color: $light;
+  height: $heighttrait;
+  width: $widthtrait;
+}
+
