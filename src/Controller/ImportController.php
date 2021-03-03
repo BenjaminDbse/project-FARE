@@ -40,7 +40,7 @@ class ImportController extends AbstractController
                     $dataFile->getPathName(),
                     __DIR__ . '/../../public/imports/' . $name . '.txt'
                 );
-                $treatment = fopen('/home/ubuntu/Documents/TCA/public/imports/' . $name . '.txt', 'r');
+                $treatment = fopen('/home/ben/Bureau/FARE/project-FARE/public/imports/' . $name . '.txt', 'r');
                 $array = [];
                 $numbOfThree = 1;
                 $count=0;
@@ -73,19 +73,19 @@ class ImportController extends AbstractController
                             for ($j = 0; $j < count($array[$count]['data']); $j += 2) {
                                 $dataClean[$j] = (($array[$count]['data'][$j] + 256) * $array[$count]['data'][$j +1]);
                             }
+                            if ($dataClean[2] > 64609) {
+                                $dataClean[2] = 2048;
+                            }
+                            if ($dataClean[4] > 60000) {
+                                $dataClean[4] = 10;
+                            }
                             $date = str_replace("/","-",$array[$count]['date']);
                             $date = new DateTime($date);
                             $blockData->setDatetime($date);
                             $blockData->setAdr($array[$count]['adr']);
                             $blockData->setStatus($array[$count]['status']);
                             $blockData->setDelta1($dataClean[0]);
-                            if ($dataClean[2] > 64609){
-                                $dataClean[2] = 2048;
-                            }
                             $blockData->setDelta2($dataClean[2]);
-                            if ($dataClean[4] > 60000){
-                                $dataClean[4] = 10;
-                            }
                             $blockData->setFilterRatio($dataClean[4]);
                             $blockData->setTemperatureCorrection($dataClean[6]);
                             $blockData->setSlopeTemperatureCorrection($dataClean[8]);
@@ -105,7 +105,9 @@ class ImportController extends AbstractController
                 }
                 $entityManager->flush();
                 fclose($treatment);
-                unlink('/home/ubuntu/Documents/TCA/public/imports/' . $name . '.txt');
+                unlink('/home/ben/Bureau/FARE/project-FARE/public/imports/' . $name . '.txt');
+                $this->addFlash('success','L\'importation à bien été effectuée');
+                return $this->redirectToRoute('home');
             }
         }
         return $this->render('import/import.html.twig', [
