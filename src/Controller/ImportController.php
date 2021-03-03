@@ -13,6 +13,9 @@ use App\Form\ImportType;
 use App\Entity\Import;
 use App\Entity\Data;
 
+/**
+ * @Route("/import", name="import_")
+ */
 class ImportController extends AbstractController
 {
     /**
@@ -112,6 +115,18 @@ class ImportController extends AbstractController
         }
         return $this->render('import/import.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}", name="show", methods={"GET"})
+     * @param Import $import
+     * @return Response
+     */
+    public function show(Import $import): Response
+    {
+        return $this->render('import/show.html.twig', [
+            'import' => $import,
         ]);
     }
 }
