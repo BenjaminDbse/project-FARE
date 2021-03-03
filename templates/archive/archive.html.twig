@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} Archives{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2 class="text-center my-5">Archives</h2>
+        <table class="table table-responsive-lg text-dark text-center">
+            <thead class="thead-light">
+            <tr>
+                <th>Date d'import</th>
+                <th>Titre</th>
+                <th>Importé par</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for import in imports %}
+                <tr>
+                    <td>{{ import.datetime|format_datetime('short', 'none', locale='fr') }}</td>
+                    <td>{{ import.title }}</td>
+                    <td>{{ import.author }}</td>
+                    <td>
+
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td class="text-danger" colspan="8">Aucun résultat trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

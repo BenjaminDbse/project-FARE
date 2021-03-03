@@ -1,6 +1,26 @@
+@import "variable.scss";
 $primary: #e53d18;
 $secondary: #2c2c2c;
 $dark: #0f0f0f;
-$light: #dedede;
+$light: #d2d2d2;
 
 @import "~bootstrap/scss/bootstrap";
+
+.dropdown-menu {
+    position: center;
+}
+
+.trait {
+    background-color: $light;
+    height: $heighttrait;
+    width: $widthtrait;
+}
+
+.slogantitle {
+    font-size: 24px;
+}
+a:hover{
+        text-decoration: none;
+        filter: brightness(1.75);
+        font-weight: bold;
+}

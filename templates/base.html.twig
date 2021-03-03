@@ -19,7 +19,17 @@
         {% endfor %}
         {% endfor %}
     {% endblock %}
+    {% block slogan %}
+        <div class="container-fluid d-flex">
+            <a class="" href="{{ path('home') }}">
+                <img class="pt-5 ml-5" src="{{ asset('build/images/logo-fare.png') }}" alt="logo FARE"></a>
+            <div class="align-self-center  pt-5">
+                <h1 class="slogantitle">Traitement et analyse des données de situation de feu et de non feu.</h1>
+            </div>
+        </div>
+    {% endblock %}
 </header>
+{% block navbar %} {% include '_include/_navbar.html.twig'%} {% endblock %}
 {% block body %}{% endblock %}
 {% block javascripts %}
     {{ encore_entry_script_tags('app') }}
