@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use DateTime;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +19,7 @@ class ImportController extends AbstractController
      * @Route("/importer-un-enregistrement", name="import", methods={"GET", "POST"})
      * @param Request $request
      * @return Response
+     * @throws Exception|Exception
      */
     public function import(Request $request): Response
     {
@@ -28,6 +31,7 @@ class ImportController extends AbstractController
             $dataFile = $form->get('file')->getData();
             $entityManager = $this->getDoctrine()->getManager();
             $import->setTitle($form->get('title')->getData());
+            $import->setDatetime(new DateTime('now'));
             $entityManager->persist($import);
             $entityManager->flush();
             if (!empty($dataFile)) {
@@ -36,7 +40,7 @@ class ImportController extends AbstractController
                     $dataFile->getPathName(),
                     __DIR__ . '/../../public/imports/' . $name . '.txt'
                 );
-                $treatment = fopen('/home/ubuntu/Documents/TCA/public/imports/' . $name . '.txt', 'r');
+                $treatment = fopen('/home/ben/Bureau/FARE/project-FARE/public/imports/' . $name . '.txt', 'r');
                 $array = [];
                 $numbOfThree = 1;
                 $count=0;
@@ -46,12 +50,14 @@ class ImportController extends AbstractController
                     if (!stristr($line, '*********')) {
                         if ($numbOfThree == 1) {
                             $date = substr($line, 1, 19);
-                            $adr = substr(strpbrk($line, '='), 1, 1);
+                            $adr = substr(strpbrk($line, '='), 1,3 );
+                            $adr = rtrim($adr, ", ");
                             $array[$count]['date'] = $date;
                             $array[$count]['adr'] = $adr;
                             $numbOfThree += 1;
                         } elseif ($numbOfThree == 2) {
-                            $status = substr($line, -3);
+                            $status = substr($line, -4);
+                            $status = trim($status);
                             $array[$count]['status'] = $status;
                             $numbOfThree += 1;
                         } elseif ($numbOfThree == 3) {
@@ -67,6 +73,11 @@ class ImportController extends AbstractController
                             for ($j = 0; $j < count($array[$count]['data']); $j += 2) {
                                 $dataClean[$j] = ($array[$count]['data'][$j] + $array[$count]['data'][$j +1]) * 256;
                             }
+                            $date = str_replace("/","-",$array[$count]['date']);
+                            $date = new DateTime($date);
+                            $blockData->setDatetime($date);
+                            $blockData->setAdr($array[$count]['adr']);
+                            $blockData->setStatus($array[$count]['status']);
                             $blockData->setDelta1($dataClean[0]);
                             $blockData->setDelta2($dataClean[2]);
                             $blockData->setFilterRatio($dataClean[4]);
@@ -88,6 +99,7 @@ class ImportController extends AbstractController
                 }
                 $entityManager->flush();
                 fclose($treatment);
+                unlink('/home/ben/Bureau/FARE/project-FARE/public/imports/' . $name . '.txt');
             }
         }
         return $this->render('import/import.html.twig', [

@@ -65,6 +65,16 @@ class Data
      */
     private $import;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $adr;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -174,6 +184,30 @@ class Data
     public function setImport(?Import $import): self
     {
         $this->import = $import;
+
+        return $this;
+    }
+
+    public function getAdr(): ?int
+    {
+        return $this->adr;
+    }
+
+    public function setAdr(?int $adr): self
+    {
+        $this->adr = $adr;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
