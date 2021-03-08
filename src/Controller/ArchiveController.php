@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Repository\DataRepository;
 use App\Repository\ImportRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

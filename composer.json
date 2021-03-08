@@ -37,6 +37,7 @@
         "symfony/string": "5.2.*",
         "symfony/translation": "5.2.*",
         "symfony/twig-bundle": "^5.2",
+        "symfony/ux-chartjs": "^1.2",
         "symfony/validator": "5.2.*",
         "symfony/web-link": "5.2.*",
         "symfony/webpack-encore-bundle": "^1.11",
@@ -46,7 +47,6 @@
         "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
-        "phpstan/phpstan-symfony": "^0.12.20",
         "symfony/browser-kit": "^5.2",
         "symfony/css-selector": "^5.2",
         "symfony/debug-bundle": "^5.2",
@@ -54,9 +54,7 @@
         "symfony/phpunit-bridge": "^5.2",
         "symfony/stopwatch": "^5.2",
         "symfony/var-dumper": "^5.2",
-        "symfony/web-profiler-bundle": "^5.2",
-        "phpmd/phpmd": "@stable",
-        "squizlabs/php_codesniffer": ">=3.5.8"
+        "symfony/web-profiler-bundle": "^5.2"
     },
     "config": {
         "optimize-autoloader": true,

@@ -41,7 +41,12 @@ class Import
     /**
      * @ORM\OneToMany(targetEntity=Data::class, mappedBy="import")
      */
-    private $data;
+    private Collection $data;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $slugify;
 
     public function __construct()
     {
@@ -134,6 +139,18 @@ class Import
                 $data->setImport(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSlugify(): ?string
+    {
+        return $this->slugify;
+    }
+
+    public function setSlugify(string $slugify): self
+    {
+        $this->slugify = $slugify;
 
         return $this;
     }
