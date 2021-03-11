@@ -18,33 +18,15 @@ class ImportRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Import::class);
     }
-
-    // /**
-    //  * @return Import[] Returns an array of Import objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findLikeName(string $name)
     {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $queryBuilder = $this->createQueryBuilder('i')
+            ->where('i.title LIKE :name')
+            ->orWhere('i.author LIKE :name')
+            ->setParameter('name', '%' . $name . '%')
+            ->orderBy('i.title', 'ASC')
+            ->getQuery();
 
-    /*
-    public function findOneBySomeField($value): ?Import
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $queryBuilder->getResult();
     }
-    */
 }

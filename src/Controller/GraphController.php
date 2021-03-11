@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Import;
+use App\Repository\DataRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,49 +17,65 @@ use Symfony\UX\Chartjs\Model\Chart;
 class GraphController extends AbstractController
 {
     /**
-     * @Route("/graphique/{id}", name="graph", methods={"GET"})
+     * @Route("/graphique/{id}", name="graph", methods={"GET","POST"})
      * @param Import $import
      * @param ChartBuilderInterface $chartBuilder
+     * @param DataRepository $dataRepository
      * @return Response
      */
-    public function graph(Import $import,ChartBuilderInterface $chartBuilder): Response
+    public function graph(Import $import,ChartBuilderInterface $chartBuilder, DataRepository $dataRepository): Response
     {
-        $delta1 = [];
-        $delta2 = [];
-        $ratioFilter = [];
-        $temperatureCorrection = [];
-        $slopeTemperatureCorrection = [];
-        $rawCo = [];
-        $coCorrection = [];
-        $adr= [];
-        $status = [];
-        $datetime = [];
+            $delta1 = [];
+            $delta2 = [];
+            $ratioFilter = [];
+            $temperatureCorrection = [];
+            $slopeTemperatureCorrection = [];
+            $rawCo = [];
+            $coCorrection = [];
+            $adr = [];
+            $status = [];
+            $datetime = [];
+            $alarm = [];
 
         foreach ($import->getData() as $data){
-            $delta1[] = $data->getDelta1();
-            $delta2[] = $data->getDelta2();
-            $ratioFilter[] = $data->getFilterRatio();
-            $slopeTemperatureCorrection[] = $data->getSlopeTemperatureCorrection();
-            $rawCo[] = $data->getRawCo();
-            $coCorrection[] = $data->getCoCorrection();
             $adr[] = $data->getAdr();
-            $status[] = $data->getStatus();
-            $temperatureCorrection[] = $data->getTemperatureCorrection();
-            $datetime[] = date_format($data->getDatetime(),'H:i:s');
-        }
-        $max1 = max($delta1);
-        $max2 = max($delta2);
-        $max3 = max($ratioFilter);
-        $max4 = max($temperatureCorrection);
-        $max5 = max($slopeTemperatureCorrection);
-        $max6 = max($rawCo);
-        $max7 = max($coCorrection);
-        $max = max($max1,$max2,$max3,$max4,$max5,$max6,$max7);
 
+        }
+        $adr = array_unique($adr);
+
+            if (!empty($_POST)) {
+                $dataFilter = $dataRepository->findByLikeAdr($import->getId(), $_POST['adr']);
+
+                foreach ($dataFilter as $data) {
+                    $delta1[] = $data->getDelta1();
+                    $delta2[] = $data->getDelta2();
+                    $ratioFilter[] = $data->getFilterRatio();
+                    $slopeTemperatureCorrection[] = $data->getSlopeTemperatureCorrection();
+                    $rawCo[] = $data->getRawCo();
+                    $coCorrection[] = $data->getCoCorrection();
+                    $status[] = $data->getStatus();
+                    $temperatureCorrection[] = $data->getTemperatureCorrection();
+                    $datetime[] = date_format($data->getDatetime(),'H:i:s');
+                    $alarm[] = $data->getAlarm();
+                }
+            }
+            $max = [
+                max($delta1),
+                max($delta2),
+                max($slopeTemperatureCorrection),
+                max($rawCo),
+                max($temperatureCorrection),
+            ];
+            for ($i =0 ; $i< count($alarm) ; $i++) {
+                if ($alarm[$i] >=  1) {
+                    $alarm[$i -1] = 0;
+                    $alarm[$i] += max($max);
+                    $alarm[$i +1] = 0;
+                }
+            }
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
         $chart->setData([
             'labels' => $datetime,
-            'backgroundColor' => '#FFFFFF',
             'datasets' => [
                 [
                     'label' => 'Delta 1',
@@ -72,6 +89,13 @@ class GraphController extends AbstractController
                     'backgroundColor' => 'rgba(1, 228, 225,0)',
                     'borderColor' => 'rgb(1, 228, 225)',
                     'data' => $delta2,
+                    'yAxisID'=> 'left-y-axis',
+                ],
+                [
+                    'label' => 'Alarme',
+                    'backgroundColor' => 'rgba(1, 228, 225,0)',
+                    'borderColor' => 'rgb(255, 0, 0)',
+                    'data' => $alarm,
                     'yAxisID'=> 'left-y-axis',
                 ],
                 [
@@ -93,18 +117,18 @@ class GraphController extends AbstractController
                     'backgroundColor' => 'rgba(255, 99, 132,0)',
                     'borderColor' => 'rgb( 128, 128, 128)',
                     'data' => $rawCo,
-                    'yAxisID'=> 'left-y-axis',
+                    'yAxisID'=> 'right-y-axis',
                 ],
                 [
-                    'label' => 'Correction de CO',
+                    'label' => 'CO Corrigé',
                     'backgroundColor' => 'rgba(255, 99, 132,0)',
                     'borderColor' => 'rgb(195, 38, 0)',
                     'data' => $coCorrection,
-                    'yAxisID'=> 'left-y-axis',
+                    'yAxisID'=> 'right-y-axis',
                 ],
                 [
                     'label' => 'Ratio filtré',
-                    'backgroundColor' => 'rgba(255, 99, 132,0)',
+                    'backgroundColor' => 'rgba(255, 255, 255,0)',
                     'borderColor' => 'rgb(255, 99, 132)',
                     'data' => $ratioFilter,
                     'yAxisID'=> 'right-y-axis',
@@ -115,14 +139,15 @@ class GraphController extends AbstractController
         $chart->setOptions([
             'scales' => [
                 'yAxes' => [
-                    ['ticks' => ['suggestedMin' => 0, 'suggestedMax' => $max,], 'position'=> 'left', 'id' => 'left-y-axis'],
-                    ['ticks' => ['suggestedMin'=> min($ratioFilter), 'suggestedMax' => max($ratioFilter)], 'position'=> 'right', 'id' => 'right-y-axis'],
+                    ['ticks' => ['suggestedMin' => 0, 'suggestedMax' => 10,], 'position'=> 'left', 'id' => 'left-y-axis',],
+                    ['ticks' => ['suggestedMin'=> 0, 'suggestedMax' => 12], 'position'=> 'right', 'id' => 'right-y-axis'],
                 ],
             ],
         ]);
         return $this->render('graph/graph.html.twig', [
             "chart" => $chart,
             "import"=> $import,
+            'adrs' => $adr,
         ]);
     }
 }

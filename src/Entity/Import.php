@@ -46,7 +46,7 @@ class Import
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $slugify;
+    private ?string $slugify;
 
     public function __construct()
     {
