@@ -23,57 +23,62 @@ class Data
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $delta1;
+    private ?float $delta1;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $delta2;
+    private ?float $delta2;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $filterRatio;
+    private ?float $filterRatio;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $temperatureCorrection;
+    private ?float $temperatureCorrection;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $slopeTemperatureCorrection;
+    private ?float $slopeTemperatureCorrection;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $rawCo;
+    private ?float $rawCo;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $coCorrection;
+    private ?float $coCorrection;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $datetime;
+    private ?DateTimeInterface $datetime;
 
     /**
      * @ORM\ManyToOne(targetEntity=Import::class, inversedBy="data")
      */
-    private $import;
+    private ?Import $import;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $adr;
+    private ?int $adr;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $status;
+    private ?int $status;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private ?int $alarm;
 
     public function getId(): ?int
     {
@@ -208,6 +213,18 @@ class Data
     public function setStatus(?int $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getAlarm(): ?int
+    {
+        return $this->alarm;
+    }
+
+    public function setAlarm(?int $alarm): self
+    {
+        $this->alarm = $alarm;
 
         return $this;
     }

@@ -18,33 +18,15 @@ class DataRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Data::class);
     }
-
-    // /**
-    //  * @return Data[] Returns an array of Data objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findByLikeAdr(int $import, int $adr)
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $queryBuilder = $this->createQueryBuilder('d')
+            ->where('d.import ='. $import)
+            ->andWhere('d.adr ='. $adr)
+            ->orderBy('d.datetime', 'ASC')
+            ->getQuery();
 
-    /*
-    public function findOneBySomeField($value): ?Data
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+
+            return $queryBuilder->getResult();
     }
-    */
 }

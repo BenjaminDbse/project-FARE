@@ -8,12 +8,16 @@
 {% block body %}
     <div class="container mt-5">
         <h2 class="text-center my-5">{{ import.title }}</h2>
-        {{ render_chart(chart, {'class': 'graph'}) }}
+        <form action="{{ path('graph',{'id' : import.id}) }}" method="POST">
+        <label for="adr" id="adr">Adresse du détecteur</label>
+        <select class="mb-5" name="adr" id="adr">
+            <option class="bg-secondary" value="">-Choix-</option>
+            {% for adr in adrs %}
+            <option class="bg-secondary text-light" value="{{ adr }}">{{ adr }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-secondary">Voir</button>
+        </form>
+        {{ render_chart(chart, {'class': 'graph', 'id': 'chart'}) }}
     </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script src="/public/bundles/mukadichartjs/Chart.bundle.min.js"></script>
-    <script src="/public/bundles/mukadichartjs/mukadi.chart.min.js"></script>
 {% endblock %}

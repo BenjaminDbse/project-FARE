@@ -5,6 +5,10 @@
 {% block body %}
     <div class="container">
         <h2 class="text-center my-5">Archives</h2>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button>{{ 'Rechercher'}}</button>
+        {{ form_end(form) }}
         <table class="table table-responsive-lg text-dark text-center">
             <thead class="thead-light">
             <tr>
