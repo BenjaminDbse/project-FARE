@@ -46,7 +46,7 @@ class ImportController extends AbstractController
                     $dataFile->getPathName(),
                     __DIR__ . '/../../public/imports/' . $name . '.txt'
                 );
-                $treatment = fopen('/home/ubuntu/Documents/TCA/public/imports/' . $name . '.txt', 'r');
+                $treatment = fopen('/home/ben/Bureau/FARE/project-FARE/public/imports/' . $name . '.txt', 'r');
                 $data1 = [];
                 $data2 = [];
                 $data3 = [];
@@ -61,7 +61,7 @@ class ImportController extends AbstractController
                     $blockData = new Data;
                     $line = fgets($treatment);
 
-                    if (!(stristr($line, '*********') || (substr(nl2br($line),0,3) == "<br"))) {
+                    if (!(stristr($line, '*********') || (substr(nl2br($line),0,3) == "<br") || stristr($line, 'ID_BLOC_ENCR'))) {
                         if ($numbOfThree == 1) {
                             if (stristr($line,'STATUS_ALARM')) {
                                 $date = substr($line, 1, 19);
@@ -166,29 +166,16 @@ class ImportController extends AbstractController
                             }
                         }
                     }
-
                     $entityManager->flush();
                 }
                 fclose($treatment);
-                unlink('/home/ubuntu/Documents/TCA/public/imports/' . $name . '.txt');
+                unlink('/home/ben/Bureau/FARE/project-FARE/public/imports/' . $name . '.txt');
                 $this->addFlash('success', 'L\'importation à bien été effectuée');
                 return $this->redirectToRoute('home');
             }
         }
         return $this->render('import/import.html.twig', [
             'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="show", methods={"GET"})
-     * @param Import $import
-     * @return Response
-     */
-    public function show(Import $import): Response
-    {
-        return $this->render('import/show.html.twig', [
-            'import' => $import,
         ]);
     }
 }
