@@ -36,15 +36,17 @@ class GraphController extends AbstractController
             $status = [];
             $datetime = [];
             $alarm = [];
-
+            $max = [];
+            $choiceUser = null;
         foreach ($import->getData() as $data){
             $adr[] = $data->getAdr();
 
         }
         $adr = array_unique($adr);
 
-            if (!empty($_POST)) {
-                $dataFilter = $dataRepository->findByLikeAdr($import->getId(), $_POST['adr']);
+            if (isset($_POST['adr'])) {
+                $choiceUser = $_POST['adr'];
+                $dataFilter = $dataRepository->findByLikeAdr($import->getId(), $choiceUser);
 
                 foreach ($dataFilter as $data) {
                     $delta1[] = $data->getDelta1();
@@ -58,14 +60,14 @@ class GraphController extends AbstractController
                     $datetime[] = date_format($data->getDatetime(),'H:i:s');
                     $alarm[] = $data->getAlarm();
                 }
+                $max = [
+                    max($delta1),
+                    max($delta2),
+                    max($slopeTemperatureCorrection),
+                    max($rawCo),
+                    max($temperatureCorrection),
+                ];
             }
-            $max = [
-                max($delta1),
-                max($delta2),
-                max($slopeTemperatureCorrection),
-                max($rawCo),
-                max($temperatureCorrection),
-            ];
             for ($i =0 ; $i< count($alarm) ; $i++) {
                 if ($alarm[$i] >=  1) {
                     $alarm[$i -1] = 0;
