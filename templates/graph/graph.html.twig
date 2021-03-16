@@ -1,5 +1,4 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}{{ parent() }} Graphique{% endblock %}
 {% block stylesheets %}
     {{ encore_entry_link_tags('graph') }}
@@ -8,16 +7,34 @@
 {% block body %}
     <div class="container mt-5">
         <h2 class="text-center my-5">{{ import.title }}</h2>
-        <form action="{{ path('graph',{'id' : import.id}) }}" method="POST">
-        <label for="adr" id="adr">Adresse du détecteur</label>
-        <select class="mb-5" name="adr" id="adr">
-            <option class="bg-secondary" value="">-Choix-</option>
-            {% for adr in adrs %}
-            <option class="bg-secondary text-light" value="{{ adr }}">{{ adr }}</option>
-            {% endfor %}
-        </select>
-        <button class="btn btn-secondary">Voir</button>
-        </form>
+        <div class="d-flex justify-content-between">
+            <div class="card align-content-center justify-content-center">
+                <form action="{{ path('graph',{'id' : import.id}) }}" method="POST">
+                    <label for="adr" id="adr">Adresse du détecteur</label>
+                    <select class="mb-5" name="adr" id="adr">
+                        <option class="bg-secondary" value="">-Choix-</option>
+                        {% for adr in adrs %}
+                            <option class="bg-secondary text-light" value="{{ adr }}">{{ adr }}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn-secondary">Voir</button>
+                </form>
+                <p class="text-center text-secondary">Adresse sélectionnée : <strong>{{ adrChoice ?? '' }}</strong></p>
+            </div>
+            <div class="card align-content-center justify-content-center">
+                <form action="{{ path('graph',{'id' : import.id}) }}" method="POST">
+                    <label for="date" id="date">Sélectionner une heure</label>
+                    <select class="mb-5" name="date" id="date">
+                        {% for date in dates %}
+                            <option class="bg-secondary text-light" value="{{ date }}">{{ date }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="limit" id="limit">Limite d'affichage</label>
+                    <input type="number" name="limit" min="0" id="limit" placeholder="5, 10, 15, ...">
+                    <button class="btn btn-secondary">Filtrer</button>
+                </form>
+            </div>
+        </div>
         {{ render_chart(chart, {'class': 'graph', 'id': 'chart'}) }}
     </div>
 {% endblock %}
