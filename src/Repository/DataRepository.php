@@ -42,7 +42,7 @@ class DataRepository extends ServiceEntityRepository
 
         return $queryBuilder->getResult();
     }
-    public function dateToResult(int $import, int $adr, string $dateAt, int $limit)
+    public function findByDateToLimit(int $import, int $adr, string $dateAt, int $limit)
     {
         $queryBuilder = $this->createQueryBuilder('d')
             ->where('d.import ='. $import)

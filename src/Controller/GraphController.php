@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Import;
+use App\Form\FilterType;
+use App\Model\Filter;
 use App\Repository\DataRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
@@ -37,16 +40,19 @@ class GraphController extends AbstractController
             $datetime = [];
             $alarm = [];
             $max = [];
-            $choiceUser = null;
+            $userChoiceAdr = null;
+            $userChoiceAdr1 = null;
         foreach ($import->getData() as $data){
             $adr[] = $data->getAdr();
 
         }
         $adr = array_unique($adr);
-
-            if (isset($_POST['adr'])) {
-                $choiceUser = $_POST['adr'];
-                $dataFilter = $dataRepository->findByLikeAdr($import->getId(), $choiceUser);
+        if (!empty($_POST['adr'])) {
+                if (is_numeric($_POST['adr']) && isset($_POST['adr'])) {
+                    $userChoiceAdr = $_POST['adr'];
+                }
+                var_dump($userChoiceAdr);
+                $dataFilter = $dataRepository->findByLikeAdr($import->getId(), $userChoiceAdr);
 
                 foreach ($dataFilter as $data) {
                     $delta1[] = $data->getDelta1();
@@ -57,7 +63,7 @@ class GraphController extends AbstractController
                     $coCorrection[] = $data->getCoCorrection();
                     $status[] = $data->getStatus();
                     $temperatureCorrection[] = $data->getTemperatureCorrection();
-                    $datetime[] = date_format($data->getDatetime(),'H:i:s');
+                    $datetime[] = date_format($data->getDatetime(),'d-m-Y  /  H:i:s');
                     $alarm[] = $data->getAlarm();
                 }
                 $max = [
@@ -68,6 +74,18 @@ class GraphController extends AbstractController
                     max($temperatureCorrection),
                 ];
             }
+                if (isset($_POST['date']) && !empty($_POST['limit'])) {
+                    $userChoiceDate = explode("/", $_POST['date']);
+                    for ($i = 0; $i < count($userChoiceDate); $i++) {
+                        $userChoiceDate[$i] = trim($userChoiceDate[$i], ' ');
+                    }
+                    $userChoiceDate[0] = explode("-", $userChoiceDate[0]);
+                    $userChoiceDate[0] = array_reverse($userChoiceDate[0]);
+                    $userChoiceDate [0] = join("-", $userChoiceDate [0]);
+                    $userChoiceDate = join(' ', $userChoiceDate);
+                    $userChoiceLimit = $_POST['limit'];
+                    $dateFilter = $dataRepository->findByDateToLimit($import->getId(), $userChoiceAdr, $userChoiceDate, $userChoiceLimit);
+                }
             for ($i =0 ; $i< count($alarm) ; $i++) {
                 if ($alarm[$i] >=  1) {
                     $alarm[$i -1] = 0;
@@ -75,6 +93,7 @@ class GraphController extends AbstractController
                     $alarm[$i +1] = 0;
                 }
             }
+
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
         $chart->setData([
             'labels' => $datetime,
@@ -150,6 +169,8 @@ class GraphController extends AbstractController
             "chart" => $chart,
             "import"=> $import,
             'adrs' => $adr,
+            'adrChoice' => $userChoiceAdr,
+            'dates' => $datetime,
         ]);
     }
 }
