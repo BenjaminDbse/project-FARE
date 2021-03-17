@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container mt-5">
+    <div class="container mt-5 mb-5">
         <h2 class="text-center my-5">{{ import.title }}</h2>
         <div class="d-flex justify-content-between">
             <div class="card align-content-center justify-content-center">
@@ -35,6 +35,15 @@
                 </form>
             </div>
         </div>
+    </div>
+    <div class="mt-5">
         {{ render_chart(chart, {'class': 'graph', 'id': 'chart'}) }}
+    </div>
+    <div class="condition">
+            {% for condition in conditions %}
+        <div class="card">
+           Le détecteur {{ adrChoice ?? '' }} est passé du status  {{ condition|join(' à  ','   le  ') }}
+        </div>
+            {% endfor %}
     </div>
 {% endblock %}

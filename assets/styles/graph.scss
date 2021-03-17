@@ -3,3 +3,10 @@
 #chart {
   background-color: #FFFFFF;
 }
+
+.condition {
+  display: grid;
+  grid-template-columns: 30% 30% 30%;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+}
