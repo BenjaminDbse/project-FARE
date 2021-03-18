@@ -77,14 +77,6 @@ class GraphController extends AbstractController
                 $alarm[$i + 1] = 0;
             }
         }
-        foreach ($condition as $key => $value) {
-            for ($i= 0 ; $i < count($condition) ; $i++) {
-                $condit[$i] = join(',',$condition[$key]);
-            }
-
-        }
-        var_dump($condition);
-        dd($condit);
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
         $chart->setData([
             'labels' => $datetime,
