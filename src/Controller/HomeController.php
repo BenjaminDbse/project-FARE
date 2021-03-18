@@ -2,19 +2,25 @@
 
 namespace App\Controller;
 
+use App\Repository\ImportRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 
 class HomeController extends AbstractController
 {
     /**
      * @Route("/", name="home")
+     * @param ImportRepository $importRepository
+     * @return Response
      */
-    public function index(): Response
+    public function index(ImportRepository $importRepository): Response
     {
-        return $this->render('home/home.html.twig', [
 
+        $imports = $importRepository->findBy([],['id' => 'DESC'],5);
+        return $this->render('home/home.html.twig', [
+            'imports'=> $imports,
         ]);
     }
 }

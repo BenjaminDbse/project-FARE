@@ -1,0 +1,19 @@
+<form action="{{ path('graph',{'id' : import.id}) }}" method="POST">
+    <div class="d-flex flex-column align-items-center">
+        <div class="column">
+            <label for="date" id="date">Sélectionner une heure</label>
+            <select class="mb-3" name="date" id="date">
+                {% for date in dates %}
+                    <option class="bg-secondary text-light" value="{{ date }}">{{ date }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="column">
+            <label for="limit" id="limit">Limite d'affichage</label>
+            <input class="w-25 mb-3" type="number" name="limit" min="0" id="limit" placeholder="5, 10, 15, ...">
+        </div>
+    </div>
+    <div class="text-center">
+        <button class="btn btn-dark mb-4">Filtrer</button>
+    </div>
+</form>

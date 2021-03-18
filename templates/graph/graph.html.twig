@@ -6,44 +6,28 @@
 
 {% block body %}
     <div class="container mt-5 mb-5">
-        <h2 class="text-center my-5">{{ import.title }}</h2>
+        <h2 class="text-center my-5 text-secondary">{{ import.title }}</h2>
         <div class="d-flex justify-content-between">
-            <div class="card align-content-center justify-content-center">
-                <form action="{{ path('graph',{'id' : import.id}) }}" method="POST">
-                    <label for="adr" id="adr">Adresse du détecteur</label>
-                    <select class="mb-5" name="adr" id="adr">
-                        <option class="bg-secondary" value="">-Choix-</option>
-                        {% for adr in adrs %}
-                            <option class="bg-secondary text-light" value="{{ adr }}">{{ adr }}</option>
-                        {% endfor %}
-                    </select>
-                    <button class="btn btn-secondary">Voir</button>
-                </form>
-                <p class="text-center text-secondary">Adresse sélectionnée : <strong>{{ adrChoice ?? '' }}</strong></p>
+            <div class="card p-3">
+                {% include '/_include/_formAdr.html.twig' %}
             </div>
-            <div class="card align-content-center justify-content-center">
-                <form action="{{ path('graph',{'id' : import.id}) }}" method="POST">
-                    <label for="date" id="date">Sélectionner une heure</label>
-                    <select class="mb-5" name="date" id="date">
-                        {% for date in dates %}
-                            <option class="bg-secondary text-light" value="{{ date }}">{{ date }}</option>
-                        {% endfor %}
-                    </select>
-                    <label for="limit" id="limit">Limite d'affichage</label>
-                    <input type="number" name="limit" min="0" id="limit" placeholder="5, 10, 15, ...">
-                    <button class="btn btn-secondary">Filtrer</button>
-                </form>
+            <div class="card p-3">
+                {% include '/_include/_formDateChoice.html.twig' %}
             </div>
         </div>
     </div>
+    <h3 class="text-center text-secondary">Adresse sélectionnée : <strong>{{ adrChoice ?? '' }}</strong></h3>
     <div class="mt-5">
         {{ render_chart(chart, {'class': 'graph', 'id': 'chart'}) }}
     </div>
-    <div class="condition">
+    <div class="condition justify-content-center m-5">
             {% for condition in conditions %}
-        <div class="card">
+        <div class="card p-5">
            Le détecteur {{ adrChoice ?? '' }} est passé du status  {{ condition|join(' à  ','   le  ') }}
         </div>
             {% endfor %}
+    </div>
+    <div class="button d-flex justify-content-around mb-5">
+        <a class="btn btn-dark text-primary" href="{{ path('archive') }}">Retour</a>
     </div>
 {% endblock %}

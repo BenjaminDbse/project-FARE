@@ -3,5 +3,26 @@
 {% block title %}{{ parent() }} Accueil{% endblock %}
 
 {% block body %}
-
+    <h2 class="text-center m-5">Dernières données importés</h2>
+    <div class="container card d-flex ">
+        <table class="table table-responsive-lg text-dark text-center">
+            <tbody class="d-flex flex-column align-items-center">
+            {% for import in imports %}
+                <tr>
+                    <td>{{ import.datetime|format_datetime('short', 'none', locale='fr') }}</td>
+                    <td>{{ import.title }}</td>
+                    <td>{{ import.author }}</td>
+                    <td>
+                        <a class="btn btn-primary"
+                           href="{{ path('graph', {'id': import.id }) }}">Voir</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td class="text-danger" colspan="8">Aucun résultat</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
