@@ -23,7 +23,7 @@
             <tbody>
             {% for import in imports %}
                 <tr>
-                    <td>{{ import.datetime|format_datetime('short', 'none', locale='fr') }}</td>
+                    <td>{{ import.datetime|format_datetime('full', 'short', locale='fr') }}</td>
                     <td>{{ import.title }}</td>
                     <td>{{ import.author }}</td>
                     <td>

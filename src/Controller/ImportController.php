@@ -46,7 +46,7 @@ class ImportController extends AbstractController
                     $dataFile->getPathName(),
                     __DIR__ . '/../../public/imports/' . $name . '.txt'
                 );
-                $treatment = fopen('/home/ben/Bureau/FARE/project-FARE/public/imports/' . $name . '.txt', 'r');
+                $treatment = fopen('/home/ben/Documents/project-FARE/public/imports/' . $name . '.txt', 'r');
                 $data1 = [];
                 $data2 = [];
                 $data3 = [];
@@ -61,9 +61,9 @@ class ImportController extends AbstractController
                     $blockData = new Data;
                     $line = fgets($treatment);
 
-                    if (!(stristr($line, '*********') || (substr(nl2br($line),0,3) == "<br") || stristr($line, 'ID_BLOC_ENCR'))) {
+                    if (!(stristr($line, '*********') || (substr(nl2br($line),0,3) == "<br"))) {
                         if ($numbOfThree == 1) {
-                            if (stristr($line,'STATUS_ALARM')) {
+                            if (stristr($line,'STATUS_ALARM') && !stristr($line, 'ID_BLOC_ENCR')) {
                                 $date = substr($line, 1, 19);
                                 $adr = substr(strpbrk($line, '='), 1, 3);
                                 $adr = rtrim($adr, ", ");
@@ -104,7 +104,7 @@ class ImportController extends AbstractController
                             $status = trim($status);
                             $array[$count]['status'] = $status;
                             $numbOfThree += 1;
-                        } elseif ($numbOfThree == 3) {
+                        } elseif (($numbOfThree == 3) && !stristr($line, 'BLOC_DATAS')) {
                             $data = substr($line, 46, 69);
                             $data = explode(', ', $data);
                             $data[13] = explode(' ', $data[13]);
@@ -148,7 +148,9 @@ class ImportController extends AbstractController
                                 $blockData->setAlarm($array[$count]['alarm']);
                             }
                             $entityManager->persist($blockData);
-
+                        } else {
+                            $numbOfThree = 1;
+                        }
                             if ($numbOfThree == 4) {
 
                                 $data1[$array[$count]['adr']] = $blockData->getDelta1();
@@ -164,12 +166,11 @@ class ImportController extends AbstractController
                                 $numbOfThree = 1;
                                 $count += 1;
                             }
-                        }
                     }
                     $entityManager->flush();
                 }
                 fclose($treatment);
-                unlink('/home/ben/Bureau/FARE/project-FARE/public/imports/' . $name . '.txt');
+                unlink('/home/ben/Documents/project-FARE/public/imports/' . $name . '.txt');
                 $this->addFlash('success', 'L\'importation à bien été effectuée');
                 return $this->redirectToRoute('home');
             }

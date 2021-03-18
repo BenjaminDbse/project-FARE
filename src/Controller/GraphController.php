@@ -73,7 +73,7 @@ class GraphController extends AbstractController
         for ($i = 0; $i < count($alarm); $i++) {
             if ($alarm[$i] >= 1) {
                 $alarm[$i - 1] = 0;
-                $alarm[$i] += max($max);
+                $alarm[$i] += 1500 ;
                 $alarm[$i + 1] = 0;
             }
         }
@@ -103,14 +103,14 @@ class GraphController extends AbstractController
                     'yAxisID' => 'left-y-axis',
                 ],
                 [
-                    'label' => 'Correction de température',
+                    'label' => 'Température corrigée',
                     'backgroundColor' => 'rgba(255, 99, 132,0)',
                     'borderColor' => 'rgb( 203, 11, 198)',
                     'data' => $temperatureCorrection,
                     'yAxisID' => 'left-y-axis',
                 ],
                 [
-                    'label' => 'Correction de pente de température',
+                    'label' => 'Pente de température',
                     'backgroundColor' => 'rgba(19,182,8,0)',
                     'borderColor' => 'rgb(19,182,8)',
                     'data' => $slopeTemperatureCorrection,
@@ -121,14 +121,14 @@ class GraphController extends AbstractController
                     'backgroundColor' => 'rgba(255, 99, 132,0)',
                     'borderColor' => 'rgb( 128, 128, 128)',
                     'data' => $rawCo,
-                    'yAxisID' => 'right-y-axis',
+                    'yAxisID' => 'left-y-axis',
                 ],
                 [
                     'label' => 'CO Corrigé',
                     'backgroundColor' => 'rgba(255, 99, 132,0)',
                     'borderColor' => 'rgb(195, 38, 0)',
                     'data' => $coCorrection,
-                    'yAxisID' => 'right-y-axis',
+                    'yAxisID' => 'left-y-axis',
                 ],
                 [
                     'label' => 'Ratio filtré',
