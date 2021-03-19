@@ -18,7 +18,10 @@
     </div>
     <h3 class="text-center text-secondary">Adresse sélectionnée : <strong>{{ adrChoice ?? '' }}</strong></h3>
     <div class="mt-5">
-        {{ render_chart(chart, {'class': 'graph', 'id': 'chart'}) }}
+        {{ render_chart(chart|base64_encode, {'class': 'graph', 'id': 'chart'}) }}
+    </div>
+    <div class="export btn btn-primary">
+        <button id="save_graph">Exporter</button>
     </div>
     <div class="condition justify-content-center m-5">
             {% for condition in conditions %}
@@ -30,4 +33,7 @@
     <div class="button d-flex justify-content-around mb-5">
         <a class="btn btn-dark text-primary" href="{{ path('archive') }}">Retour</a>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
 {% endblock %}
