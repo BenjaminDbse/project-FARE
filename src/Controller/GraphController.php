@@ -146,6 +146,9 @@ class GraphController extends AbstractController
                     ['ticks' => ['suggestedMin' => 0, 'suggestedMax' => 12], 'position' => 'right', 'id' => 'right-y-axis'],
                 ],
             ],
+            'elements' => [
+                'line' => ['tension' => 0 ],
+            ]
         ]);
         return $this->render('graph/graph.html.twig', [
             "chart" => $chart,
