@@ -73,7 +73,7 @@ class GraphController extends AbstractController
         for ($i = 0; $i < count($alarm); $i++) {
             if ($alarm[$i] >= 1) {
                 $alarm[$i - 1] = 0;
-                $alarm[$i] += 1500 ;
+                $alarm[$i] = max($max) + 50 ;
                 $alarm[$i + 1] = 0;
             }
         }
@@ -139,7 +139,6 @@ class GraphController extends AbstractController
                 ],
             ],
         ]);
-
         $chart->setOptions([
             'scales' => [
                 'yAxes' => [
