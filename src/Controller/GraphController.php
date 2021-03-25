@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Import;
+use App\Form\ExportType;
+use App\Model\Export;
 use App\Repository\DataRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,19 +15,25 @@ use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
 
 /**
- * @Route("/graph")
+ * @Route("/graphique")
  */
 class GraphController extends AbstractController
 {
     /**
-     * @Route("/graphique/{id}", name="graph", methods={"GET","POST"})
+     * @Route("/{id}", name="graph", methods={"GET","POST"})
      * @param Import $import
      * @param ChartBuilderInterface $chartBuilder
      * @param DataRepository $dataRepository
      * @param Request $request
      * @return Response
      */
-    public function graph(Import $import, ChartBuilderInterface $chartBuilder, DataRepository $dataRepository, Request $request): Response
+    public function graph(
+        Import $import,
+        ChartBuilderInterface $chartBuilder,
+        DataRepository $dataRepository,
+        Request $request
+    ): Response
+
     {
         $delta1 = [];
         $delta2 = [];
@@ -73,7 +81,7 @@ class GraphController extends AbstractController
         for ($i = 0; $i < count($alarm); $i++) {
             if ($alarm[$i] >= 1) {
                 $alarm[$i - 1] = 0;
-                $alarm[$i] = max($max) + 50 ;
+                $alarm[$i] = max($max) + 50;
                 $alarm[$i + 1] = 0;
             }
         }
@@ -118,7 +126,7 @@ class GraphController extends AbstractController
                 ],
                 [
                     'label' => 'CO Brut',
-                    'backgroundColor' => 'rgba(255, 99, 132,0)',
+                    'backgroundColor' => 'rgba(255,99,132,0)',
                     'borderColor' => 'rgb( 128, 128, 128)',
                     'data' => $rawCo,
                     'yAxisID' => 'left-y-axis',
@@ -141,15 +149,19 @@ class GraphController extends AbstractController
         ]);
         $chart->setOptions([
             'scales' => [
-                'yAxes' => [
+                'yAxes' =>
+[
                     ['ticks' => ['suggestedMin' => 0, 'suggestedMax' => 10,], 'position' => 'left', 'id' => 'left-y-axis',],
                     ['ticks' => ['suggestedMin' => 0, 'suggestedMax' => 12], 'position' => 'right', 'id' => 'right-y-axis'],
                 ],
             ],
             'elements' => [
-                'line' => ['tension' => 0 ],
+                'line' => ['tension' => 0],
             ]
         ]);
+        $session = $request->getSession();
+        $session->set('graph', $chart);
+
         return $this->render('graph/graph.html.twig', [
             "chart" => $chart,
             "import" => $import,
@@ -157,7 +169,7 @@ class GraphController extends AbstractController
             'adrChoice' => $filterAdr,
             'dates' => $datetime,
             'status' => $status,
-            'conditions' =>$condition,
+            'conditions' => $condition,
         ]);
     }
 }
