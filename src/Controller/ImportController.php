@@ -46,7 +46,7 @@ class ImportController extends AbstractController
                     $dataFile->getPathName(),
                     __DIR__ . '/../../public/imports/' . $name . '.txt'
                 );
-                $treatment = fopen('/home/ben/Documents/project-FARE/public/imports/' . $name . '.txt', 'r');
+                $treatment = fopen(__DIR__ . '/../../public/imports/' . $name . '.txt', 'r');
                 $data1 = [];
                 $data2 = [];
                 $data3 = [];
@@ -170,7 +170,7 @@ class ImportController extends AbstractController
                     $entityManager->flush();
                 }
                 fclose($treatment);
-                unlink('/home/ben/Documents/project-FARE/public/imports/' . $name . '.txt');
+                unlink(__DIR__ . '/../../public/imports/' . $name . '.txt');
                 $this->addFlash('success', 'L\'importation à bien été effectuée');
                 return $this->redirectToRoute('home');
             }
