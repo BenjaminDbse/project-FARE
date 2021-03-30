@@ -15,6 +15,7 @@ class SearchImportType extends AbstractType
             ->add('search', SearchType::class, [
                 'required' => false,
                 'csrf_protection' => false,
+                'label' => 'Rechercher',
             ])
         ;
     }
