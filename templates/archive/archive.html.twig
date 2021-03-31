@@ -8,7 +8,7 @@
         {{ form_start(form) }}
         {{ form_widget(form) }}
         <div class="text-center m-4">
-        <button class="btn btn-secondary">{{ 'Rechercher'}}</button>
+            <button class="btn btn-secondary">{{ 'Rechercher' }}</button>
         </div>
         {{ form_end(form) }}
         <table class="table table-responsive-lg text-dark text-center">
@@ -27,8 +27,10 @@
                     <td>{{ import.title }}</td>
                     <td>{{ import.author }}</td>
                     <td>
-                         <a class="col btn btn-primary mb-sm-2 mb-2 mb-2"
-                           href="{{ path('graph', {'id': import.id }) }}">Voir le graphique</a>
+                        <a
+                           class="col btn btn-primary mb-sm-2 mb-2 mb-2" href="{{ path('graph', {'id': import.id }) }}">
+                            Voir le graphique
+                        </a>
                     </td>
                 </tr>
             {% else %}
