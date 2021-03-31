@@ -23,7 +23,6 @@ class ImportRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('i')
             ->where('i.title LIKE :name')
             ->orWhere('i.author LIKE :name')
-            ->orWhere('i.datetime LIKE :name')
             ->setParameter('name', '%' . $name . '%')
             ->orderBy('i.title', 'ASC')
             ->getQuery();

@@ -3,15 +3,15 @@
 {% block title %}{{ parent() }} Archives{% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div class="container mb-5">
         <h2 class="text-center my-5">Archives</h2>
         {{ form_start(form) }}
         {{ form_widget(form) }}
         <div class="text-center m-4">
-        <button class="btn btn-secondary">{{ 'Rechercher'}}</button>
+            <button class="btn btn-secondary">{{ 'Rechercher' }}</button>
         </div>
         {{ form_end(form) }}
-        <table class="table table-responsive-lg text-dark text-center">
+        <table class="table table-responsive-lg text-dark text-center mb-5">
             <thead class="thead-light">
             <tr>
                 <th>Date d'import</th>
@@ -27,8 +27,10 @@
                     <td>{{ import.title }}</td>
                     <td>{{ import.author }}</td>
                     <td>
-                         <a class="col btn btn-primary mb-sm-2 mb-2 mb-2"
-                           href="{{ path('graph', {'id': import.id }) }}">Voir le graphique</a>
+                        <a
+                           class="col btn btn-primary mb-sm-2 mb-2 mb-2" href="{{ path('graph', {'id': import.id }) }}">
+                            Voir le graphique
+                        </a>
                     </td>
                 </tr>
             {% else %}
@@ -38,5 +40,8 @@
             {% endfor %}
             </tbody>
         </table>
+        <div class="button d-flex justify-content-around mb-5">
+            <a class="btn btn-dark text-primary" href="{{ path('home') }}">Retour</a>
+        </div>
     </div>
 {% endblock %}
