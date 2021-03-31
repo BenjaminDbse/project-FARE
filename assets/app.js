@@ -8,6 +8,8 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.scss';
 import './styles/graph.scss';
+import bsCustomFileInput from 'bs-custom-file-input';
+
 // start the Stimulus application
 import './bootstrap';
 
@@ -21,5 +23,6 @@ require('bootstrap');
 // require('bootstrap/js/dist/popover');
 
 $(document).ready(function () {
+    bsCustomFileInput.init();
     $('[data-toggle="popover"]').popover();
 });

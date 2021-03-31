@@ -19,7 +19,7 @@ use App\Services\Slugify;
 class ImportController extends AbstractController
 {
     /**
-     * @Route("/importer-un-enregistrement", name="import", methods={"GET", "POST"})
+     * @Route("/", name="import", methods={"GET", "POST"})
      * @param Request $request
      * @param Slugify $slugify
      * @return Response
