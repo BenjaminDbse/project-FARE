@@ -127,7 +127,7 @@ class GraphController extends AbstractController
         for ($i = 0; $i < count($alarm); $i++) {
             if ($alarm[$i] >= 1) {
                 $alarm[$i - 1] = 0;
-                $alarm[$i] = max($max) + 50;
+                $alarm[$i] = max($delta2) + 50;
                 $alarm[$i + 1] = 0;
             }
         }
