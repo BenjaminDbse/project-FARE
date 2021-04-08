@@ -3,8 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Import;
-use App\Form\ExportType;
-use App\Model\Export;
+use App\Repository\AlgoRepository;
 use App\Repository\DataRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +23,7 @@ class GraphController extends AbstractController
      * @param Import $import
      * @param ChartBuilderInterface $chartBuilder
      * @param DataRepository $dataRepository
+     * @param AlgoRepository $algoRepository
      * @param Request $request
      * @return Response
      */
@@ -31,6 +31,7 @@ class GraphController extends AbstractController
         Import $import,
         ChartBuilderInterface $chartBuilder,
         DataRepository $dataRepository,
+        AlgoRepository $algoRepository,
         Request $request
     ): Response
 
@@ -46,13 +47,17 @@ class GraphController extends AbstractController
         $status = [];
         $datetime = [];
         $alarm = [];
-        $max = [];
         $filterAdr = null;
         $condition = [];
+        $resultAlgo = [];
+        $dataFilter = [];
+        $algoName = 'Algo non défini';
+
         foreach ($import->getData() as $data) {
             $adr[] = $data->getAdr();
         }
         $adr = array_unique($adr);
+        $algo = $algoRepository->findAll();
 
         if (!empty($_POST['adr'])) {
             $filterAdr = $request->request->all();
@@ -61,31 +66,8 @@ class GraphController extends AbstractController
             $session->set('adr', $filterAdr);
 
             $dataFilter = $dataRepository->findByLikeAdr($import->getId(), $filterAdr);
-            foreach ($dataFilter as $data) {
-                $delta1[] = $data->getDelta1();
-                $delta2[] = $data->getDelta2();
-                $ratioFilter[] = $data->getFilterRatio();
-                $slopeTemperatureCorrection[] = $data->getSlopeTemperatureCorrection();
-                $rawCo[] = $data->getRawCo();
-                $coCorrection[] = $data->getCoCorrection();
-                $temperatureCorrection[] = $data->getTemperatureCorrection();
-                $datetime[] = date_format($data->getDatetime(), 'd-m-Y  /  H:i:s');
-                $alarm[] = $data->getAlarm();
-                $status[] = $data->getStatus();
-            }
-            for ($i = 0 ; $i < count($status) ; $i++) {
-                if ((key_exists($i + 1, $status)) && ($status[$i] != $status[$i + 1])) {
-                    $condition[$i] = [$status[$i], $status[$i + 1], $datetime[$i + 1]];
-                }
-            }
-            $max = [
-                max($delta1),
-                max($delta2),
-                max($slopeTemperatureCorrection),
-                max($rawCo),
-                max($temperatureCorrection),
-            ];
         }
+
         if (isset($_POST['date']) && !empty($_POST['limit'])) {
             $session = $request->getSession()->all();
             $filterAdr = $session['adr'];
@@ -99,6 +81,27 @@ class GraphController extends AbstractController
             $userChoiceDate = join(' ', $userChoiceDate);
             $userChoiceLimit = $_POST['limit'];
             $dataFilter = $dataRepository->findByDateToLimit($import->getId(), $filterAdr, $userChoiceDate, $userChoiceLimit);
+            $session = $request->getSession();
+            $session->set('filter', $dataFilter);
+        }
+        foreach ($dataFilter as $data) {
+            $delta1[] = $data->getDelta1();
+            $delta2[] = $data->getDelta2();
+            $ratioFilter[] = $data->getFilterRatio();
+            $slopeTemperatureCorrection[] = $data->getSlopeTemperatureCorrection();
+            $rawCo[] = $data->getRawCo();
+            $coCorrection[] = $data->getCoCorrection();
+            $temperatureCorrection[] = $data->getTemperatureCorrection();
+            $datetime[] = date_format($data->getDatetime(), 'd-m-Y  /  H:i:s');
+            $alarm[] = $data->getAlarm();
+            $status[] = $data->getStatus();
+        }
+        if (isset($_POST['algo'])) {
+            $session = $request->getSession()->all();
+            $dataFilter = $session['filter'];
+            $filterAdr = $session['adr'];
+            $algoChoice = $algoRepository->findBy(['id' => $_POST['algo']]);
+
             foreach ($dataFilter as $data) {
                 $delta1[] = $data->getDelta1();
                 $delta2[] = $data->getDelta2();
@@ -111,18 +114,21 @@ class GraphController extends AbstractController
                 $alarm[] = $data->getAlarm();
                 $status[] = $data->getStatus();
             }
-            for ($i = 0 ; $i < count($status) ; $i++) {
-                if ((key_exists($i + 1, $status)) && ($status[$i] != $status[$i + 1])) {
-                    $condition[$i] = [$status[$i], $status[$i + 1], $datetime[$i + 1]];
+            foreach ($algoChoice as $value) {
+                $algoName = $value->getName();
+                $ordnance1tmp = $value->getYtmp() - ($value->getCoef2tmp() * $value->getXtmp());
+                $ordnance2tmp = $value->getYtmp() - ($value->getCoef2tmp() * $value->getXtmp());
+                $ordnance1ratio = $value->getYratio() - ($value->getCoef1ratio() * $value->getXratio());
+                $ordnance2ratio = $value->getYratio() - ($value->getCoef2ratio() * $value->getXratio());
+                $sdt = $value->getCoef1tmp() * 0 * 2 + $ordnance1tmp;
+                for ($i = 0; $i < count($ratioFilter); $i++) {
+                    if ($ratioFilter[$i] < $value->getXratio()) {
+                        $resultAlgo[$i] = ($value->getCoef1ratio() * $ratioFilter[$i] + $ordnance1ratio) * $sdt;
+                    } else {
+                        $resultAlgo[$i] = ($value->getCoef2ratio() * $ratioFilter[$i] + $ordnance2ratio) * $sdt;
+                    }
                 }
             }
-            $max = [
-                max($delta1),
-                max($delta2),
-                max($slopeTemperatureCorrection),
-                max($rawCo),
-                max($temperatureCorrection),
-            ];
         }
         for ($i = 0; $i < count($alarm); $i++) {
             if ($alarm[$i] >= 1) {
@@ -131,10 +137,22 @@ class GraphController extends AbstractController
                 $alarm[$i + 1] = 0;
             }
         }
+        for ($i = 0 ; $i < count($status) ; $i++) {
+            if ((key_exists($i + 1, $status)) && ($status[$i] != $status[$i + 1])) {
+                $condition[$i] = [$status[$i], $status[$i + 1], $datetime[$i + 1]];
+            }
+        }
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
         $chart->setData([
             'labels' => $datetime,
             'datasets' => [
+                [
+                    'label' => $algoName,
+                    'backgroundColor' => 'rgba( 230, 146, 0 ,0)',
+                    'borderColor' => 'rgb(0, 0, 0)',
+                    'data' => $resultAlgo,
+                    'yAxisID' => 'left-y-axis',
+                ],
                 [
                     'label' => 'Delta 1',
                     'backgroundColor' => 'rgba( 230, 146, 0 ,0)',
@@ -205,9 +223,6 @@ class GraphController extends AbstractController
                 'line' => ['tension' => 0],
             ]
         ]);
-        $session = $request->getSession();
-        $session->set('graph', $chart);
-
         return $this->render('graph/graph.html.twig', [
             "chart" => $chart,
             "import" => $import,
@@ -216,6 +231,7 @@ class GraphController extends AbstractController
             'dates' => $datetime,
             'status' => $status,
             'conditions' => $condition,
+            'algos' => $algo,
         ]);
     }
 }
