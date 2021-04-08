@@ -68,19 +68,24 @@ class GraphController extends AbstractController
             $dataFilter = $dataRepository->findByLikeAdr($import->getId(), $filterAdr);
         }
 
-        if (isset($_POST['date']) && !empty($_POST['limit'])) {
+        if (isset($_POST['date']) && !empty($_POST['toDate'])) {
             $session = $request->getSession()->all();
             $filterAdr = $session['adr'];
             $userChoiceDate = explode("/", $_POST['date']);
+            $userChoiceToDate = explode("/", $_POST['toDate']);
             for ($i = 0; $i < count($userChoiceDate); $i++) {
                 $userChoiceDate[$i] = trim($userChoiceDate[$i], ' ');
+                $userChoiceToDate[$i] = trim($userChoiceToDate[$i], ' ');
             }
             $userChoiceDate[0] = explode("-", $userChoiceDate[0]);
+            $userChoiceToDate[0] = explode("-", $userChoiceToDate[0]);
             $userChoiceDate[0] = array_reverse($userChoiceDate[0]);
+            $userChoiceToDate[0] = array_reverse($userChoiceToDate[0]);
             $userChoiceDate [0] = join("-", $userChoiceDate [0]);
+            $userChoiceToDate [0] = join("-", $userChoiceToDate [0]);
             $userChoiceDate = join(' ', $userChoiceDate);
-            $userChoiceLimit = $_POST['limit'];
-            $dataFilter = $dataRepository->findByDateToLimit($import->getId(), $filterAdr, $userChoiceDate, $userChoiceLimit);
+            $userChoiceToDate = join(' ', $userChoiceToDate);
+            $dataFilter = $dataRepository->findByDateToLimit($import->getId(), $filterAdr, $userChoiceDate, $userChoiceToDate);
             $session = $request->getSession();
             $session->set('filter', $dataFilter);
         }
@@ -137,7 +142,7 @@ class GraphController extends AbstractController
                 $alarm[$i + 1] = 0;
             }
         }
-        for ($i = 0 ; $i < count($status) ; $i++) {
+        for ($i = 0; $i < count($status); $i++) {
             if ((key_exists($i + 1, $status)) && ($status[$i] != $status[$i + 1])) {
                 $condition[$i] = [$status[$i], $status[$i + 1], $datetime[$i + 1]];
             }
@@ -214,10 +219,10 @@ class GraphController extends AbstractController
         $chart->setOptions([
             'scales' => [
                 'yAxes' =>
-[
-                    ['ticks' => ['suggestedMin' => 0, 'suggestedMax' => 10,], 'position' => 'left', 'id' => 'left-y-axis',],
-                    ['ticks' => ['suggestedMin' => 0, 'suggestedMax' => 12], 'position' => 'right', 'id' => 'right-y-axis'],
-                ],
+                    [
+                        ['ticks' => ['suggestedMin' => 0, 'suggestedMax' => 10,], 'position' => 'left', 'id' => 'left-y-axis',],
+                        ['ticks' => ['suggestedMin' => 0, 'suggestedMax' => 12], 'position' => 'right', 'id' => 'right-y-axis'],
+                    ],
             ],
             'elements' => [
                 'line' => ['tension' => 0],

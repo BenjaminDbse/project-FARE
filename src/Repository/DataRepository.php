@@ -30,14 +30,15 @@ class DataRepository extends ServiceEntityRepository
 
             return $queryBuilder->getResult();
     }
-    public function findByDateToLimit(int $import, int $adr, string $dateAt, int $limit)
+    public function findByDateToLimit(int $import, int $adr, string $dateAt, string $dateTo)
     {
         $queryBuilder = $this->createQueryBuilder('d')
             ->where('d.import = '. $import)
             ->andWhere('d.adr = '. $adr)
-            ->andWhere('d.datetime >= :dateAt')
-            ->setParameters(['dateAt' => $dateAt])
-            ->setMaxResults($limit)
+            ->andWhere(' d.datetime between :dateAt and :dateTo')
+            ->setParameters(
+                ['dateAt' => $dateAt,
+                'dateTo' => $dateTo])
             ->orderBy('d.datetime', 'ASC')
             ->getQuery();
 
