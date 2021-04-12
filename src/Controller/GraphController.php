@@ -122,6 +122,7 @@ class GraphController extends AbstractController
             $dataFilter = $session['filter'];
             $filterAdr = $session['adr'];
             $algoChoice = $algoRepository->findBy(['id' => $_POST['algo']]);
+            $sdt = [];
 
             foreach ($dataFilter as $data) {
                 $delta1[] = $data->getDelta1();
@@ -137,16 +138,23 @@ class GraphController extends AbstractController
             }
             foreach ($algoChoice as $value) {
                 $algoName = $value->getName();
-                $ordnance1tmp = $value->getYtmp() - ($value->getCoef2tmp() * $value->getXtmp());
+                $ordnance1tmp = $value->getYtmp() - ($value->getCoef1tmp() * $value->getXtmp());
                 $ordnance2tmp = $value->getYtmp() - ($value->getCoef2tmp() * $value->getXtmp());
                 $ordnance1ratio = $value->getYratio() - ($value->getCoef1ratio() * $value->getXratio());
                 $ordnance2ratio = $value->getYratio() - ($value->getCoef2ratio() * $value->getXratio());
-                $sdt = $value->getCoef1tmp() * 0 * 2 + $ordnance1tmp;
+
+                for ($i = 0; $i < count($temperatureCorrection); $i++) {
+                    if ($slopeTemperatureCorrection[$i] * 2 < $value->getXtmp()) {
+                        $sdt [] = $value->getCoef1tmp() * $slopeTemperatureCorrection[$i] * 2 + $ordnance1tmp;
+                    } else {
+                        $sdt [] = $value->getCoef2tmp() * $slopeTemperatureCorrection[$i] * 2 + $ordnance2tmp;
+                    }
+                }
                 for ($i = 0; $i < count($ratioFilter); $i++) {
                     if ($ratioFilter[$i] < $value->getXratio()) {
-                        $resultAlgo[$i] = ($value->getCoef1ratio() * $ratioFilter[$i] + $ordnance1ratio) * $sdt;
+                        $resultAlgo[$i] = ($value->getCoef1ratio() * $ratioFilter[$i] + $ordnance1ratio) * $sdt[$i];
                     } else {
-                        $resultAlgo[$i] = ($value->getCoef2ratio() * $ratioFilter[$i] + $ordnance2ratio) * $sdt;
+                        $resultAlgo[$i] = ($value->getCoef2ratio() * $ratioFilter[$i] + $ordnance2ratio) * $sdt[$i];
                     }
                 }
             }

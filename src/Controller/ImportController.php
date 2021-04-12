@@ -38,6 +38,7 @@ class ImportController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $import->setTitle($form->get('title')->getData());
             $import->setDatetime(new DateTime('now'));
+            $import->setAuthor($this->getUser());
             $entityManager->persist($import);
             $entityManager->flush();
             if (!empty($dataFile)) {
