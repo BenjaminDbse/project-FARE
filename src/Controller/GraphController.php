@@ -6,6 +6,7 @@ use App\Entity\Import;
 use App\Repository\AlgoRepository;
 use App\Repository\DataRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -71,23 +72,30 @@ class GraphController extends AbstractController
         if (isset($_POST['date']) && !empty($_POST['toDate'])) {
             $session = $request->getSession()->all();
             $filterAdr = $session['adr'];
-            $userChoiceDate = explode("/", $_POST['date']);
-            $userChoiceToDate = explode("/", $_POST['toDate']);
-            for ($i = 0; $i < count($userChoiceDate); $i++) {
-                $userChoiceDate[$i] = trim($userChoiceDate[$i], ' ');
-                $userChoiceToDate[$i] = trim($userChoiceToDate[$i], ' ');
+            if ($_POST['date'] > $_POST['toDate']) {
+                throw new Exception('La date de début ('. $_POST['date'] . ') doit être avant la date de fin ('. $_POST['toDate'] .').');
             }
-            $userChoiceDate[0] = explode("-", $userChoiceDate[0]);
-            $userChoiceToDate[0] = explode("-", $userChoiceToDate[0]);
-            $userChoiceDate[0] = array_reverse($userChoiceDate[0]);
-            $userChoiceToDate[0] = array_reverse($userChoiceToDate[0]);
-            $userChoiceDate [0] = join("-", $userChoiceDate [0]);
-            $userChoiceToDate [0] = join("-", $userChoiceToDate [0]);
-            $userChoiceDate = join(' ', $userChoiceDate);
-            $userChoiceToDate = join(' ', $userChoiceToDate);
-            $dataFilter = $dataRepository->findByDateToLimit($import->getId(), $filterAdr, $userChoiceDate, $userChoiceToDate);
-            $session = $request->getSession();
-            $session->set('filter', $dataFilter);
+            try {
+                $userChoiceDate = explode("/", $_POST['date']);
+                $userChoiceToDate = explode("/", $_POST['toDate']);
+                for ($i = 0; $i < count($userChoiceDate); $i++) {
+                    $userChoiceDate[$i] = trim($userChoiceDate[$i], ' ');
+                    $userChoiceToDate[$i] = trim($userChoiceToDate[$i], ' ');
+                }
+                $userChoiceDate[0] = explode("-", $userChoiceDate[0]);
+                $userChoiceToDate[0] = explode("-", $userChoiceToDate[0]);
+                $userChoiceDate[0] = array_reverse($userChoiceDate[0]);
+                $userChoiceToDate[0] = array_reverse($userChoiceToDate[0]);
+                $userChoiceDate [0] = join("-", $userChoiceDate [0]);
+                $userChoiceToDate [0] = join("-", $userChoiceToDate [0]);
+                $userChoiceDate = join(' ', $userChoiceDate);
+                $userChoiceToDate = join(' ', $userChoiceToDate);
+                $dataFilter = $dataRepository->findByDateToLimit($import->getId(), $filterAdr, $userChoiceDate, $userChoiceToDate);
+                $session = $request->getSession();
+                $session->set('filter', $dataFilter);
+            } catch (Exception $e) {
+                echo $e->getMessage();
+            }
         }
         foreach ($dataFilter as $data) {
             $delta1[] = $data->getDelta1();
