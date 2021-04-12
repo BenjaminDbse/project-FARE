@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArchiveController extends AbstractController
 {
     /**
-     * @Route("/archive", name="archive")
+     * @Route("/archives", name="archive")
      * @param Request $request
      * @param ImportRepository $importRepository
      * @return Response

@@ -52,7 +52,8 @@ class Import
     private ?string $author;
 
     /**
-     * @ORM\OneToMany(targetEntity=Data::class, mappedBy="import")
+     * @ORM\OneToMany(targetEntity=Data::class, mappedBy="import", cascade="All")
+     *
      */
     private Collection $data;
 
