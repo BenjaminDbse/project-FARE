@@ -54,6 +54,8 @@ class GraphController extends AbstractController
         $dataFilter = [];
         $algoName = 'Algo non défini';
 
+        $dateChoice = [];
+
         foreach ($import->getData() as $data) {
             $adr[] = $data->getAdr();
         }
@@ -67,34 +69,40 @@ class GraphController extends AbstractController
             $session->set('adr', $filterAdr);
 
             $dataFilter = $dataRepository->findByLikeAdr($import->getId(), $filterAdr);
+            $session = $request->getSession();
+            $session->set('filter', $dataFilter);
+            foreach ($dataFilter as $data) {
+                $dateChoice [] = date_format($data->getDatetime(), 'd-m-Y  /  H:i:s');
+            }
+            $session = $request->getSession();
+            $session->set('date', $dateChoice);
         }
 
         if (isset($_POST['date']) && !empty($_POST['toDate'])) {
             $session = $request->getSession()->all();
             $filterAdr = $session['adr'];
             if ($_POST['date'] > $_POST['toDate']) {
-                throw new Exception('La date de début ('. $_POST['date'] . ') doit être avant la date de fin ('. $_POST['toDate'] .').');
+                throw new Exception('La date de début (' . $_POST['date'] . ') doit être avant la date de fin (' . $_POST['toDate'] . ').');
             }
-            try {
-                $userChoiceDate = explode("/", $_POST['date']);
-                $userChoiceToDate = explode("/", $_POST['toDate']);
-                for ($i = 0; $i < count($userChoiceDate); $i++) {
-                    $userChoiceDate[$i] = trim($userChoiceDate[$i], ' ');
-                    $userChoiceToDate[$i] = trim($userChoiceToDate[$i], ' ');
-                }
-                $userChoiceDate[0] = explode("-", $userChoiceDate[0]);
-                $userChoiceToDate[0] = explode("-", $userChoiceToDate[0]);
-                $userChoiceDate[0] = array_reverse($userChoiceDate[0]);
-                $userChoiceToDate[0] = array_reverse($userChoiceToDate[0]);
-                $userChoiceDate [0] = join("-", $userChoiceDate [0]);
-                $userChoiceToDate [0] = join("-", $userChoiceToDate [0]);
-                $userChoiceDate = join(' ', $userChoiceDate);
-                $userChoiceToDate = join(' ', $userChoiceToDate);
-                $dataFilter = $dataRepository->findByDateToLimit($import->getId(), $filterAdr, $userChoiceDate, $userChoiceToDate);
-                $session = $request->getSession();
-                $session->set('filter', $dataFilter);
-            } catch (Exception $e) {
-                echo $e->getMessage();
+            $userChoiceDate = explode("/", $_POST['date']);
+            $userChoiceToDate = explode("/", $_POST['toDate']);
+            for ($i = 0; $i < count($userChoiceDate); $i++) {
+                $userChoiceDate[$i] = trim($userChoiceDate[$i], ' ');
+                $userChoiceToDate[$i] = trim($userChoiceToDate[$i], ' ');
+            }
+            $userChoiceDate[0] = explode("-", $userChoiceDate[0]);
+            $userChoiceToDate[0] = explode("-", $userChoiceToDate[0]);
+            $userChoiceDate[0] = array_reverse($userChoiceDate[0]);
+            $userChoiceToDate[0] = array_reverse($userChoiceToDate[0]);
+            $userChoiceDate [0] = join("-", $userChoiceDate [0]);
+            $userChoiceToDate [0] = join("-", $userChoiceToDate [0]);
+            $userChoiceDate = join(' ', $userChoiceDate);
+            $userChoiceToDate = join(' ', $userChoiceToDate);
+            $dataFilter = $dataRepository->findByDateToLimit($import->getId(), $filterAdr, $userChoiceDate, $userChoiceToDate);
+            $session = $request->getSession();
+            $session->set('filter', $dataFilter);
+            foreach ($dataFilter as $data) {
+                $dateChoice [] = date_format($data->getDatetime(), 'd-m-Y  /  H:i:s');
             }
         }
         foreach ($dataFilter as $data) {
@@ -104,8 +112,8 @@ class GraphController extends AbstractController
             $slopeTemperatureCorrection[] = $data->getSlopeTemperatureCorrection();
             $rawCo[] = $data->getRawCo();
             $coCorrection[] = $data->getCoCorrection();
-            $temperatureCorrection[] = $data->getTemperatureCorrection();
             $datetime[] = date_format($data->getDatetime(), 'd-m-Y  /  H:i:s');
+            $temperatureCorrection[] = $data->getTemperatureCorrection();
             $alarm[] = $data->getAlarm();
             $status[] = $data->getStatus();
         }
@@ -154,6 +162,10 @@ class GraphController extends AbstractController
             if ((key_exists($i + 1, $status)) && ($status[$i] != $status[$i + 1])) {
                 $condition[$i] = [$status[$i], $status[$i + 1], $datetime[$i + 1]];
             }
+        }
+        $session = $request->getSession()->all();
+        if (isset($session['filter'])) {
+            $dateChoice = $session['date'];
         }
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
         $chart->setData([
@@ -241,7 +253,7 @@ class GraphController extends AbstractController
             "import" => $import,
             'adrs' => $adr,
             'adrChoice' => $filterAdr,
-            'dates' => $datetime,
+            'dates' => $dateChoice,
             'status' => $status,
             'conditions' => $condition,
             'algos' => $algo,
