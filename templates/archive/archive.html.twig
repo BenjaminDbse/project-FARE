@@ -32,7 +32,7 @@
                             Voir le graphique
                         </a>
                         {% if is_granted("ROLE_ADMIN") or import.author == app.user %}
-                        {{ include('admin/import/_delete_form.html.twig') }}
+                            {{ include('admin/import/_delete_form.html.twig') }}
                         {% endif %}
                     </td>
                 </tr>

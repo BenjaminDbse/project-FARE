@@ -28,6 +28,9 @@ class ImportController extends AbstractController
      */
     public function import(Request $request, Slugify $slugify): Response
     {
+        if (!($this->getUser())) {
+            return $this->redirectToRoute('app_login');
+        }
         $import = new import;
         /** @var User $user */
         $user = $this->getUser();
@@ -65,14 +68,14 @@ class ImportController extends AbstractController
                     $blockData = new Data;
                     $line = fgets($treatment);
 
-                    if (!(stristr($line, '*********') || (substr(nl2br($line),0,3) == "<br"))) {
+                    if (!(stristr($line, '*********') || (substr(nl2br($line), 0, 3) == "<br"))) {
                         if ($numbOfThree == 1) {
-                            if (stristr($line,'STATUS_ALARM') && !stristr($line, 'ID_BLOC_ENCR')) {
+                            if (stristr($line, 'STATUS_ALARM') && !stristr($line, 'ID_BLOC_ENCR')) {
                                 $date = substr($line, 1, 19);
                                 $adr = substr(strpbrk($line, '='), 1, 3);
                                 $adr = rtrim($adr, ", ");
-                                $alarm = substr($line,62,2);
-                                $alarm = trim($alarm," \n\r\t\v\0");
+                                $alarm = substr($line, 62, 2);
+                                $alarm = trim($alarm, " \n\r\t\v\0");
                                 $array[$count]['date'] = $date;
                                 $array[$count]['adr'] = $adr;
                                 $array[$count]['alarm'] = $alarm;
@@ -93,7 +96,7 @@ class ImportController extends AbstractController
                                     $blockData->setCoCorrection($data7[$array[$count]['adr']]);
                                 }
                                 $entityManager->persist($blockData);
-                                $numbOfThree = 1 ;
+                                $numbOfThree = 1;
                                 $count += 1;
                             } else {
                                 $date = substr($line, 1, 19);
@@ -131,17 +134,26 @@ class ImportController extends AbstractController
                                 $dataClean[4] = 10;
                             }
                             if ($dataClean[4] != 10) {
-                                $dataClean[4] = $dataClean[4] /10;
+                                $dataClean[4] = $dataClean[4] / 10;
+                            }
+                            if ($dataClean[8] > 65000) {
+                                $dataClean[8] = 0;
+                            }
+                            if ($dataClean[10] > 64000) {
+                                $dataClean[10] = 0;
+                            }
+                            if ($dataClean[12] > 64000) {
+                                $dataClean[12] = 0;
                             }
                             $date = str_replace("/", "-", $array[$count]['date']);
                             $date = new DateTime($date);
                             $blockData->setDatetime($date);
                             $blockData->setAdr($array[$count]['adr']);
                             $blockData->setStatus(intval($array[$count]['status']));
-                            $blockData->setDelta1(($dataClean[0]/10));
-                            $blockData->setDelta2(($dataClean[2]/10));
+                            $blockData->setDelta1(($dataClean[0] / 10));
+                            $blockData->setDelta2(($dataClean[2] / 10));
                             $blockData->setFilterRatio(($dataClean[4]));
-                            $blockData->setTemperatureCorrection(($dataClean[6]/10));
+                            $blockData->setTemperatureCorrection(($dataClean[6] / 10));
                             $blockData->setSlopeTemperatureCorrection(($dataClean[8]));
                             $blockData->setRawCo(($dataClean[10]));
                             $blockData->setCoCorrection(($dataClean[12]));
@@ -155,21 +167,21 @@ class ImportController extends AbstractController
                         } else {
                             $numbOfThree = 1;
                         }
-                            if ($numbOfThree == 4) {
+                        if ($numbOfThree == 4) {
 
-                                $data1[$array[$count]['adr']] = $blockData->getDelta1();
-                                $data2[$array[$count]['adr']] = $blockData->getDelta2();
-                                $data3[$array[$count]['adr']] = $blockData->getFilterRatio();
-                                $data4[$array[$count]['adr']] = $blockData->getTemperatureCorrection();
-                                $data5[$array[$count]['adr']] = $blockData->getSlopeTemperatureCorrection();
-                                $data6[$array[$count]['adr']] = $blockData->getRawCo();
-                                $data7[$array[$count]['adr']] = $blockData->getCoCorrection();
-                                if (!empty($dataClean)) {
-                                    $dataClean = [];
-                                }
-                                $numbOfThree = 1;
-                                $count += 1;
+                            $data1[$array[$count]['adr']] = $blockData->getDelta1();
+                            $data2[$array[$count]['adr']] = $blockData->getDelta2();
+                            $data3[$array[$count]['adr']] = $blockData->getFilterRatio();
+                            $data4[$array[$count]['adr']] = $blockData->getTemperatureCorrection();
+                            $data5[$array[$count]['adr']] = $blockData->getSlopeTemperatureCorrection();
+                            $data6[$array[$count]['adr']] = $blockData->getRawCo();
+                            $data7[$array[$count]['adr']] = $blockData->getCoCorrection();
+                            if (!empty($dataClean)) {
+                                $dataClean = [];
                             }
+                            $numbOfThree = 1;
+                            $count += 1;
+                        }
                     }
                     $entityManager->flush();
                 }

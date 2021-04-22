@@ -88,6 +88,7 @@ class Import
     {
         $this->title = $title;
     }
+
     /**
      * @return File
      */

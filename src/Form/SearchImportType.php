@@ -16,8 +16,7 @@ class SearchImportType extends AbstractType
                 'required' => false,
                 'csrf_protection' => false,
                 'label' => 'Rechercher',
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

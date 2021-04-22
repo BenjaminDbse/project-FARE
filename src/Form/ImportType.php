@@ -18,13 +18,13 @@ class ImportType extends AbstractType
     {
         $this->ImportRepository = $ImportRepository;
     }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('title', TextType::class, [
                 'label' => 'Titre :'
             ])
-
             ->add('file', FileType::class, [
                 'label' => 'Fichier :'
             ]);

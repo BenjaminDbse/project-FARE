@@ -19,26 +19,28 @@ class DataRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Data::class);
     }
+
     public function findByLikeAdr(int $import, int $adr)
     {
         $queryBuilder = $this->createQueryBuilder('d')
-            ->where('d.import ='. $import)
-            ->andWhere('d.adr ='. $adr)
+            ->where('d.import =' . $import)
+            ->andWhere('d.adr =' . $adr)
             ->orderBy('d.datetime', 'ASC')
             ->getQuery();
 
 
-            return $queryBuilder->getResult();
+        return $queryBuilder->getResult();
     }
+
     public function findByDateToLimit(int $import, int $adr, string $dateAt, string $dateTo)
     {
         $queryBuilder = $this->createQueryBuilder('d')
-            ->where('d.import = '. $import)
-            ->andWhere('d.adr = '. $adr)
+            ->where('d.import = ' . $import)
+            ->andWhere('d.adr = ' . $adr)
             ->andWhere(' d.datetime between :dateAt and :dateTo')
             ->setParameters(
                 ['dateAt' => $dateAt,
-                'dateTo' => $dateTo])
+                    'dateTo' => $dateTo])
             ->orderBy('d.datetime', 'ASC')
             ->getQuery();
 

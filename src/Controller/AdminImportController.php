@@ -25,9 +25,8 @@ class AdminImportController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($import);
             $entityManager->flush();
-            $this->addFlash('danger', 'L\'importation à bien été supprimée');
         }
-
+        $this->addFlash('danger', 'L\'Archive à bien été supprimée');
         return $this->redirectToRoute('archive');
     }
 }

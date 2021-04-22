@@ -26,7 +26,8 @@
                     <p class="nav-link">Vous êtes connectez en tant que</p>
                 </div>
                 <div>
-                    <a href="{{ path('account') }}" class="nav-link text-primary">{{ app.user.lastname }} {{ app.user.firstname }}</a>
+                    <a href="{{ path('account') }}"
+                       class="nav-link text-primary">{{ app.user.lastname }} {{ app.user.firstname }}</a>
                 </div>
                 <div>
                     <a class="nav-link text-secondary" href="{{ path('app_logout') }}">
@@ -34,13 +35,13 @@
                 </div>
             {% else %}
                 <div>
-                <a class="nav-link" href="{{ path('app_login') }}"> Se connecter</a>
+                    <a class="nav-link" href="{{ path('app_login') }}"> Se connecter</a>
                 </div>
                 <div class="nav-link">
-                ou
+                    ou
                 </div>
                 <div>
-                <a class="nav-link" href="{{ path('app_register') }}">Créer un compte</a>
+                    <a class="nav-link" href="{{ path('app_register') }}">Créer un compte</a>
                 </div>
             {% endif %}
         </div>

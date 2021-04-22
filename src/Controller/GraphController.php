@@ -155,10 +155,10 @@ class GraphController extends AbstractController
                         $resultAlgo[$i] = ($value->getCoef2ratio() * $ratioFilter[$i] + $ordnance2ratio) * $sdt[$i];
                     }
                 }
-                if ($_POST['algo'] > 11 ) {
-                    for ($i = 0 ; $i < count($coCorrection); $i++) {
+                if ($_POST['algo'] > 11) {
+                    for ($i = 0; $i < count($coCorrection); $i++) {
                         if ($coCorrection[$i] > 10) {
-                            $resultAlgo[$i] = $resultAlgo[$i] * 1.5 ;
+                            $resultAlgo[$i] = $resultAlgo[$i] * 1.5;
                         }
                     }
                 }

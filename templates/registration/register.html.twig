@@ -6,33 +6,33 @@
     {% for flashError in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
     {% endfor %}
-<div class="container mt-5 mb-5">
-    <h1 class="text-center my-5 text-secondary">Créer un compte</h1>
+    <div class="container mt-5 mb-5">
+        <h1 class="text-center my-5 text-secondary">Créer un compte</h1>
 
-    {{ form_start(registrationForm) }}
+        {{ form_start(registrationForm) }}
         {{ form_row(registrationForm.email) }}
-    <div class="row">
-        <div class="col my-2 w-50">
-        {{ form_row(registrationForm.lastname, {
-            label: 'Nom'
-        }) }}
+        <div class="row">
+            <div class="col my-2 w-50">
+                {{ form_row(registrationForm.lastname, {
+                    label: 'Nom'
+                }) }}
+            </div>
+            <div class="col my-2 w-50">
+                {{ form_row(registrationForm.firstname,{
+                    label: 'Prénom'
+                }) }}
+            </div>
         </div>
-        <div class="col my-2 w-50">
-        {{ form_row(registrationForm.firstname,{
-            label: 'Prénom'
-        }) }}
-        </div>
-    </div>
         {{ form_row(registrationForm.plainPassword, {
             label: 'Mot de passe'
         }) }}
         {{ form_row(registrationForm.agreeTerms, {
             label: 'Accepter les termes'
         }) }}
-    <div class="button d-flex justify-content-around mb-5">
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-        <a class="btn btn-dark text-primary" href="{{ path('home') }}">Retour</a>
+        <div class="button d-flex justify-content-around mb-5">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a class="btn btn-dark text-primary" href="{{ path('home') }}">Retour</a>
+        </div>
+        {{ form_end(registrationForm) }}
     </div>
-    {{ form_end(registrationForm) }}
-</div>
 {% endblock %}
