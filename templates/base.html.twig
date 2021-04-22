@@ -12,12 +12,38 @@
 <header>
     {% block flash %}
         {% for category, messages in app.flashes %}
-        {% for message in messages %}
-        <div class="addFlash alert alert-{{ category }} text-center">
-            {{ message }}
+            {% for message in messages %}
+                <div class="addFlash alert alert-{{ category }} text-center">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    {% endblock %}
+    {% block connexion %}
+        <div class="d-flex justify-content-end">
+            {% if app.user %}
+                <div>
+                    <p class="nav-link">Vous êtes connectez en tant que</p>
+                </div>
+                <div>
+                    <a href="{{ path('account') }}" class="nav-link text-primary">{{ app.user.lastname }} {{ app.user.firstname }}</a>
+                </div>
+                <div>
+                    <a class="nav-link text-secondary" href="{{ path('app_logout') }}">
+                        [Se déconnecter]</a>
+                </div>
+            {% else %}
+                <div>
+                <a class="nav-link" href="{{ path('app_login') }}"> Se connecter</a>
+                </div>
+                <div class="nav-link">
+                ou
+                </div>
+                <div>
+                <a class="nav-link" href="{{ path('app_register') }}">Créer un compte</a>
+                </div>
+            {% endif %}
         </div>
-        {% endfor %}
-        {% endfor %}
     {% endblock %}
     {% block slogan %}
         <div class="container-fluid d-flex">
@@ -29,7 +55,7 @@
         </div>
     {% endblock %}
 </header>
-{% block navbar %} {% include '_include/_navbar.html.twig'%} {% endblock %}
+{% block navbar %} {% include '_include/_navbar.html.twig' %} {% endblock %}
 {% block body %}{% endblock %}
 {% block javascripts %}
     {{ encore_entry_script_tags('app') }}
