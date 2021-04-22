@@ -81,9 +81,7 @@ class GraphController extends AbstractController
         if (isset($_POST['date']) && !empty($_POST['toDate'])) {
             $session = $request->getSession()->all();
             $filterAdr = $session['adr'];
-            if ($_POST['date'] > $_POST['toDate']) {
-                throw new Exception('La date de début (' . $_POST['date'] . ') doit être avant la date de fin (' . $_POST['toDate'] . ').');
-            }
+
             $userChoiceDate = explode("/", $_POST['date']);
             $userChoiceToDate = explode("/", $_POST['toDate']);
             for ($i = 0; $i < count($userChoiceDate); $i++) {
@@ -155,6 +153,13 @@ class GraphController extends AbstractController
                         $resultAlgo[$i] = ($value->getCoef1ratio() * $ratioFilter[$i] + $ordnance1ratio) * $sdt[$i];
                     } else {
                         $resultAlgo[$i] = ($value->getCoef2ratio() * $ratioFilter[$i] + $ordnance2ratio) * $sdt[$i];
+                    }
+                }
+                if ($_POST['algo'] > 11 ) {
+                    for ($i = 0 ; $i < count($coCorrection); $i++) {
+                        if ($coCorrection[$i] > 10) {
+                            $resultAlgo[$i] = $resultAlgo[$i] * 1.5 ;
+                        }
                     }
                 }
             }

@@ -14,23 +14,23 @@
             <div class="card p-3">
                 {% include '/_include/_formDateChoice.html.twig' %}
             </div>
-            <div class="card p-3">
-                {% include '/_include/_formAlgo.html.twig' %}
+                <div class="card p-3">
+                    {% include '/_include/_formAlgo.html.twig' %}
+                </div>
             </div>
         </div>
-    </div>
-    <h3 class="text-center text-secondary">Adresse sélectionnée : <strong>{{ adrChoice ?? '' }}</strong></h3>
-    <div class="mt-5">
-        {% include '/_include/_graphique.html.twig' %}
-    </div>
-    <div class="condition justify-content-center m-5">
-            {% for condition in conditions %}
-        <div class="card p-5">
-           Le détecteur {{ adrChoice ?? '' }} est passé du status  {{ condition|join(' à  ','   le  ') }}
+        <h3 class="text-center text-secondary">Adresse sélectionnée : <strong>{{ adrChoice ?? '' }}</strong></h3>
+        <div class="mt-5">
+            {% include '/_include/_graphique.html.twig' %}
         </div>
+        <div class="condition justify-content-center m-5">
+            {% for condition in conditions %}
+                <div class="card p-5">
+                    Le détecteur {{ adrChoice ?? '' }} est passé du status {{ condition|join(' à  ','   le  ') }}
+                </div>
             {% endfor %}
-    </div>
-    <div class="button d-flex justify-content-around mb-5">
-        <a class="btn btn-dark text-primary" href="{{ path('archive') }}">Retour</a>
-    </div>
+        </div>
+        <div class="button d-flex justify-content-around mb-5">
+            <a class="btn btn-dark text-primary" href="{{ path('archive') }}">Retour</a>
+        </div>
 {% endblock %}
