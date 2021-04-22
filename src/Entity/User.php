@@ -3,11 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
 class User implements UserInterface
 {
@@ -35,14 +39,24 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=255)
      */
     private $firstname;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=255)
      */
     private $lastname;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Import::class, mappedBy="author")
+     */
+    private Collection $imports;
+
+    public function __construct()
+    {
+        $this->imports = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -145,6 +159,36 @@ class User implements UserInterface
     public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Import[]
+     */
+    public function getImports(): Collection
+    {
+        return $this->imports;
+    }
+
+    public function addImport(Import $import): self
+    {
+        if (!$this->imports->contains($import)) {
+            $this->imports[] = $import;
+            $import->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImport(Import $import): self
+    {
+        if ($this->imports->removeElement($import)) {
+            // set the owning side to null (unless already changed)
+            if ($import->getAuthor() === $this) {
+                $import->setAuthor(null);
+            }
+        }
 
         return $this;
     }

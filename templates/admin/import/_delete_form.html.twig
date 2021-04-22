@@ -1,5 +1,5 @@
 <form method="post" action="{{ path('import_delete', {'id': import.id}) }}" onsubmit="return confirm('Voulez-vous supprimer cette importation ?');">
     <input type="hidden" name="_method" value="DELETE">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ import.id) }}">
-    <button class="col btn btn-danger mb-sm-2 mb-2 btn">Supprimer</button>
+    <button class="col btn btn-secondary mb-sm-2 mb-2 text-primary">Supprimer</button>
 </form>

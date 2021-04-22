@@ -25,13 +25,15 @@
                 <tr>
                     <td>{{ import.datetime|format_datetime('full', 'short', locale='fr') }}</td>
                     <td>{{ import.title }}</td>
-                    <td>{{ import.author }}</td>
+                    <td>{{ import.author.lastname ?? '' }} {{ import.author.firstname ?? '' }}</td>
                     <td>
                         <a
                            class="col btn btn-primary mb-sm-2 mb-2 mb-2" href="{{ path('graph', {'id': import.id }) }}">
                             Voir le graphique
                         </a>
+                        {% if is_granted("ROLE_ADMIN") or import.author == app.user %}
                         {{ include('admin/import/_delete_form.html.twig') }}
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}
