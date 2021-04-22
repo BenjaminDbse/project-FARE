@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use DateTime;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,6 +29,8 @@ class ImportController extends AbstractController
     public function import(Request $request, Slugify $slugify): Response
     {
         $import = new import;
+        /** @var User $user */
+        $user = $this->getUser();
         $form = $this->createForm(ImportType::class, $import);
         $form->handleRequest($request);
 
@@ -38,7 +41,7 @@ class ImportController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $import->setTitle($form->get('title')->getData());
             $import->setDatetime(new DateTime('now'));
-            $import->setAuthor($this->getUser());
+            $import->setAuthor($user);
             $entityManager->persist($import);
             $entityManager->flush();
             if (!empty($dataFile)) {

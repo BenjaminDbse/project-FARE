@@ -11,7 +11,7 @@
                 <tr>
                     <td>{{ import.datetime|format_datetime('short', 'none', locale='fr') }}</td>
                     <td>{{ import.title }}</td>
-                    <td>{{ import.author }}</td>
+                    <td>{{ import.author.lastname ?? '' }} {{ import.author.firstname ?? '' }}</td>
                     <td>
                         <a class="btn btn-primary"
                            href="{{ path('graph', {'id': import.id }) }}">Voir</a>

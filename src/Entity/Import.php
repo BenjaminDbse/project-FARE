@@ -47,11 +47,6 @@ class Import
     private ?DateTimeInterface $Datetime;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private ?string $author;
-
-    /**
      * @ORM\OneToMany(targetEntity=Data::class, mappedBy="import", cascade="All")
      *
      */
@@ -61,6 +56,12 @@ class Import
      * @ORM\Column(type="string", length=255)
      */
     private ?string $slugify;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="imports")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private ?User $author;
 
     public function __construct()
     {
@@ -115,18 +116,6 @@ class Import
         return $this;
     }
 
-    public function getAuthor(): ?string
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(?string $author): self
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Data[]
      */
@@ -165,6 +154,18 @@ class Import
     public function setSlugify(string $slugify): self
     {
         $this->slugify = $slugify;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }

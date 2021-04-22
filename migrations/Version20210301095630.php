@@ -21,7 +21,7 @@ final class Version20210301095630 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE data (id INT AUTO_INCREMENT NOT NULL, delta1 DOUBLE PRECISION DEFAULT NULL, delta2 DOUBLE PRECISION DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE import (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, datetime DATETIME DEFAULT NULL, author VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE import (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, datetime DATETIME DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
     }
 
     public function down(Schema $schema) : void
