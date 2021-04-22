@@ -15,14 +15,16 @@ class HomeController extends AbstractController
     /**
      * @Route("/", name="home")
      * @param ImportRepository $importRepository
-     * @param UserRepository $userRepository
      * @return Response
      */
     public function index(ImportRepository $importRepository): Response
     {
-        $imports = $importRepository->findBy([],['id' => 'DESC'],5);
+        if (!($this->getUser())) {
+            return $this->redirectToRoute('app_login');
+        }
+        $imports = $importRepository->findBy([], ['id' => 'DESC'], 5);
         return $this->render('home/home.html.twig', [
-            'imports'=> $imports,
+            'imports' => $imports,
         ]);
     }
 }

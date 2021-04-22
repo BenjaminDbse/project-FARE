@@ -4,6 +4,13 @@
 
 {% block body %}
     <h2>Modification de l'utilisateur {{ user.lastname }} {{ user.firstname }}</h2>
-
+    <div class=" container card">
+        <ul><p>Roles attribuable:</p>
+            <li class="text-success">ROLE_USER : Permet de supprimer ses propres importations</li>
+            <li class="text-danger">ROLE_ADMIN : Permet de supprimer toutes les importations, de voir/modifier/supprimer
+                les comptes inscrits
+            </li>
+        </ul>
+    </div>
     {{ include('user/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 {% endblock %}

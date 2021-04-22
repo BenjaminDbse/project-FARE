@@ -24,10 +24,10 @@ class AccountController extends AbstractController
         $user = $this->getUser();
         $imports = $importRepository->findBy(['author' => $user]);
         return $this->render('account/account.html.twig',
-        [
-            'user' => $user,
-            'imports' => $imports,
-            'users' => $userRepository->findAll(),
-        ]);
+            [
+                'user' => $user,
+                'imports' => $imports,
+                'users' => $userRepository->findAll(),
+            ]);
     }
 }

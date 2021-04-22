@@ -19,6 +19,9 @@ class ArchiveController extends AbstractController
      */
     public function index(Request $request, ImportRepository $importRepository): Response
     {
+        if (!($this->getUser())) {
+            return $this->redirectToRoute('app_login');
+        }
         $form = $this->createForm(SearchImportType::class);
         $form->handleRequest($request);
         $imports = $importRepository->findAll();
@@ -28,9 +31,9 @@ class ArchiveController extends AbstractController
                 $imports = $importRepository->findLikeName($search);
             }
         }
-            return $this->render('archive/archive.html.twig', [
-                'imports' => $imports,
-                'form' => $form->createView(),
-            ]);
+        return $this->render('archive/archive.html.twig', [
+            'imports' => $imports,
+            'form' => $form->createView(),
+        ]);
     }
 }
