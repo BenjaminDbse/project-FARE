@@ -14,30 +14,26 @@
                         href="{{ path('app_logout') }}">Se déconnecter</a>
             </div>
         {% endif %}
+            <h1 class="text-center my-5 text-secondary">Se connecter</h1>
+            <div class="container">
+            <label for="inputEmail">Email</label>
+            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required
+                   autofocus>
+            <label for="inputPassword">Mot de passe</label>
+            <input type="password" name="password" id="inputPassword" class="form-control" required>
 
-        <h1 class="text-center my-5 text-secondary">Se connecter</h1>
-        <label for="inputEmail">Email</label>
-        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required
-               autofocus>
-        <label for="inputPassword">Mot de passe</label>
-        <input type="password" name="password" id="inputPassword" class="form-control" required>
+            <input type="hidden" name="_csrf_token"
+                   value="{{ csrf_token('authenticate') }}"
+            >
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" name="_remember_me"> Se souvenir de moi
+                </label>
+            </div>
 
-        <input type="hidden" name="_csrf_token"
-               value="{{ csrf_token('authenticate') }}"
-        >
-
-        {#
-        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-        See https://symfony.com/doc/current/security/remember_me.html
-
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" name="_remember_me"> Remember me
-            </label>
-        </div>
-        #}
-        <div class="button d-flex justify-content-center mt-5">
-            <button class="btn btn-lg btn-secondary" type="submit">Se connecter</button>
-        </div>
+            <div class="button d-flex justify-content-center mt-5">
+                <button class="btn btn-lg btn-secondary" type="submit">Se connecter</button>
+            </div>
+            </div>
     </form>
 {% endblock %}
