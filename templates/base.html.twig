@@ -10,15 +10,6 @@
 </head>
 <body>
 <header>
-    {% block flash %}
-        {% for category, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="addFlash alert alert-{{ category }} text-center">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endfor %}
-    {% endblock %}
     {% block connexion %}
         <div class="d-flex justify-content-end">
             {% if app.user %}
@@ -45,6 +36,15 @@
                 </div>
             {% endif %}
         </div>
+    {% endblock %}
+    {% block flash %}
+        {% for category, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="addFlash alert alert-{{ category }} text-center">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
     {% endblock %}
     {% block slogan %}
         <div class="container-fluid d-flex">

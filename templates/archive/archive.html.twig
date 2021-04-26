@@ -4,13 +4,17 @@
 
 {% block body %}
     <div class="container mb-5">
-        <h2 class="text-center my-5">Archives</h2>
-        {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <div class="text-center m-4">
-            <button class="btn btn-secondary">{{ 'Rechercher' }}</button>
+        <h2 class="text-center my-5 justify-content-center">Archives</h2>
+        <div class="d-flex justify-content-center">
+            <div class="w-50 text-center">
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <div class="text-center m-4">
+                    <button class="btn btn-secondary">{{ 'Rechercher' }}</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
         </div>
-        {{ form_end(form) }}
         <table class="table table-responsive-lg text-dark text-center mb-5">
             <thead class="thead-light">
             <tr>
@@ -28,7 +32,8 @@
                     <td>{{ import.author.lastname ?? '' }} {{ import.author.firstname ?? '' }}</td>
                     <td>
                         <a
-                           class="col btn btn-primary mb-sm-2 mb-2 mb-2" href="{{ path('graph', {'id': import.id }) }}">
+                                class="col btn btn-primary mb-sm-2 mb-2 mb-2"
+                                href="{{ path('graph', {'id': import.id }) }}">
                             Voir le graphique
                         </a>
                         {% if is_granted("ROLE_ADMIN") or import.author == app.user %}
