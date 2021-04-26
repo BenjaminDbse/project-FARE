@@ -30,8 +30,10 @@
             </div>
         {% endfor %}
     </div>
-    <div class="button d-flex justify-content-around mb-5">
-        {{ include('admin/import/_delete_form.html.twig') }}
+    <div class="button d-flex justify-content-center mb-5">
+        {% if is_granted("ROLE_ADMIN") or import.author == app.user %}
+            {{ include('admin/import/_delete_form.html.twig') }}
+        {% endif %}
         <a class="btn btn-secondary text-white" href="{{ path('archive') }}">Retour</a>
     </div>
 {% endblock %}
