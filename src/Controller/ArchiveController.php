@@ -19,9 +19,6 @@ class ArchiveController extends AbstractController
      */
     public function index(Request $request, ImportRepository $importRepository): Response
     {
-        if (!($this->getUser())) {
-            return $this->redirectToRoute('app_login');
-        }
         $form = $this->createForm(SearchImportType::class);
         $form->handleRequest($request);
         $imports = $importRepository->findAll();
