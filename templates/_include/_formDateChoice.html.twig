@@ -1,20 +1,28 @@
 <form action="{{ path('graph',{'id' : import.id}) }}" method="POST">
     <div class="d-flex flex-column align-items-center">
-        <div class="column">
-            <label for="date" id="date">Heure de début :</label>
-            <select class="mb-3" name="date" id="date">
-                {% for date in dates %}
-                    <option class="bg-secondary text-light" value="{{ date }}">{{ date }}</option>
-                {% endfor %}
-            </select>
+        <div class="timeend column">
+            <div class="label">
+                <label for="date" id="date">Heure de début :</label>
+            </div>
+            <div class="selectChoice">
+                <select class="mb-3" name="date" id="date">
+                    {% for date in dates %}
+                        <option class="bg-secondary text-light" value="{{ date }}">{{ date }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
-        <div class="column">
-            <label for="toDate" id="toDate">Heure de fin :</label>
-            <select class="mb-3" name="toDate" id="toDate">
-                {% for date in dates %}
-                    <option class="bg-secondary text-light" value="{{ date }}">{{ date }}</option>
-                {% endfor %}
-            </select>
+        <div class="timeend column">
+            <div class="label">
+                <label for="toDate" id="toDate">Heure de fin :</label>
+            </div>
+            <div class="selectChoice">
+                <select class="mb-3" name="toDate" id="toDate">
+                    {% for date in dates %}
+                        <option class="bg-secondary text-light" value="{{ date }}">{{ date }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
     </div>
     <div class="text-center">

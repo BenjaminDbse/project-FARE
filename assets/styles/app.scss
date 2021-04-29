@@ -1,4 +1,5 @@
 @import "variable.scss";
+
 $primary: #e53d18;
 $secondary: #2c2c2c;
 $dark: #0f0f0f;
@@ -7,20 +8,54 @@ $light: #d2d2d2;
 @import "~bootstrap/scss/bootstrap";
 
 .dropdown-menu {
-    position: center;
+  position: center;
 }
 
 .trait {
-    background-color: $light;
-    height: $heighttrait;
-    width: $widthtrait;
+  background-color: $light;
+  height: $heighttrait;
+  width: $widthtrait;
 }
 
 .slogantitle {
-    font-size: 24px;
+  font-size: 24px;
 }
-a:hover{
-        text-decoration: none;
-        filter: brightness(1.75);
-        font-weight: bold;
+
+a {
+  text-decoration: none;
+}
+
+.hover:hover {
+  text-decoration: none;
+  filter: brightness(1.75);
+  font-weight: bold;
+}
+
+/* Page account grid des cards users */
+.card-user {
+  display: grid;
+  grid-template-columns: 70% 70% 70%;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+}
+
+@media screen and (max-width: 420px) {
+  .slogantitle {
+    display: none;
+  }
+  .container-fluid {
+    justify-content: center;
+  }
+  .tdtime {
+    display: none;
+  }
+  .connected {
+    display: none;
+  }
+  .card-user {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+  }
 }

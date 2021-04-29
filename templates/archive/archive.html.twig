@@ -18,7 +18,7 @@
         <table class="table table-responsive-lg text-dark text-center mb-5">
             <thead class="thead-light">
             <tr>
-                <th>Date d'import</th>
+                <th class="tdtime">Date d'import</th>
                 <th>Titre</th>
                 <th>Importé par</th>
                 <th>Actions</th>
@@ -27,7 +27,7 @@
             <tbody>
             {% for import in imports %}
                 <tr>
-                    <td>{{ import.datetime|format_datetime('full', 'short', locale='fr') }}</td>
+                    <td class="tdtime">{{ import.datetime|format_datetime('full', 'short', locale='fr') }}</td>
                     <td>{{ import.title }}</td>
                     <td>{{ import.author.lastname ?? '' }} {{ import.author.firstname ?? '' }}</td>
                     <td>

@@ -259,7 +259,8 @@ class GraphController extends AbstractController
             ],
             'elements' => [
                 'line' => ['tension' => 0],
-            ]
+            ],
+            "maintainAspectRatio" => false,
         ]);
         return $this->render('graph/graph.html.twig', [
             "chart" => $chart,

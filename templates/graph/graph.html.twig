@@ -7,7 +7,7 @@
 {% block body %}
     <div class="container mt-5 mb-5">
         <h2 class="text-center my-5 text-secondary">{{ import.title }}</h2>
-        <div class="d-flex justify-content-between">
+        <div class="filters d-flex justify-content-between">
             <div class="card p-3">
                 {% include '/_include/_formAdr.html.twig' %}
             </div>
@@ -20,7 +20,7 @@
         </div>
     </div>
     <h3 class="text-center text-secondary">Adresse sélectionnée : <strong>{{ adrChoice ?? '' }}</strong></h3>
-    <div class="mt-5">
+    <div class="chart-container mt-5">
         {% include '/_include/_graphique.html.twig' %}
     </div>
     <div class="condition justify-content-center m-5">
@@ -34,6 +34,6 @@
         {% if is_granted("ROLE_ADMIN") or import.author == app.user %}
             {{ include('admin/import/_delete_form.html.twig') }}
         {% endif %}
-        <a class="btn btn-secondary text-white ml-2" href="{{ path('archive') }}">Retour</a>
+        <a class="btn btn-secondary text-white ml-2 mb-0" href="{{ path('archive') }}">Retour</a>
     </div>
 {% endblock %}

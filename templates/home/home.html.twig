@@ -9,7 +9,7 @@
             <tbody class="d-flex flex-column align-items-center">
             {% for import in imports %}
                 <tr>
-                    <td>{{ import.datetime|format_datetime('short', 'none', locale='fr') }}</td>
+                    <td class="tdtime">{{ import.datetime|format_datetime('short', 'none', locale='fr') }}</td>
                     <td>{{ import.title }}</td>
                     <td>{{ import.author.lastname ?? '' }} {{ import.author.firstname ?? '' }}</td>
                     <td>

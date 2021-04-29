@@ -12,8 +12,9 @@
     {% if is_granted("ROLE_ADMIN") %}
     <h3>Personnes enregistrés</h3>
     <div class="row">
-        {% for user in users %}
-            <div class="card col-4">
+            <div class="card-user">
+                {% for user in users %}
+            <div class="card">
                 <ul>
                     <li>Nom : {{ user.lastname }}</li>
                     <li>Prénom: {{ user.firstname }}</li>
@@ -28,7 +29,8 @@
                     </li>
                 </ul>
             </div>
-        {% endfor %}
+                {% endfor %}
+            </div>
         {% endif %}
     </div>
 {% endblock %}

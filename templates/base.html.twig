@@ -14,25 +14,25 @@
         <div class="d-flex justify-content-end">
             {% if app.user %}
                 <div>
-                    <p class="nav-link">Vous êtes connectez en tant que</p>
+                    <p class="connected nav-link">Vous êtes connecté en tant que</p>
                 </div>
                 <div>
                     <a href="{{ path('account') }}"
                        class="nav-link text-primary">{{ app.user.lastname }} {{ app.user.firstname }}</a>
                 </div>
                 <div>
-                    <a class="nav-link text-secondary" href="{{ path('app_logout') }}">
+                    <a class="hover nav-link text-secondary" href="{{ path('app_logout') }}">
                         [Se déconnecter]</a>
                 </div>
             {% else %}
                 <div>
-                    <a class="nav-link" href="{{ path('app_login') }}"> Se connecter</a>
+                    <a class="hover nav-link" href="{{ path('app_login') }}"> Se connecter</a>
                 </div>
                 <div class="nav-link">
                     ou
                 </div>
                 <div>
-                    <a class="nav-link" href="{{ path('app_register') }}">Créer un compte</a>
+                    <a class="hover nav-link" href="{{ path('app_register') }}">Créer un compte</a>
                 </div>
             {% endif %}
         </div>
@@ -48,8 +48,8 @@
     {% endblock %}
     {% block slogan %}
         <div class="container-fluid d-flex">
-            <a class="" href="{{ path('home') }}">
-                <img class="pt-5 ml-5" src="{{ asset('build/images/logo-fare.png') }}" alt="logo FARE"></a>
+            <a class="hover linkslogan" href="{{ path('home') }}">
+                <img class="imgslogan pt-5 ml-5" src="{{ asset('build/images/logo-fare.png') }}" alt="logo FARE"></a>
             <div class="align-self-center  pt-5">
                 <h1 class="slogantitle">Traitement et analyse des données de situation de feu et de non feu.</h1>
             </div>
