@@ -1,14 +1,18 @@
 <form action="{{ path('graph',{'id' : import.id}) }}" method="POST">
-    <label for="algo" id="algo">Algorithme</label>
     <div class=" d-flex justify-content-center">
-        <select class="mb-3" name="algo" id="algo">
-            <option class="bg-secondary" value="">-Choix-</option>
-            {% for algo in algos %}
-                <option class="bg-secondary text-light" value="{{ algo.id }}">{{ algo.name }}</option>
-            {% endfor %}
-        </select>
+        <div class="timeend">
+            <div class="label">
+                <label for="algo" id="algo">Algorithme</label>
+            </div>
+            <select class="mb-3" name="algo" id="algo">
+                <option class="bg-secondary" value="">-Choix-</option>
+                {% for algo in algos %}
+                    <option class="bg-secondary text-light" value="{{ algo.id }}">{{ algo.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
     <div class="text-center">
-        <button class="btn btn-dark mb-4">Voir</button>
+        <button class="btn btn-dark">Voir</button>
     </div>
 </form>

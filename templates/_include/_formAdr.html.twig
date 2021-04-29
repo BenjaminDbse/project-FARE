@@ -1,14 +1,18 @@
 <form action="{{ path('graph',{'id' : import.id}) }}" method="POST">
-    <label for="adr" id="adr">Adresse du détecteur</label>
     <div class=" d-flex justify-content-center">
-        <select class="mb-3" name="adr" id="adr">
-            <option class="bg-secondary" value="">-Choix-</option>
-            {% for adr in adrs %}
-                <option class="bg-secondary text-light" value="{{ adr }}">{{ adr }}</option>
-            {% endfor %}
-        </select>
+        <div class="timeend">
+            <div class="label">
+                <label for="adr" id="adr">Adresse du détecteur</label>
+            </div>
+            <select class="mb-3" name="adr" id="adr">
+                <option class="bg-secondary" value="">-Choix-</option>
+                {% for adr in adrs %}
+                    <option class="bg-secondary text-light" value="{{ adr }}">{{ adr }}</option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
     <div class="text-center">
-        <button class="btn btn-dark mb-4">Voir</button>
+        <button class="btn btn-dark">Voir</button>
     </div>
 </form>
