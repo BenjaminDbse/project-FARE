@@ -18,7 +18,7 @@ use App\Services\Slugify;
 /**
  * @Route("/import", name="import_")
  */
-class ImportController extends AbstractController
+class ImportingController extends AbstractController
 {
     const LOCATION_FILE = '/../../public/imports/';
     const START_TREATMENT = '*********';
@@ -90,12 +90,8 @@ class ImportController extends AbstractController
                         $this->fourthTreatment();
                     }
                 }
-                $entityManager->flush();
             }
-            fclose($treatment);
-            unlink(__DIR__ . self::LOCATION_FILE . $nameFile);
-            $this->addFlash('success', 'L\'importation à bien été effectuée');
-            return $this->redirectToRoute('home');
+            $entityManager->flush();
         }
         return $this->render('import/import.html.twig', [
             'form' => $form->createView(),
