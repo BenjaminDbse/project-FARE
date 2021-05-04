@@ -27,8 +27,8 @@ class ImportController extends AbstractController
     const RESULT_ERROR = 2048;
     const DIVISION_DATA = 10;
     const RATIO_NOT_CALCULATED = 10;
-    private $import;
-    private $blockData;
+    private Import $import;
+    private Data $blockData;
     private int $loopTreatment = 1;
     private int $counter = 0;
     private int $adr;
@@ -74,8 +74,8 @@ class ImportController extends AbstractController
             $nameFile = $this->moveAndNameFile($dataFile);
             $treatment = fopen(__DIR__ . self::LOCATION_FILE . $nameFile, 'r');
             while (!feof($treatment)) {
-                /* Initiolisation des variables qui me servent à boucler sur 3 lignes différentes
-                et instaciation de Data  */
+                /* Initialisation des variables qui me servent à boucler sur 3 lignes différentes
+                et instantiation de Data  */
                 $this->blockData = new Data;
                 $line = fgets($treatment);
                 if (!(stristr($line, self::START_TREATMENT) || (substr(nl2br($line), 0, 3) == "<br"))) {
@@ -120,21 +120,21 @@ class ImportController extends AbstractController
             $this->adr = rtrim($this->adr, ", ");
             $this->arrayData[$this->counter]['date'] = $date;
             $this->arrayData[$this->counter]['adr'] = $this->adr;
+            var_dump($line);
 
-            if (
-                stristr($line, 'STATUS_ALARM')
-                && !stristr($line, 'ID_BLOC_ENCR')
-                || !stristr($line, 'BLOC_DATA')
-            ) {
-                $this->TreatmentAlarm($line, $entityManager);
-            } else {
-                $this->loopTreatment += 1;
-            }
+        if (stristr($line, 'STATUS_ALARM')) {
+            $this->TreatmentAlarm($line, $entityManager);
+            dd($line);
+
+        }
             $date = str_replace("/", "-", $this->arrayData[$this->counter]['date']);
             $date = new DateTime($date);
             $this->blockData->setDatetime($date);
             $this->blockData->setAdr($this->arrayData[$this->counter]['adr']);
             $this->blockData->setImport($this->import);
+            $this->loopTreatment += 1;
+        } else {
+            $this->loopTreatment = 1;
         }
     }
 
@@ -188,12 +188,15 @@ class ImportController extends AbstractController
             if (array_key_exists(14, $data)) {
                 unset($data[14]);
             }
+            for($i = 0 ; $i < count($data) ; $i ++) {
+                $data[$i] = intval($data[$i]);
+            }
             $this->arrayData[$this->counter]['data'] = $data;
             if (count($this->arrayData[$this->counter]['data']) == 14) {
                 $this->calculateData($this->arrayData[$this->counter]['data']);
             }
             $this->date = new DateTime(str_replace("/", "-", $this->arrayData[$this->counter]['date']));
-            $this->saveData($entityManager);
+            $this->saveData();
             $this->loopTreatment += 1;
             if (isset($this->arrayData[$this->counter]['alarm'])) {
                 $this->blockData->setAdr($this->arrayData[$this->counter]['adr']);
@@ -206,8 +209,8 @@ class ImportController extends AbstractController
 
     private function calculateData(array $arrayData)
     {
-        for ($j = 0; $j < count($this->arrayData[$this->counter]['data']); $j += 2) {
-            $this->dataClean[$j] = ($arrayData[$this->counter]['data'][$j] + (256 * $arrayData[$this->counter]['data'][$j + 1]));
+        for ($j = 0; $j < count($arrayData); $j += 2) {
+            $this->dataClean[$j] = ($arrayData[$j] + (256 * $arrayData[$j + 1]));
         }
         if ($this->dataClean[2] > self::ERROR_DETECT) {
             $this->dataClean[2] = self::RESULT_ERROR;
@@ -225,7 +228,7 @@ class ImportController extends AbstractController
         }
     }
 
-    private function saveData($entityManager)
+    private function saveData()
     {
         $this->blockData->setDatetime($this->date);
         $this->blockData->setAdr($this->arrayData[$this->counter]['adr']);
@@ -238,12 +241,10 @@ class ImportController extends AbstractController
         $this->blockData->setRawCo(($this->dataClean[10]));
         $this->blockData->setCoCorrection(($this->dataClean[12]));
         $this->blockData->setImport($this->import);
-        $entityManager->persist($this->blockData);
     }
 
     private function fourthTreatment()
     {
-
         $this->data1[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta1();
         $this->data2[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta2();
         $this->data3[$this->arrayData[$this->counter]['adr']] = $this->blockData->getFilterRatio();
