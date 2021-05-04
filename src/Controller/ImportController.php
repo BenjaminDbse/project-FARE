@@ -13,7 +13,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Form\ImportType;
 use App\Entity\Import;
 use App\Entity\Data;
-use App\Services\Slugify;
 
 /**
  * @Route("/import", name="import_")
@@ -244,13 +243,14 @@ class ImportController extends AbstractController
 
     private function fourthTreatment()
     {
-        $data1[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta1();
-        $data2[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta2();
-        $data3[$this->arrayData[$this->counter]['adr']] = $this->blockData->getFilterRatio();
-        $data4[$this->arrayData[$this->counter]['adr']] = $this->blockData->getTemperatureCorrection();
-        $data5[$this->arrayData[$this->counter]['adr']] = $this->blockData->getSlopeTemperatureCorrection();
-        $data6[$this->arrayData[$this->counter]['adr']] = $this->blockData->getRawCo();
-        $data7[$this->arrayData[$this->counter]['adr']] = $this->blockData->getCoCorrection();
+
+        $this->data1[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta1();
+        $this->data2[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta2();
+        $this->data3[$this->arrayData[$this->counter]['adr']] = $this->blockData->getFilterRatio();
+        $this->data4[$this->arrayData[$this->counter]['adr']] = $this->blockData->getTemperatureCorrection();
+        $this->data5[$this->arrayData[$this->counter]['adr']] = $this->blockData->getSlopeTemperatureCorrection();
+        $this->data6[$this->arrayData[$this->counter]['adr']] = $this->blockData->getRawCo();
+        $this->data7[$this->arrayData[$this->counter]['adr']] = $this->blockData->getCoCorrection();
         if (!empty($this->dataClean)) {
             $this->dataClean = [];
         }

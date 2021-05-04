@@ -16,7 +16,7 @@ use App\Entity\Data;
 use App\Services\Slugify;
 
 /**
- * @Route("/import", name="import_")
+ * @Route("/gjiobjrt", name="idzsmport_")
  */
 class ImportingController extends AbstractController
 {
