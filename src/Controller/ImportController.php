@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use DateTime;
-use DateTimeInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +30,7 @@ class ImportController extends AbstractController
     private int $loopTreatment = 1;
     private int $counter = 0;
     private int $adr;
-    private DateTimeInterface $date;
+    private DateTime $date;
     private array $dataClean;
     private array $arrayData;
     private array $data1;
@@ -48,7 +46,6 @@ class ImportController extends AbstractController
      * @Route("/", name="import", methods={"GET", "POST"})
      * @param Request $request
      * @return Response
-     * @throws Exception
      */
     public function import(Request $request): Response
     {
@@ -85,8 +82,6 @@ class ImportController extends AbstractController
                         $this->secondTreatment($line);
                     } elseif ($this->loopTreatment == 3) {
                         $this->thirdTreatment($line, $entityManager);
-                    } elseif ($this->loopTreatment == 4) {
-                        $this->fourthTreatment();
                     }
                 }
                 $entityManager->flush();
@@ -101,7 +96,7 @@ class ImportController extends AbstractController
         ]);
     }
 
-    private function moveAndNameFile(Object $dataFile): string
+    private function moveAndNameFile(object $dataFile): string
     {
         /* Nom du fichier importé */
         $nameFile = pathinfo($dataFile->getClientOriginalName(), PATHINFO_FILENAME) . '.txt';
@@ -118,21 +113,17 @@ class ImportController extends AbstractController
             $date = substr($line, 1, 19);
             $this->adr = intval(substr(strpbrk($line, '='), 1, 3));
             $this->adr = rtrim($this->adr, ", ");
+            $date = str_replace('/','-',$date);
             $this->arrayData[$this->counter]['date'] = $date;
             $this->arrayData[$this->counter]['adr'] = $this->adr;
-            var_dump($line);
-
-        if (stristr($line, 'STATUS_ALARM')) {
-            $this->TreatmentAlarm($line, $entityManager);
-            dd($line);
-
-        }
-            $date = str_replace("/", "-", $this->arrayData[$this->counter]['date']);
-            $date = new DateTime($date);
+            $this->loopTreatment += 1;
+            $date = new DateTime($this->arrayData[$this->counter]['date']);
             $this->blockData->setDatetime($date);
             $this->blockData->setAdr($this->arrayData[$this->counter]['adr']);
             $this->blockData->setImport($this->import);
-            $this->loopTreatment += 1;
+            if (stristr($line, 'STATUS_ALARM')) {
+                $this->TreatmentAlarm($line, $entityManager);
+            }
         } else {
             $this->loopTreatment = 1;
         }
@@ -150,6 +141,7 @@ class ImportController extends AbstractController
         $this->blockData->setStatus($this->blockData->getAlarm());
         /* Si une alarme ce déclenche je récupére les derniéres données connues
          * du détecteur ou l'alarme ce déclenche */
+
         if (($this->arrayData[$this->counter]['adr'] == $this->adr) && (isset($this->arrayData[$this->counter]['adr']))) {
             $this->saveDataAlarm($entityManager);
             $this->loopTreatment = 1;
@@ -188,16 +180,15 @@ class ImportController extends AbstractController
             if (array_key_exists(14, $data)) {
                 unset($data[14]);
             }
-            for($i = 0 ; $i < count($data) ; $i ++) {
+            for ($i = 0; $i < count($data); $i++) {
                 $data[$i] = intval($data[$i]);
             }
-            $this->arrayData[$this->counter]['data'] = $data;
+            $this->arrayData[$this->counter]['data'] = str_replace("/", "-", $data);
             if (count($this->arrayData[$this->counter]['data']) == 14) {
                 $this->calculateData($this->arrayData[$this->counter]['data']);
             }
-            $this->date = new DateTime(str_replace("/", "-", $this->arrayData[$this->counter]['date']));
+            $this->date = new DateTime($this->arrayData[$this->counter]['date']);
             $this->saveData();
-            $this->loopTreatment += 1;
             if (isset($this->arrayData[$this->counter]['alarm'])) {
                 $this->blockData->setAdr($this->arrayData[$this->counter]['adr']);
                 $this->blockData->setDatetime($this->arrayData[$this->counter]['date']);
@@ -205,6 +196,19 @@ class ImportController extends AbstractController
             }
             $entityManager->persist($this->blockData);
         }
+        $this->data1[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta1();
+        $this->data2[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta2();
+        $this->data3[$this->arrayData[$this->counter]['adr']] = $this->blockData->getFilterRatio();
+        $this->data4[$this->arrayData[$this->counter]['adr']] = $this->blockData->getTemperatureCorrection();
+        $this->data5[$this->arrayData[$this->counter]['adr']] = $this->blockData->getSlopeTemperatureCorrection();
+        $this->data6[$this->arrayData[$this->counter]['adr']] = $this->blockData->getRawCo();
+        $this->data7[$this->arrayData[$this->counter]['adr']] = $this->blockData->getCoCorrection();
+        if (!empty($this->dataClean)) {
+            $this->dataClean = [];
+        }
+        $this->loopTreatment = 1;
+        $this->counter += 1;
+
     }
 
     private function calculateData(array $arrayData)
@@ -241,21 +245,5 @@ class ImportController extends AbstractController
         $this->blockData->setRawCo(($this->dataClean[10]));
         $this->blockData->setCoCorrection(($this->dataClean[12]));
         $this->blockData->setImport($this->import);
-    }
-
-    private function fourthTreatment()
-    {
-        $this->data1[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta1();
-        $this->data2[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta2();
-        $this->data3[$this->arrayData[$this->counter]['adr']] = $this->blockData->getFilterRatio();
-        $this->data4[$this->arrayData[$this->counter]['adr']] = $this->blockData->getTemperatureCorrection();
-        $this->data5[$this->arrayData[$this->counter]['adr']] = $this->blockData->getSlopeTemperatureCorrection();
-        $this->data6[$this->arrayData[$this->counter]['adr']] = $this->blockData->getRawCo();
-        $this->data7[$this->arrayData[$this->counter]['adr']] = $this->blockData->getCoCorrection();
-        if (!empty($this->dataClean)) {
-            $this->dataClean = [];
-        }
-        $this->loopTreatment = 1;
-        $this->counter += 1;
     }
 }
