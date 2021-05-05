@@ -191,14 +191,4 @@ class User implements UserInterface
         }
         return $this;
     }
-
-    public function __serialize(): array
-    {
-        return ['id' => $this->getId()];
-    }
-
-    public function __unserialize(array $data): void
-    {
-        $this->id = $data['id'];
-    }
 }
