@@ -53,11 +53,6 @@ class Import
     private Collection $data;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private ?string $slugify;
-
-    /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="imports")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -143,18 +138,6 @@ class Import
                 $data->setImport(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getSlugify(): ?string
-    {
-        return $this->slugify;
-    }
-
-    public function setSlugify(string $slugify): self
-    {
-        $this->slugify = $slugify;
 
         return $this;
     }
