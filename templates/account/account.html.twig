@@ -4,33 +4,33 @@
     <div class="container mt-5 mb-5">
     <h2 class="text-center my-5 text-secondary">Mon compte</h2>
     <h3>Mes Importations</h3>
-    <ul>
-        {% for import in imports %}
-            <li><a href="{{ path('graph', {'id': import.id }) }}">{{ import.title }}</a></li>
-        {% endfor %}
-    </ul>
+        <ul class="row">
+            {% for import in imports %}
+                <li class="col-3 ml-2"><a href="{{ path('graph', {'id': import.id }) }}">{{ import.title }}</a></li>
+            {% endfor %}
+        </ul>
     {% if is_granted("ROLE_ADMIN") %}
-    <h3>Personnes enregistrés</h3>
+    <h3>Gestion des Comptes</h3>
     <div class="row">
-            <div class="card-user">
-                {% for user in users %}
-            <div class="card">
-                <ul>
-                    <li>Nom : {{ user.lastname }}</li>
-                    <li>Prénom: {{ user.firstname }}</li>
-                    <li>Email: {{ user.email }}</li>
-                    <li class="row">
-                        <a class="col btn btn-primary w-50" href="{{ path('user_edit', {'id': user.id }) }}">
-                            Modifier le profil
-                        </a>
-                        <div class="w-50 ml-2">
-                            {{ include('admin/user/_delete_form.html.twig') }}
+        <div class="card-user">
+            {% for user in users %}
+                <div class="card">
+                    <ul>
+                        <li>Nom : {{ user.lastname }}</li>
+                        <li>Prénom: {{ user.firstname }}</li>
+                        <li>Email: {{ user.email }}</li>
+                        <div class="option justify-content-center align-content-center align-self-center">
+                            <a class="btn btn-primary" href="{{ path('user_edit', {'id': user.id }) }}">
+                                Modifier le profil
+                            </a>
+                            <div class="mt-2 align-self-center">
+                                {{ include('admin/user/_delete_form.html.twig') }}
+                            </div>
                         </div>
-                    </li>
-                </ul>
-            </div>
-                {% endfor %}
-            </div>
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
         {% endif %}
     </div>
 {% endblock %}

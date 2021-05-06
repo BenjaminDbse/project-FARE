@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Import;
+use App\Entity\User;
 use App\Repository\AlgoRepository;
 use App\Repository\DataRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -35,7 +37,6 @@ class GraphController extends AbstractController
         AlgoRepository $algoRepository,
         Request $request
     ): Response
-
     {
         $delta1 = [];
         $delta2 = [];
@@ -55,14 +56,18 @@ class GraphController extends AbstractController
         $algoName = 'Algo non défini';
 
         $dateChoice = [];
+        $import = $this->getDoctrine()
+            ->getRepository(Import::class)
+            ->find($import->getId());
 
+        $user = $import->getAuthor();
         foreach ($import->getData() as $data) {
             $adr[] = $data->getAdr();
         }
         $adr = array_unique($adr);
         $algo = $algoRepository->findAll();
-
         if (!empty($_POST['adr'])) {
+
             $filterAdr = $request->request->all();
             $filterAdr = $filterAdr['adr'];
             $session = $request->getSession();

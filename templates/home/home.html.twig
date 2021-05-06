@@ -4,9 +4,9 @@
 
 {% block body %}
     <h2 class="text-center m-5">Dernières données importés</h2>
-    <div class="container card d-flex ">
+    <div class="container card">
         <table class="table table-responsive-lg text-dark text-center">
-            <tbody class="d-flex flex-column align-items-center">
+            <tbody>
             {% for import in imports %}
                 <tr>
                     <td class="tdtime">{{ import.datetime|format_datetime('short', 'none', locale='fr') }}</td>
