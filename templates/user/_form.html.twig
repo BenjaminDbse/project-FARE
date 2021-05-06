@@ -1,9 +1,11 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
-<div class="text-center button d-flex justify-content-center mb-5">
-    <button class="btn">{{ button_label|default('Sauvegarder') }}</button>
+<div class="text-center button d-flex justify-content-around mt-3 mb-3">
     <div class="button">
-        <a class="btn btn-dark text-primary ml-5 mt-5" href="{{ path('account') }}">Retour</a>
+    <button class="btn btn-secondary text-white">{{ button_label|default('Sauvegarder') }}</button>
+    </div>
+    <div class="button">
+        <a class="btn btn-dark text-primary" href="{{ path('account') }}">Retour</a>
     </div>
 </div>
 {{ form_end(form) }}

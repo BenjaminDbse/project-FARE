@@ -49,9 +49,9 @@ class ImportController extends AbstractController
      */
     public function import(Request $request): Response
     {
-//        if (!($this->getUser())) {
-//            return $this->redirectToRoute('app_login');
-//        }
+        if (!($this->getUser())) {
+            return $this->redirectToRoute('app_login');
+        }
         $this->import = new import;
         $form = $this->createForm(ImportType::class, $this->import);
         $form->handleRequest($request);
@@ -113,7 +113,7 @@ class ImportController extends AbstractController
             $date = substr($line, 1, 19);
             $this->adr = intval(substr(strpbrk($line, '='), 1, 3));
             $this->adr = rtrim($this->adr, ", ");
-            $date = str_replace('/','-',$date);
+            $date = str_replace('/', '-', $date);
             $this->arrayData[$this->counter]['date'] = $date;
             $this->arrayData[$this->counter]['adr'] = $this->adr;
             $this->loopTreatment += 1;
@@ -241,7 +241,7 @@ class ImportController extends AbstractController
         $this->blockData->setDelta2(($this->dataClean[2] / self::DIVISION_DATA));
         $this->blockData->setFilterRatio(($this->dataClean[4]));
         $this->blockData->setTemperatureCorrection(($this->dataClean[6] / self::DIVISION_DATA));
-        $this->blockData->setSlopeTemperatureCorrection(($this->dataClean[8]));
+        $this->blockData->setSlopeTemperatureCorrection(($this->dataClean[8] / self::DIVISION_DATA));
         $this->blockData->setRawCo(($this->dataClean[10]));
         $this->blockData->setCoCorrection(($this->dataClean[12]));
         $this->blockData->setImport($this->import);

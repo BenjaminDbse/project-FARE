@@ -22,8 +22,10 @@ class ImportRepository extends ServiceEntityRepository
     public function findLikeName(string $name)
     {
         $queryBuilder = $this->createQueryBuilder('i')
+            ->join('i.author','u')
             ->where('i.title LIKE :name')
-            ->orWhere('i.author LIKE :name')
+            ->orWhere('u.lastname LIKE :name')
+            ->orWhere('u.firstname LIKE :name')
             ->setParameter('name', '%' . $name . '%')
             ->orderBy('i.title', 'ASC')
             ->getQuery();
