@@ -2,13 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Algo;
 use App\Entity\Import;
-use App\Entity\User;
 use App\Repository\AlgoRepository;
 use App\Repository\DataRepository;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,7 +69,7 @@ class GraphController extends AbstractController
             $startDate = $_POST['date'];
             $endDate = $_POST['toDate'];
 
-            $this->postDate($request, $dataRepository, $startDate,$endDate);
+            $this->postDate($request, $dataRepository, $startDate, $endDate);
             $this->treatmentDataFilter($this->dataFilter);
         }
 
@@ -88,9 +84,9 @@ class GraphController extends AbstractController
             $this->resultAlgo = $this->curveAlgo($algoCalculated, $nbAlgo);
         }
         if (isset($_POST['algo']) || isset($_POST['adr']) || isset($_POST['date'])) {
-        $this->treatmentAlarm();
-        $this->treatmentStatus();
-        $session = $request->getSession()->all();
+            $this->treatmentAlarm();
+            $this->treatmentStatus();
+            $session = $request->getSession()->all();
             $this->dateChoice = $session['date'];
         }
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
@@ -325,7 +321,7 @@ class GraphController extends AbstractController
     {
         for ($i = 0; $i < count($this->status); $i++) {
             if ((key_exists($i + 1, $this->status)) && ($this->status[$i] != $this->status[$i + 1])) {
-                $this->datetime[$i + 1] = str_replace('/','à',$this->datetime[$i + 1]);
+                $this->datetime[$i + 1] = str_replace('/', 'à', $this->datetime[$i + 1]);
                 $this->condition[$i] = [$this->status[$i], $this->status[$i + 1], $this->datetime[$i + 1]];
             }
         }
