@@ -10,15 +10,21 @@
         <h2 class="text-secondary mt-1">{{ import.title }}</h2>
         <p class="mt-3"><small class="text-muted font-italic">(Importé par {{ import.author.firstname }} {{ import.author.lastname }})</small></p>
         </div>
-        <div class="filters d-flex justify-content-between">
+        <div class="filters d-flex justify-content-around">
+            <div>
             <div class="card p-3">
                 {% include '/_include/_formAdr.html.twig' %}
             </div>
+            </div>
+            <div>
             <div class="card p-3">
                 {% include '/_include/_formDateChoice.html.twig' %}
             </div>
+            </div>
+            <div>
             <div class="card p-3">
                 {% include '/_include/_formAlgo.html.twig' %}
+            </div>
             </div>
         </div>
     </div>
