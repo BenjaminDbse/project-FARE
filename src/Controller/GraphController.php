@@ -18,7 +18,6 @@ use Symfony\UX\Chartjs\Model\Chart;
  */
 class GraphController extends AbstractController
 {
-
     private array $delta1 = [];
     private array $delta2 = [];
     private array $ratioFilter = [];
@@ -36,6 +35,7 @@ class GraphController extends AbstractController
     private array $dateChoice = [];
     private Import $import;
     private array $dataFilter;
+    private array $curveEstimateAlarm = [];
 
     /**
      * @Route("/{id}", name="graph", methods={"GET","POST"})
@@ -82,6 +82,7 @@ class GraphController extends AbstractController
             $this->treatmentDataFilter($this->dataFilter);
             $algoCalculated = $this->calculatedAlgo($algoChoice);
             $this->resultAlgo = $this->curveAlgo($algoCalculated, $nbAlgo);
+            $this->estimateAlarm();
         }
         if (isset($_POST['algo']) || isset($_POST['adr']) || isset($_POST['date'])) {
             $this->treatmentAlarm();
@@ -98,6 +99,13 @@ class GraphController extends AbstractController
                     'backgroundColor' => 'rgba( 230, 146, 0 ,0)',
                     'borderColor' => 'rgb(0, 0, 0)',
                     'data' => $this->resultAlgo,
+                    'yAxisID' => 'left-y-axis',
+                ],
+                [
+                    'label' => 'Estimation Alarme',
+                    'backgroundColor' => 'rgba( 230, 46, 0 ,0.5)',
+                    'borderColor' => 'rgb(230, 46, 0)',
+                    'data' => $this->curveEstimateAlarm,
                     'yAxisID' => 'left-y-axis',
                 ],
                 [
@@ -323,6 +331,16 @@ class GraphController extends AbstractController
             if ((key_exists($i + 1, $this->status)) && ($this->status[$i] != $this->status[$i + 1])) {
                 $this->datetime[$i + 1] = str_replace('/', 'à', $this->datetime[$i + 1]);
                 $this->condition[$i] = [$this->status[$i], $this->status[$i + 1], $this->datetime[$i + 1]];
+            }
+        }
+    }
+    private function estimateAlarm()
+    {
+        for ($i = 0 ; $i < count($this->delta2) ; $i++) {
+            if ($this->delta2[$i] > $this->resultAlgo[$i]) {
+                $this->curveEstimateAlarm[$i] = max($this->delta2) + 50 ;
+            } else {
+                $this->curveEstimateAlarm[$i] = 0;
             }
         }
     }
