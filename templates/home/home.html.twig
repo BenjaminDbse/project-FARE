@@ -3,13 +3,13 @@
 {% block title %}{{ parent() }} Accueil{% endblock %}
 
 {% block body %}
-    <h2 class="text-center m-5">Dernières données importés</h2>
+    <h2 class="text-center m-5 font-weight-bold">Dernières données importés</h2>
     <div class="container card">
         <table class="table table-responsive-lg text-dark text-center">
             <tbody>
             {% for import in imports %}
                 <tr>
-                    <td class="tdtime">{{ import.datetime|format_datetime('short', 'none', locale='fr') }}</td>
+                    <td class="tdTime">{{ import.datetime|format_datetime('short', 'none', locale='fr') }}</td>
                     <td>{{ import.title }}</td>
                     <td>{{ import.author.lastname ?? '' }} {{ import.author.firstname ?? '' }}</td>
                     <td>

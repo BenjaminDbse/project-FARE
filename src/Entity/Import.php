@@ -35,7 +35,8 @@ class Import
     /**
      * @Assert\File(
      *      mimeTypes = {
-     *         "text/plain"
+     *         "text/plain",
+     *         "application/octet-stream"
      *      })
      * @var File
      */
@@ -56,7 +57,7 @@ class Import
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="imports")
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?User $author;
+    private User $author;
 
     public function __construct()
     {
@@ -142,12 +143,12 @@ class Import
         return $this;
     }
 
-    public function getAuthor(): ?User
+    public function getAuthor(): User
     {
         return $this->author;
     }
 
-    public function setAuthor(?User $author): self
+    public function setAuthor(User $author): self
     {
         $this->author = $author;
 

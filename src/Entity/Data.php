@@ -21,148 +21,148 @@ class Data
     private $id;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="float")
      */
-    private ?float $delta1;
+    private float $delta1;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="float")
      */
-    private ?float $delta2;
+    private float $delta2;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="float")
      */
-    private ?float $filterRatio;
+    private float $filterRatio;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="float")
      */
-    private ?float $temperatureCorrection;
+    private float $temperatureCorrection;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="float")
      */
-    private ?float $slopeTemperatureCorrection;
+    private float $slopeTemperatureCorrection;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="float")
      */
-    private ?float $rawCo;
+    private float $rawCo;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="float")
      */
-    private ?float $coCorrection;
+    private float $coCorrection;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime")
      */
-    private ?DateTimeInterface $datetime;
+    private DateTimeInterface $datetime;
 
     /**
      * @ORM\ManyToOne(targetEntity=Import::class, inversedBy="data")
      */
-    private ?Import $import;
+    private Import $import;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer")
      */
-    private ?int $adr;
+    private int $adr;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer")
      */
-    private ?int $status;
+    private int $status;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private ?int $alarm;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getDelta1(): ?float
+    public function getDelta1(): float
     {
         return $this->delta1;
     }
 
-    public function setDelta1(?float $delta1): self
+    public function setDelta1(float $delta1): self
     {
         $this->delta1 = $delta1;
 
         return $this;
     }
 
-    public function getDelta2(): ?float
+    public function getDelta2(): float
     {
         return $this->delta2;
     }
 
-    public function setDelta2(?float $delta2): self
+    public function setDelta2(float $delta2): self
     {
         $this->delta2 = $delta2;
 
         return $this;
     }
 
-    public function getFilterRatio(): ?float
+    public function getFilterRatio(): float
     {
         return $this->filterRatio;
     }
 
-    public function setFilterRatio(?float $filterRatio): self
+    public function setFilterRatio(float $filterRatio): self
     {
         $this->filterRatio = $filterRatio;
 
         return $this;
     }
 
-    public function getTemperatureCorrection(): ?float
+    public function getTemperatureCorrection(): float
     {
         return $this->temperatureCorrection;
     }
 
-    public function setTemperatureCorrection(?float $temperatureCorrection): self
+    public function setTemperatureCorrection(float $temperatureCorrection): self
     {
         $this->temperatureCorrection = $temperatureCorrection;
 
         return $this;
     }
 
-    public function getSlopeTemperatureCorrection(): ?float
+    public function getSlopeTemperatureCorrection(): float
     {
         return $this->slopeTemperatureCorrection;
     }
 
-    public function setSlopeTemperatureCorrection(?float $slopeTemperatureCorrection): self
+    public function setSlopeTemperatureCorrection(float $slopeTemperatureCorrection): self
     {
         $this->slopeTemperatureCorrection = $slopeTemperatureCorrection;
 
         return $this;
     }
 
-    public function getRawCo(): ?float
+    public function getRawCo(): float
     {
         return $this->rawCo;
     }
 
-    public function setRawCo(?float $rawCo): self
+    public function setRawCo(float $rawCo): self
     {
         $this->rawCo = $rawCo;
 
         return $this;
     }
 
-    public function getCoCorrection(): ?float
+    public function getCoCorrection(): float
     {
         return $this->coCorrection;
     }
 
-    public function setCoCorrection(?float $coCorrection): self
+    public function setCoCorrection(float $coCorrection): self
     {
         $this->coCorrection = $coCorrection;
 
@@ -174,43 +174,43 @@ class Data
         return $this->datetime;
     }
 
-    public function setDatetime(?DateTimeInterface $datetime): self
+    public function setDatetime(DateTimeInterface $datetime): self
     {
         $this->datetime = $datetime;
 
         return $this;
     }
 
-    public function getImport(): ?Import
+    public function getImport(): Import
     {
         return $this->import;
     }
 
-    public function setImport(?Import $import): self
+    public function setImport(Import $import): self
     {
         $this->import = $import;
 
         return $this;
     }
 
-    public function getAdr(): ?int
+    public function getAdr(): int
     {
         return $this->adr;
     }
 
-    public function setAdr(?int $adr): self
+    public function setAdr(int $adr): self
     {
         $this->adr = $adr;
 
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): int
     {
         return $this->status;
     }
 
-    public function setStatus(?int $status): self
+    public function setStatus(int $status): self
     {
         $this->status = $status;
 

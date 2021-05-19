@@ -6,14 +6,41 @@
                 Import de fichiers
             </a>
             <ul class="dropdown-menu bg-secondary" aria-labelledby="navbarDropdownMenuLink">
-                <li><a class="hover text-light dropdown-item bg-secondary" href="{{ path('import_import') }}">Fichier
-                        d'enregistrement</a></li>
-                <li><a class="text-light dropdown-item bg-secondary" href="#">Contexte d'alarme</a></li>
-                <li><a target="_blank" class="text-light dropdown-item bg-secondary"
-                       href="https://www.ilovepdf.com/fr/jpg_en_pdf">Convertir en PDF</a></li>
+                <li>
+                    <a class="hover text-light dropdown-item bg-secondary" href="{{ path('import_import') }}">Fichier
+                        d'enregistrement
+                    </a>
+                </li>
+                <li>
+                    <a class="text-light dropdown-item bg-secondary" href="{{ path('context_context') }}">Contexte
+                        d'alarme
+                    </a>
+                </li>
+                <li>
+                    <a target="_blank" class="text-light dropdown-item bg-secondary"
+                       href="https://www.ilovepdf.com/fr/jpg_en_pdf">Convertir en PDF
+                    </a>
+                </li>
             </ul>
         </div>
         <div class="trait"></div>
-        <a class="text-light" href="{{ path('archive') }}">Archives</a>
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownMenuLink"
+                   role="button" data-toggle="dropdown" aria-expanded="false">
+                    Archives
+                </a>
+                    <ul class="dropdown-menu bg-secondary" aria-labelledby="navbarDropdownMenuLink">
+                        <li>
+                            <a class="hover text-light dropdown-item bg-secondary" href="{{ path('archive') }}">
+                                Archives enregistrements
+                            </a>
+                        </li>
+                        <li>
+                            <a class="hover text-light dropdown-item bg-secondary" href="{{ path('archive') }}">
+                                Archives contextes
+                            </a>
+                        </li>
+                    </ul>
+            </div>
     </nav>
 </div>

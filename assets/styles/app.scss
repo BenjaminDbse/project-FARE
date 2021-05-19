@@ -17,7 +17,7 @@ $light: #d2d2d2;
   width: $widthtrait;
 }
 
-.slogantitle {
+.sloganTitle {
   font-size: 24px;
 }
 
@@ -39,14 +39,18 @@ a {
   grid-row-gap: 10px;
 }
 
+.responsive-button {
+  display: none;
+}
+
 @media screen and (max-width: 420px) {
-  .slogantitle {
+  .sloganTitle {
     display: none;
   }
   .container-fluid {
     justify-content: center;
   }
-  .tdtime {
+  .tdTime {
     display: none;
   }
   .connected {
@@ -57,5 +61,11 @@ a {
     grid-template-columns: 100%;
     grid-column-gap: 5px;
     grid-row-gap: 5px;
+  }
+  .responsive-button {
+    display: flex;
+  }
+  .no-responsive-button {
+    display: none;
   }
 }

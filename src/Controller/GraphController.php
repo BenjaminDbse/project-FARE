@@ -18,6 +18,7 @@ use Symfony\UX\Chartjs\Model\Chart;
  */
 class GraphController extends AbstractController
 {
+    const VALUE_ALARM = 50;
     private array $delta1 = [];
     private array $delta2 = [];
     private array $ratioFilter = [];
@@ -319,7 +320,7 @@ class GraphController extends AbstractController
         for ($i = 0; $i < count($this->alarm); $i++) {
             if ($this->alarm[$i] >= 1) {
                 $this->alarm[$i - 1] = 0;
-                $this->alarm[$i] = max($this->delta2) + 50;
+                $this->alarm[$i] = max($this->delta2) + self::VALUE_ALARM;
                 $this->alarm[$i + 1] = 0;
             }
         }
@@ -338,9 +339,9 @@ class GraphController extends AbstractController
     {
         for ($i = 0 ; $i < count($this->delta2) ; $i++) {
             if ($this->delta2[$i] > $this->resultAlgo[$i]) {
-                $this->curveEstimateAlarm[$i] = max($this->delta2) + 50 ;
+                $this->curveEstimateAlarm[$i] = max($this->delta2) +  self::VALUE_ALARM ;
             } else {
-                $this->curveEstimateAlarm[$i] = 0;
+                $this->curveEstimateAlarm[$i] = null;
             }
         }
     }
