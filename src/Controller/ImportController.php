@@ -57,9 +57,9 @@ class ImportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /* Je fais appel à Doctrine pour persist les données de l'import */
             $entityManager = $this->getDoctrine()->getManager();
             $this->import->setTitle($form->get('title')->getData());
+            $this->import->setType('Enregistrement');
             $this->import->setDatetime(new DateTime('now'));
             /** La variable user est une instance de l'entité User
              * @var User $user
@@ -98,9 +98,7 @@ class ImportController extends AbstractController
 
     private function moveAndNameFile(object $dataFile): string
     {
-        /* Nom du fichier importé */
         $nameFile = pathinfo($dataFile->getClientOriginalName(), PATHINFO_FILENAME) . '.txt';
-        /*Déplacement du fichier importé */
         move_uploaded_file($dataFile->getPathName(), __DIR__ . self::LOCATION_FILE . $nameFile);
 
         return $nameFile;
@@ -108,16 +106,15 @@ class ImportController extends AbstractController
 
     private function firstTreatment($line, $entityManager)
     {
-        /* Je récupére les informations dont j'ai besoin grâce aux fonctions PHP */
         if (!stristr($line, 'ID_BLOC_ENCR') || !stristr($line, 'BLOC_DATAS')) {
             $date = substr($line, 1, 19);
             $this->adr = intval(substr(strpbrk($line, '='), 1, 3));
             $this->adr = rtrim($this->adr, ", ");
             $date = str_replace('/', '-', $date);
             $this->arrayData[$this->counter]['date'] = $date;
+            $date = new Datetime($this->arrayData[$this->counter]['date']);
             $this->arrayData[$this->counter]['adr'] = $this->adr;
             $this->loopTreatment += 1;
-            $date = new DateTime($this->arrayData[$this->counter]['date']);
             $this->blockData->setDatetime($date);
             $this->blockData->setAdr($this->arrayData[$this->counter]['adr']);
             $this->blockData->setImport($this->import);
@@ -129,9 +126,6 @@ class ImportController extends AbstractController
         }
     }
 
-    /*
-     * Si une alarme ce déclenche je récupére les données précédentes
-     */
     private function TreatmentAlarm($line, $entityManager)
     {
         $alarm = substr($line, 62, 2);
@@ -139,8 +133,6 @@ class ImportController extends AbstractController
         $this->arrayData[$this->counter]['alarm'] = intval($alarm);
         $this->blockData->setAlarm($this->arrayData[$this->counter]['alarm']);
         $this->blockData->setStatus($this->blockData->getAlarm());
-        /* Si une alarme ce déclenche je récupére les derniéres données connues
-         * du détecteur ou l'alarme ce déclenche */
 
         if (($this->arrayData[$this->counter]['adr'] == $this->adr) && (isset($this->arrayData[$this->counter]['adr']))) {
             $this->saveDataAlarm($entityManager);
@@ -245,5 +237,22 @@ class ImportController extends AbstractController
         $this->blockData->setRawCo(($this->dataClean[10]));
         $this->blockData->setCoCorrection(($this->dataClean[12]));
         $this->blockData->setImport($this->import);
+    }
+
+    /**
+     * @Route("/{id}", name="delete", methods={"DELETE"})
+     * @param Request $request
+     * @param Import $import
+     * @return Response
+     */
+    public function delete(Request $request, Import $import): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $import->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($import);
+            $entityManager->flush();
+        }
+        $this->addFlash('danger', 'L\'Archive à bien été supprimée');
+        return $this->redirectToRoute('archive');
     }
 }

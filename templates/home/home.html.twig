@@ -3,18 +3,23 @@
 {% block title %}{{ parent() }} Accueil{% endblock %}
 
 {% block body %}
-    <h2 class="text-center m-5">Dernières données importés</h2>
+    <h2 class="text-center m-5 font-weight-bold">Dernières données importés</h2>
     <div class="container card">
         <table class="table table-responsive-lg text-dark text-center">
             <tbody>
             {% for import in imports %}
                 <tr>
-                    <td class="tdtime">{{ import.datetime|format_datetime('short', 'none', locale='fr') }}</td>
+                    <td class="tdTime">{{ import.datetime|format_datetime('short', 'none', locale='fr') }}</td>
                     <td>{{ import.title }}</td>
+                    <td>{{ import.type }}</td>
                     <td>{{ import.author.lastname ?? '' }} {{ import.author.firstname ?? '' }}</td>
                     <td>
-                        <a class="btn btn-primary"
-                           href="{{ path('graph', {'id': import.id }) }}">Voir</a>
+                        <a class="no-responsive-button btn btn-secondary" href="{{ path('graph', {'id': import.id }) }}">
+                            Voir
+                        </a>
+                        <a class="responsive-button" href="{{ path('graph', {'id': import.id }) }}">
+                            <img src="{{ asset('build/images/eye.png') }}" alt="eye">
+                        </a>
                     </td>
                 </tr>
             {% else %}

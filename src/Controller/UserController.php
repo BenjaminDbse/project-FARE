@@ -27,6 +27,11 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $choiceUser = $form->get('verified')->getData();
+            $user->setRoles(["ROLE_USER"]);
+            if ($choiceUser === true) {
+                $user->setRoles(["ROLE_ADMIN"]);
+            }
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', 'L\'utilisateur à bien été modifié.');

@@ -24,6 +24,7 @@ class ImportRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('i')
             ->join('i.author','u')
             ->where('i.title LIKE :name')
+            ->orWhere('i.type LIKE :name')
             ->orWhere('u.lastname LIKE :name')
             ->orWhere('u.firstname LIKE :name')
             ->setParameter('name', '%' . $name . '%')

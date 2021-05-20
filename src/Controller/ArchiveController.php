@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\SearchImportType;
 use App\Repository\ImportRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,12 +14,13 @@ use Datetime;
 class ArchiveController extends AbstractController
 {
     /**
-     * @Route("/archives", name="archive")
+     * @Route("/archives", name="archive", methods={"GET", "POST"})
      * @param Request $request
      * @param ImportRepository $importRepository
+     * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function index(Request $request, ImportRepository $importRepository): Response
+    public function index(Request $request, ImportRepository $importRepository, PaginatorInterface $paginator): Response
     {
         $form = $this->createForm(SearchImportType::class);
         $form->handleRequest($request);
@@ -30,8 +32,8 @@ class ArchiveController extends AbstractController
             }
         }
         return $this->render('archive/archive.html.twig', [
-            'imports' => $imports,
             'form' => $form->createView(),
+            'imports' => $imports,
         ]);
     }
 }

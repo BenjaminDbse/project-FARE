@@ -18,23 +18,17 @@ class UserType extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('roles', TextType::class, [
-            ])
             ->add('firstname', TextType::class, [
                 'label' => 'Prénom'
             ])
             ->add('lastname', TextType::class, [
                 'label' => 'Nom'
-            ]);
-        $builder->get('roles')
-            ->addModelTransformer(new CallbackTransformer(
-                function ($rolesAsArray) {
-                    return implode(', ', $rolesAsArray);
-                },
-                function ($rolesAsString) {
-                    return explode(', ', $rolesAsString);
-                }
-            ));
+            ])
+            ->add('verified', CheckboxType::class, [
+                'label' => 'Passer le compte en administrateur',
+                'required' => false,
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

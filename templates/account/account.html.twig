@@ -2,15 +2,26 @@
 {% block title %} {{ parent() }} Mon compte {% endblock %}
 {% block body %}
     <div class="container mt-5 mb-5">
-    <h2 class="text-center my-5 text-secondary">Mon compte</h2>
-    <h3>Mes Importations</h3>
-        <ul class="row">
-            {% for import in imports %}
-                <li class="col-3 ml-2"><a href="{{ path('graph', {'id': import.id }) }}">{{ import.title }}</a></li>
-            {% endfor %}
-        </ul>
+    <h2 class="text-center my-5 text-secondary font-weight-bold">Mon compte</h2>
+    {% if is_granted("ROLE_USER") and not is_granted("ROLE_ADMIN") %}
+        <div class="d-flex justify-content-end">
+            <p>supprimer mon compte
+                <a class="" href="{{ path('user_delete', {'id': app.user.id }) }}">
+                    <img src="{{ asset('build/images/delete.png') }}" alt="trashcan"></a>
+            </p>
+
+        </div>
+    {% endif %}
+    <h3 class="text-center my-5 text-secondary font-italic">Mes Importations</h3>
+    <ul class="row mb-5">
+        {% for import in imports %}
+            <li class="col-3 ml-2"><a href="{{ path('graph', {'id': import.id }) }}">{{ import.title }}</a></li>
+        {% endfor %}
+    </ul>
     {% if is_granted("ROLE_ADMIN") %}
-    <h3>Gestion des Comptes</h3>
+    <div class="text-center mt-5">
+    <h3 class="text-center my-5 text-secondary font-italic">Gestion des Comptes</h3>
+    </div>
     <div class="row">
         <div class="card-user">
             {% for user in users %}
@@ -19,12 +30,16 @@
                         <li>Nom : {{ user.lastname }}</li>
                         <li>Prénom: {{ user.firstname }}</li>
                         <li>Email: {{ user.email }}</li>
-                        <div class="option justify-content-center align-content-center align-self-center">
-                            <a class="btn btn-primary" href="{{ path('user_edit', {'id': user.id }) }}">
-                                Modifier le profil
+                        <div class="d-flex option justify-content-around">
+                            <div class="">
+                            <a href="{{ path('user_edit', {'id': user.id }) }}">
+                                <img src="{{ asset('build/images/setting.png') }}" alt="setting">
                             </a>
-                            <div class="mt-2 align-self-center">
-                                {{ include('admin/user/_delete_form.html.twig') }}
+                            </div>
+                            <div class="">
+                                <a class="" href="{{ path('user_delete', {'id': app.user.id }) }}">
+                                    <img src="{{ asset('build/images/delete.png') }}" alt="trashcan">
+                                </a>
                             </div>
                         </div>
                     </ul>

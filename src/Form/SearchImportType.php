@@ -12,6 +12,7 @@ class SearchImportType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->setMethod('GET')
             ->add('search', SearchType::class, [
                 'required' => false,
                 'csrf_protection' => false,
