@@ -15,7 +15,6 @@
                 {{ form_end(form) }}
             </div>
         </div>
-       {#  <p class="font-italic text-right">{{ imports.getTotalItemCount}} résultat(s).</p>#}
         <table class="table table-responsive-lg text-dark text-center mb-5">
             <thead class="thead-light">
             <tr>
@@ -61,9 +60,6 @@
             {% endfor %}
             </tbody>
         </table>
-        <div class="d-flex justify-content-center">
-            {{ knp_pagination_render(imports)}}
-        </div>
         <div class="button d-flex justify-content-around mb-5">
             <a class="btn btn-dark text-white" href="{{ path('home') }}">Retour</a>
         </div>

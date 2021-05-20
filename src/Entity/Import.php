@@ -60,10 +60,9 @@ class Import
     private User $author;
 
     /**
-     * @ORM\Column(type="string", length=20)
-     * @Assert\NotBlank
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
-    private string $type;
+    private ?string $type;
 
     public function __construct()
     {
@@ -170,7 +169,7 @@ class Import
         return $this->type;
     }
 
-    public function setType(string $type): self
+    public function setType(?string $type): self
     {
         $this->type = $type;
 

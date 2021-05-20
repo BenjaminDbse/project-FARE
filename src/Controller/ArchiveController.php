@@ -30,11 +30,6 @@ class ArchiveController extends AbstractController
             if (!empty($search)) {
                 $imports = $importRepository->findLikeName($search);
             }
-            $imports = $paginator->paginate(
-                $imports,
-                $request->query->getInt('page', 1),
-                10
-            );
         }
         return $this->render('archive/archive.html.twig', [
             'form' => $form->createView(),

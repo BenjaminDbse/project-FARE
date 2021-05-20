@@ -59,9 +59,9 @@ class ImportController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $this->import->setTitle($form->get('title')->getData());
-            $this->import->setDatetime(new DateTime('now'));
             $this->import->setType('Enregistrement');
-            /**
+            $this->import->setDatetime(new DateTime('now'));
+            /** La variable user est une instance de l'entité User
              * @var User $user
              */
             $user = $this->getUser();
@@ -71,6 +71,8 @@ class ImportController extends AbstractController
             $nameFile = $this->moveAndNameFile($dataFile);
             $treatment = fopen(__DIR__ . self::LOCATION_FILE . $nameFile, 'r');
             while (!feof($treatment)) {
+                /* Initialisation des variables qui me servent à boucler sur 3 lignes différentes
+                et instantiation de Data  */
                 $this->blockData = new Data;
                 $line = fgets($treatment);
                 if (!(stristr($line, self::START_TREATMENT) || (substr(nl2br($line), 0, 3) == "<br"))) {
@@ -110,9 +112,9 @@ class ImportController extends AbstractController
             $this->adr = rtrim($this->adr, ", ");
             $date = str_replace('/', '-', $date);
             $this->arrayData[$this->counter]['date'] = $date;
+            $date = new Datetime($this->arrayData[$this->counter]['date']);
             $this->arrayData[$this->counter]['adr'] = $this->adr;
             $this->loopTreatment += 1;
-            $date = new DateTime($this->arrayData[$this->counter]['date']);
             $this->blockData->setDatetime($date);
             $this->blockData->setAdr($this->arrayData[$this->counter]['adr']);
             $this->blockData->setImport($this->import);
