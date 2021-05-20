@@ -14,7 +14,7 @@
                     <td>{{ import.type }}</td>
                     <td>{{ import.author.lastname ?? '' }} {{ import.author.firstname ?? '' }}</td>
                     <td>
-                        <a class="no-responsive-button btn btn-primary" href="{{ path('graph', {'id': import.id }) }}">
+                        <a class="no-responsive-button btn btn-secondary" href="{{ path('graph', {'id': import.id }) }}">
                             Voir
                         </a>
                         <a class="responsive-button" href="{{ path('graph', {'id': import.id }) }}">
