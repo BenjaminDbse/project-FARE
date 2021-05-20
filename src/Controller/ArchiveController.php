@@ -9,7 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Datetime;
 
 class ArchiveController extends AbstractController
 {
@@ -20,7 +19,11 @@ class ArchiveController extends AbstractController
      * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function index(Request $request, ImportRepository $importRepository, PaginatorInterface $paginator): Response
+    public function index(
+        Request $request,
+        ImportRepository $importRepository,
+        PaginatorInterface $paginator
+    ): Response
     {
         $form = $this->createForm(SearchImportType::class);
         $form->handleRequest($request);

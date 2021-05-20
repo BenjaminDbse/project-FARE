@@ -201,7 +201,6 @@ class ImportController extends AbstractController
             $this->counter += 1;
         } else {
             $this->loopTreatment = 1;
-            $this->counter -= 1;
         }
     }
 
