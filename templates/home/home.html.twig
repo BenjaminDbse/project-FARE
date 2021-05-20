@@ -13,8 +13,12 @@
                     <td>{{ import.title }}</td>
                     <td>{{ import.author.lastname ?? '' }} {{ import.author.firstname ?? '' }}</td>
                     <td>
-                        <a class="btn btn-primary"
-                           href="{{ path('graph', {'id': import.id }) }}">Voir</a>
+                        <a class="no-responsive-button btn btn-primary" href="{{ path('graph', {'id': import.id }) }}">
+                            Voir
+                        </a>
+                        <a class="responsive-button" href="{{ path('graph', {'id': import.id }) }}">
+                            <img src="{{ asset('build/images/eye.png') }}" alt="eye">
+                        </a>
                     </td>
                 </tr>
             {% else %}

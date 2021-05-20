@@ -59,6 +59,12 @@ class Import
      */
     private User $author;
 
+    /**
+     * @ORM\Column(type="string", length=20)
+     * @Assert\NotBlank
+     */
+    private string $type;
+
     public function __construct()
     {
         $this->data = new ArrayCollection();
@@ -157,5 +163,17 @@ class Import
     public function __toString(): string
     {
         return $this->author;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
     }
 }

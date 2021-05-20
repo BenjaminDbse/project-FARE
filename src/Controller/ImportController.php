@@ -60,7 +60,8 @@ class ImportController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $this->import->setTitle($form->get('title')->getData());
             $this->import->setDatetime(new DateTime('now'));
-            /** La variable user est une instance de l'entité User
+            $this->import->setType('Enregistrement');
+            /**
              * @var User $user
              */
             $user = $this->getUser();
@@ -154,7 +155,7 @@ class ImportController extends AbstractController
     {
         $status = substr($line, -4);
         $status = trim($status);
-        $this->arrayData[$this->counter]['status'] = intval($status);
+        $this->arrayData[$this->counter]['status'] = $status;
         $this->loopTreatment += 1;
     }
 
@@ -225,14 +226,14 @@ class ImportController extends AbstractController
     {
         $this->blockData->setDatetime($this->date);
         $this->blockData->setAdr($this->arrayData[$this->counter]['adr']);
-        $this->blockData->setStatus($this->arrayData[$this->counter]['status']);
-        $this->blockData->setDelta1($this->dataClean[0] / self::DIVISION_DATA);
-        $this->blockData->setDelta2($this->dataClean[2] / self::DIVISION_DATA);
-        $this->blockData->setFilterRatio($this->dataClean[4]);
-        $this->blockData->setTemperatureCorrection($this->dataClean[6] / self::DIVISION_DATA);
-        $this->blockData->setSlopeTemperatureCorrection($this->dataClean[8] / self::DIVISION_DATA);
-        $this->blockData->setRawCo($this->dataClean[10]);
-        $this->blockData->setCoCorrection($this->dataClean[12]);
+        $this->blockData->setStatus(intval($this->arrayData[$this->counter]['status']));
+        $this->blockData->setDelta1(($this->dataClean[0] / self::DIVISION_DATA));
+        $this->blockData->setDelta2(($this->dataClean[2] / self::DIVISION_DATA));
+        $this->blockData->setFilterRatio(($this->dataClean[4]));
+        $this->blockData->setTemperatureCorrection(($this->dataClean[6] / self::DIVISION_DATA));
+        $this->blockData->setSlopeTemperatureCorrection(($this->dataClean[8] / self::DIVISION_DATA));
+        $this->blockData->setRawCo(($this->dataClean[10]));
+        $this->blockData->setCoCorrection(($this->dataClean[12]));
         $this->blockData->setImport($this->import);
     }
 

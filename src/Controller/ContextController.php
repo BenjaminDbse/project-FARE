@@ -40,6 +40,7 @@ class ContextController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $import->setTitle($form->get('title')->getData());
             $import->setDatetime(new DateTime('now'));
+            $import->setType('Contexte');
             /** La variable user est une instance de l'entité User
              * @var User $user
              */
@@ -66,9 +67,7 @@ class ContextController extends AbstractController
     }
     private function moveAndNameFile(object $dataFile)
     {
-        /* Nom du fichier importé */
         $this->nameFile = pathinfo($dataFile->getClientOriginalName(), PATHINFO_FILENAME) . '.ctx';
-        /*Déplacement du fichier importé */
         move_uploaded_file($dataFile->getPathName(), __DIR__ . self::LOCATION_FILE . $this->nameFile);
     }
 }
