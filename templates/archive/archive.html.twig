@@ -19,7 +19,8 @@
             <thead class="thead-light">
             <tr>
                 <th class="tdTime">Date d'import</th>
-                <th>Titre</th>
+                <th class="tdTime">Titre</th>
+                <th>Type</th>
                 <th>Importé par</th>
                 <th>Actions</th>
             </tr>
@@ -29,6 +30,7 @@
                 <tr>
                     <td class="tdTime">{{ import.datetime|format_datetime('full', 'short', locale='fr') }}</td>
                     <td>{{ import.title }}</td>
+                    <td class="tdTime">{{ import.type }}</td>
                     <td>{{ import.author.lastname ?? '' }} {{ import.author.firstname ?? '' }}</td>
                     <td>
                         <a class="no-responsive-button btn btn-primary"
