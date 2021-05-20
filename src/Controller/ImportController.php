@@ -187,23 +187,22 @@ class ImportController extends AbstractController
                 $this->blockData->setAlarm($this->arrayData[$this->counter]['alarm']);
             }
             $entityManager->persist($this->blockData);
+            $this->data1[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta1();
+            $this->data2[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta2();
+            $this->data3[$this->arrayData[$this->counter]['adr']] = $this->blockData->getFilterRatio();
+            $this->data4[$this->arrayData[$this->counter]['adr']] = $this->blockData->getTemperatureCorrection();
+            $this->data5[$this->arrayData[$this->counter]['adr']] = $this->blockData->getSlopeTemperatureCorrection();
+            $this->data6[$this->arrayData[$this->counter]['adr']] = $this->blockData->getRawCo();
+            $this->data7[$this->arrayData[$this->counter]['adr']] = $this->blockData->getCoCorrection();
+            if (!empty($this->dataClean)) {
+                $this->dataClean = [];
+            }
+            $this->loopTreatment = 1;
+            $this->counter += 1;
         } else {
             $this->loopTreatment = 1;
             $this->counter -= 1;
         }
-        $this->data1[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta1();
-        $this->data2[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta2();
-        $this->data3[$this->arrayData[$this->counter]['adr']] = $this->blockData->getFilterRatio();
-        $this->data4[$this->arrayData[$this->counter]['adr']] = $this->blockData->getTemperatureCorrection();
-        $this->data5[$this->arrayData[$this->counter]['adr']] = $this->blockData->getSlopeTemperatureCorrection();
-        $this->data6[$this->arrayData[$this->counter]['adr']] = $this->blockData->getRawCo();
-        $this->data7[$this->arrayData[$this->counter]['adr']] = $this->blockData->getCoCorrection();
-        if (!empty($this->dataClean)) {
-            $this->dataClean = [];
-        }
-        $this->loopTreatment = 1;
-        $this->counter += 1;
-
     }
 
     private function calculateData(array $arrayData)
