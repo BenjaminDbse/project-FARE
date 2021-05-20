@@ -187,6 +187,9 @@ class ImportController extends AbstractController
                 $this->blockData->setAlarm($this->arrayData[$this->counter]['alarm']);
             }
             $entityManager->persist($this->blockData);
+        } else {
+            $this->loopTreatment = 1;
+            $this->counter -= 1;
         }
         $this->data1[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta1();
         $this->data2[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta2();
