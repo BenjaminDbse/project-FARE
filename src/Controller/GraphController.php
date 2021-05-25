@@ -189,6 +189,9 @@ class GraphController extends AbstractController
             'status' => $this->status,
             'conditions' => $this->condition,
             'algos' => $algo,
+            'algoSelected' => $this->algoName,
+            'startDate' => $startDate ?? '',
+            'endDate' => $endDate ?? '',
         ]);
     }
 
