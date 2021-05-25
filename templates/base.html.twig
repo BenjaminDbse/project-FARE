@@ -57,11 +57,11 @@
         {% endfor %}
     {% endblock %}
 </header>
-{# {% block slogan %}
-        <div class="align-self-center  pt-5">
-            <h1 class="sloganTitle">Traitement et analyse des données de situation de feu et de non feu.</h1>
-        </div>
-    {% endblock %} #}
+<mainTitle>
+    {% block slogan %}
+        <h1 class="sloganTitle text-center text-secondary font-weight-bolder">Traitement et analyse des données</h1>
+    {% endblock %}
+</mainTitle>
 {% block navbar %} {% include '_include/_navbar.html.twig' %} {% endblock %}
 {% block body %}{% endblock %}
 {% block javascripts %}
