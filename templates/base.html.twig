@@ -18,35 +18,40 @@
                 </a>
             </div>
             <div class="d-flex">
-                <div class="d-flex">
-                    {% if app.user %}
-                    <p class="nav-link no-responsive-button">Mon compte</p>
-                    <a href="{{ path('account') }}"
-                       class="hover text-primary">
-                        <img src="{{ asset('build/images/user.png') }}" alt="connection">
-                    </a>
-                </div>
-                <div class="d-flex">
-                    <p class="nav-link no-responsive-button">Se déconnecter</p>
-                    <a class="hover text-secondary" href="{{ path('app_logout') }}">
-                        <img class="exit" src="{{ asset('build/images/sortir.png') }}" alt="deconnexion">
-                    </a>
-                </div>
-            </div>
-            {% else %}
-                <div class="align-content-end">
-                    <div class="d-flex responsive-connect">
-                        <div class="btn btn-secondary">
-                        <a class="text-white" href="{{ path('app_login') }}"> Se connecter</a>
-                        </div>
-                        <div class="btn-responsive btn btn-white border-dark ml-2 mr-2">
-                        <a class="text-secondary" href="{{ path('app_register') }}">Créer un compte</a>
+                {% if app.user %}
+                    <div class="d-flex">
+                        <p class="nav-link no-responsive-button">Mon compte</p>
+                        <a href="{{ path('account') }}"
+                           class="hover text-primary">
+                            <img src="{{ asset('build/images/user.png') }}" alt="connection">
+                        </a>
+                    </div>
+                    <div class="d-flex mr-2">
+                        <p class="nav-link no-responsive-button">Se déconnecter</p>
+                        <a class="hover text-secondary" href="{{ path('app_logout') }}">
+                            <img class="exit" src="{{ asset('build/images/sortir.png') }}" alt="deconnexion">
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="align-content-end">
+                        <div class="d-flex responsive-connect">
+                            <div class="btn btn-secondary">
+                                <a class="text-white" href="{{ path('app_login') }}"> Se connecter</a>
+                            </div>
+                            <div class="btn-responsive btn btn-white border-dark ml-2 mr-2">
+                                <a class="text-secondary" href="{{ path('app_register') }}">Créer un compte</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
     {% endblock %}
+    {% block slogan %}
+        <h1 class="sloganTitle text-center text-secondary font-weight-bolder">Traitement et analyse des données</h1>
+    {% endblock %}
+</header>
+<flash>
     {% block flash %}
         {% for category, messages in app.flashes %}
             {% for message in messages %}
@@ -56,12 +61,7 @@
             {% endfor %}
         {% endfor %}
     {% endblock %}
-</header>
-<mainTitle>
-    {% block slogan %}
-        <h1 class="sloganTitle text-center text-secondary font-weight-bolder">Traitement et analyse des données</h1>
-    {% endblock %}
-</mainTitle>
+</flash>
 {% block navbar %} {% include '_include/_navbar.html.twig' %} {% endblock %}
 {% block body %}{% endblock %}
 {% block javascripts %}
