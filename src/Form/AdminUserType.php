@@ -12,7 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UserType extends AbstractType
+class AdminUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -23,6 +23,10 @@ class UserType extends AbstractType
             ])
             ->add('lastname', TextType::class, [
                 'label' => 'Nom'
+            ])
+            ->add('verified', CheckboxType::class, [
+                'label' => 'Passer le compte en administrateur',
+                'required' => false,
             ])
         ;
     }
