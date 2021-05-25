@@ -7,7 +7,7 @@
             <select class="mb-3" name="adr" id="adr">
                 <option class="bg-secondary" value="">-Choix-</option>
                 {% for adr in adrs %}
-                    <option class="bg-secondary text-light" value="{{ adr }}">{{ adr }}</option>
+                    <option class="bg-secondary text-light" value="{{ adr }}"{{ adr == adrChoice ? 'selected' : ''}}>{{ adr }}</option>
                 {% endfor %}
             </select>
         </div>

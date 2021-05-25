@@ -1,26 +1,9 @@
 @import "app.scss";
 
-.condition {
-  display: grid;
-  grid-template-columns: 30% 30% 30%;
-  grid-column-gap: 20px;
-  grid-row-gap: 20px;
-}
-
 .graph {
   width: 100%;
   height: $height-graph;
 }
-
-@media screen and (max-width: 1000px) {
-  .condition {
-    display: grid;
-    grid-template-columns: 100%;
-    grid-column-gap: 5px;
-    grid-row-gap: 5px;
-  }
-}
-
 @media screen and (max-width: 420px) {
   .filters {
     display: flex;
