@@ -11,28 +11,38 @@
 <body>
 <header>
     {% block connexion %}
-        <div class="d-flex justify-content-end">
-            {% if app.user %}
-                <div>
-                    <p class="connected nav-link">Vous êtes connecté en tant que</p>
-                </div>
-                <div>
+        <div class="d-flex justify-content-between my-4">
+            <div>
+                <a class="hover linkSlogan" href="{{ path('home') }}">
+                    <img class="imgSlogan ml-5" src="{{ asset('build/images/logo-fare.png') }}" alt="logo FARE">
+                </a>
+            </div>
+            <div class="d-flex">
+                <div class="d-flex">
+                    {% if app.user %}
+                    <p class="nav-link no-responsive-button">Mon compte</p>
                     <a href="{{ path('account') }}"
-                       class="nav-link text-primary">{{ app.user.lastname }} {{ app.user.firstname }}</a>
+                       class="hover text-primary">
+                        <img src="{{ asset('build/images/user.png') }}" alt="connection">
+                    </a>
                 </div>
-                <div>
-                    <a class="hover nav-link text-secondary" href="{{ path('app_logout') }}">
-                        [Se déconnecter]</a>
+                <div class="d-flex">
+                    <p class="nav-link no-responsive-button">Se déconnecter</p>
+                    <a class="hover text-secondary" href="{{ path('app_logout') }}">
+                        <img class="exit" src="{{ asset('build/images/sortir.png') }}" alt="deconnexion">
+                    </a>
                 </div>
+            </div>
             {% else %}
-                <div>
-                    <a class="hover nav-link" href="{{ path('app_login') }}"> Se connecter</a>
-                </div>
-                <div class="nav-link">
-                    ou
-                </div>
-                <div>
-                    <a class="hover nav-link" href="{{ path('app_register') }}">Créer un compte</a>
+                <div class="align-content-end">
+                    <div class="d-flex responsive-connect">
+                        <div class="btn btn-secondary">
+                        <a class="text-white" href="{{ path('app_login') }}"> Se connecter</a>
+                        </div>
+                        <div class="btn-responsive btn btn-white border-dark ml-2 mr-2">
+                        <a class="text-secondary" href="{{ path('app_register') }}">Créer un compte</a>
+                        </div>
+                    </div>
                 </div>
             {% endif %}
         </div>
@@ -46,16 +56,12 @@
             {% endfor %}
         {% endfor %}
     {% endblock %}
-    {% block slogan %}
-        <div class="container-fluid d-flex">
-            <a class="hover linkSlogan" href="{{ path('home') }}">
-                <img class="imgSlogan pt-5 ml-5" src="{{ asset('build/images/logo-fare.png') }}" alt="logo FARE"></a>
-            <div class="align-self-center  pt-5">
-                <h1 class="sloganTitle">Traitement et analyse des données d'alarme.</h1>
-            </div>
-        </div>
-    {% endblock %}
 </header>
+{# {% block slogan %}
+        <div class="align-self-center  pt-5">
+            <h1 class="sloganTitle">Traitement et analyse des données de situation de feu et de non feu.</h1>
+        </div>
+    {% endblock %} #}
 {% block navbar %} {% include '_include/_navbar.html.twig' %} {% endblock %}
 {% block body %}{% endblock %}
 {% block javascripts %}

@@ -7,8 +7,8 @@
 {% block body %}
     <div class="container mt-5 my-5">
         <div class="d-flex justify-content-center my-5">
-            <h2 class="text-secondary mt-1 font-weight-bold">{{ import.title }}</h2>
-            <p class="mt-3"><small class="text-muted font-italic">(Importé
+            <h2 class="text-secondary mt-1 font-weight-bold">{{ import.title }} </h2>
+            <p class="mt-3 ml-2"><small class="text-muted font-italic"> (Importé
                     par {{ import.author.firstname }} {{ import.author.lastname }})</small></p>
         </div>
         <div class="filters d-flex justify-content-around">
@@ -29,13 +29,12 @@
             </div>
         </div>
     </div>
-    <h3 class="text-center text-secondary">Adresse sélectionnée : <strong>{{ adrChoice ?? '' }}</strong></h3>
     <div class="chart-container mt-5">
         {% include '/_include/_graphique.html.twig' %}
     </div>
-    <div class="condition justify-content-center m-5">
+    <div class="d-flex flex-wrap">
         {% for condition in conditions %}
-            <div class="card p-5">
+            <div class="card p-5 m-2">
                 Le détecteur {{ adrChoice ?? '' }} est passé du status {{ condition|join(' à  ','   le  ') }}
             </div>
         {% endfor %}

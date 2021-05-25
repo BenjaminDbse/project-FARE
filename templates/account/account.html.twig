@@ -23,20 +23,19 @@
     <h3 class="text-center my-5 text-secondary font-italic">Gestion des Comptes</h3>
     </div>
     <div class="row">
-        <div class="card-user">
+        <div class="d-flex flex-wrap justify-content-around">
             {% for user in users %}
-                <div class="card">
+                <div class="card p-3 m-2">
                     <ul>
                         <li>Nom : {{ user.lastname }}</li>
                         <li>Prénom: {{ user.firstname }}</li>
-                        <li>Email: {{ user.email }}</li>
-                        <div class="d-flex option justify-content-around">
-                            <div class="">
+                        <div class="d-flex option justify-content-around mt-2 p-0">
+                            <div>
                             <a href="{{ path('user_edit', {'id': user.id }) }}">
                                 <img src="{{ asset('build/images/setting.png') }}" alt="setting">
                             </a>
                             </div>
-                            <div class="">
+                            <div>
                                 <a class="" href="{{ path('user_delete', {'id': app.user.id }) }}">
                                     <img src="{{ asset('build/images/delete.png') }}" alt="trashcan">
                                 </a>

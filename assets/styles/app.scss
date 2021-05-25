@@ -31,14 +31,6 @@ a {
   font-weight: bold;
 }
 
-/* Page account grid des cards users */
-.card-user {
-  display: grid;
-  grid-template-columns: 45% 45% 45%;
-  grid-column-gap: 10px;
-  grid-row-gap: 10px;
-}
-
 .responsive-button {
   display: none;
 }
@@ -56,16 +48,22 @@ a {
   .connected {
     display: none;
   }
-  .card-user {
-    display: grid;
-    grid-template-columns: 100%;
-    grid-column-gap: 5px;
-    grid-row-gap: 5px;
-  }
   .responsive-button {
     display: flex;
   }
   .no-responsive-button {
     display: none;
+  }
+  .exit {
+    margin-left: $responsive-space;
+  }
+  .responsive-connect {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: $responsive-space * 2;
+  }
+  .btn-responsive {
+    margin-top: $responsive-space;
   }
 }

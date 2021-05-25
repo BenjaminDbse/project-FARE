@@ -49,7 +49,7 @@ class ContextController extends AbstractController
             $entityManager->persist($import);
             $dataFile = $form->get('file')->getData();
             $this->moveAndNameFile($dataFile);
-            $treatment = fopen(__DIR__ . self::LOCATION_FILE . $this->nameFile, 'rb');
+            $treatment = fopen(__DIR__ . self::LOCATION_FILE . $this->nameFile, 'r');
             while (!feof($treatment)) {
                 $blockData = new Data;
                 $line = fgets($treatment);

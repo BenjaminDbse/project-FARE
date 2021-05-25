@@ -7,7 +7,7 @@
             <select class="mb-3" name="algo" id="algo">
                 <option class="bg-secondary" value="">-Choix-</option>
                 {% for algo in algos %}
-                    <option class="bg-secondary text-light" value="{{ algo.id }}">{{ algo.name }}</option>
+                    <option class="bg-secondary text-light" value="{{ algo.id }}"{{ algo.name == algoSelected ? 'selected' : ''}}>{{ algo.name }}</option>
                 {% endfor %}
             </select>
         </div>
