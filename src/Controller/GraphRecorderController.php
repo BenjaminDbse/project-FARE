@@ -12,11 +12,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+
 
 /**
- * @Route("/graphique")
+ * @Route("/graphique-enregistrement", name="graph_")
  */
-class GraphController extends AbstractController
+class GraphRecorderController extends AbstractController
 {
     const VALUE_ALARM = 50;
     private array $delta1 = [];
@@ -39,8 +41,9 @@ class GraphController extends AbstractController
     private array $curveEstimateAlarm = [];
 
     /**
-     * @Route("/{id}", name="graph", methods={"GET","POST"})
+     * @Route("/{id}", name="recorder", methods={"GET","POST"})
      * @param Import $import
+     * @ParamConverter("import", class="App\Entity\Import", options={"mapping": {"id": "id"}})
      * @param ChartBuilderInterface $chartBuilder
      * @param DataRepository $dataRepository
      * @param AlgoRepository $algoRepository
@@ -180,7 +183,7 @@ class GraphController extends AbstractController
             ],
             "maintainAspectRatio" => false,
         ]);
-        return $this->render('graph/graph.html.twig', [
+        return $this->render('graph/graphRecorder.html.twig', [
             "chart" => $chart,
             "import" => $import,
             'adrs' => $adr,

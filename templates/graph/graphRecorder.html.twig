@@ -43,6 +43,6 @@
         {% if is_granted("ROLE_ADMIN") or import.author == app.user %}
             {{ include('import/_delete_form.html.twig') }}
         {% endif %}
-        <a class="btn btn-secondary text-white ml-2" href="{{ path('archive') }}">Retour</a>
+        <a class="btn btn-secondary text-white ml-2" href="{{ path('archive_recorder') }}">Retour</a>
     </div>
 {% endblock %}
