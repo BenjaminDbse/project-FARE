@@ -21,6 +21,9 @@ class AccountController extends AbstractController
      */
     public function account(ImportRepository $importRepository, UserRepository $userRepository): Response
     {
+        if (!($this->getUser())) {
+            return $this->redirectToRoute('app_login');
+        }
         $imports = $importRepository->findBy(['author' => $this->getUser()]);
         return $this->render('account/account.html.twig',
             [

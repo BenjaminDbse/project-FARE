@@ -35,8 +35,7 @@ class Import
     /**
      * @Assert\File(
      *      mimeTypes = {
-     *         "text/plain",
-     *         "application/octet-stream"
+     *         "text/plain"
      *      })
      * @var File
      */

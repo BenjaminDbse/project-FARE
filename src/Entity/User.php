@@ -58,9 +58,15 @@ class User implements UserInterface
      */
     private $verified;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ImportContext::class, mappedBy="author")
+     */
+    private $importContexts;
+
     public function __construct()
     {
         $this->imports = new ArrayCollection();
+        $this->importContexts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -205,6 +211,36 @@ class User implements UserInterface
     public function setVerified(?bool $verified): self
     {
         $this->verified = $verified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ImportContext[]
+     */
+    public function getImportContexts(): Collection
+    {
+        return $this->importContexts;
+    }
+
+    public function addImportContext(ImportContext $importContext): self
+    {
+        if (!$this->importContexts->contains($importContext)) {
+            $this->importContexts[] = $importContext;
+            $importContext->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImportContext(ImportContext $importContext): self
+    {
+        if ($this->importContexts->removeElement($importContext)) {
+            // set the owning side to null (unless already changed)
+            if ($importContext->getAuthor() === $this) {
+                $importContext->setAuthor(null);
+            }
+        }
 
         return $this;
     }
