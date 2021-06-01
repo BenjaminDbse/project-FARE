@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Form\ImportType;
 use App\Entity\Import;
 use App\Entity\Data;
+use App\Service\Recorder;
 
 /**
  * @Route("/import", name="import_")
@@ -45,9 +46,10 @@ class ImportController extends AbstractController
     /**
      * @Route("/", name="import", methods={"GET", "POST"})
      * @param Request $request
+     * @param Recorder $recorder
      * @return Response
      */
-    public function import(Request $request): Response
+    public function import(Request $request, Recorder $recorder): Response
     {
         if (!($this->getUser())) {
             return $this->redirectToRoute('app_login');
@@ -59,7 +61,6 @@ class ImportController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $this->import->setTitle($form->get('title')->getData());
-            $this->import->setType('Enregistrement');
             $this->import->setDatetime(new DateTime('now'));
             /** La variable user est une instance de l'entité User
              * @var User $user
@@ -70,6 +71,41 @@ class ImportController extends AbstractController
             $dataFile = $form->get('file')->getData();
             $nameFile = $this->moveAndNameFile($dataFile);
             $treatment = fopen(__DIR__ . self::LOCATION_FILE . $nameFile, 'r');
+            $type = $form->get('category')->getData()->getid();
+            $this->import->setCategory($form->get('category')->getData());
+            $arrayData = [];
+
+            if ($type === 1) {
+                while (($line = fgets($treatment,137)) !== false) {
+                    $arrayData[] = trim($line);
+                }
+                fclose($treatment);
+                unlink(__DIR__ . self::LOCATION_FILE . $nameFile);
+                $arrayData = $recorder->treatment($arrayData);
+            }
+            if (empty($arrayData['errors'])) {
+                $this->blockData = new Data;
+                for ($i = 1 ; $i < count($arrayData) ; $i += 3){
+                    $this->blockData->setAdr($arrayData[$i]['adr']);
+                    $this->blockData->setDatetime($arrayData[$i]['date']);
+                    $this->blockData->setStatus($arrayData[$i]['status']);
+                    $this->blockData->setDelta1($arrayData[$i]['data'][0]);
+                    $this->blockData->setDelta2($arrayData[$i]['data'][2]);
+                    $this->blockData->setFilterRatio($arrayData[$i]['data'][4]);
+                    $this->blockData->setTemperatureCorrection($arrayData[$i]['data'][6]);
+                    $this->blockData->setSlopeTemperatureCorrection($arrayData[$i]['data'][8]);
+                    $this->blockData->setRawCo($arrayData[$i]['data'][10]);
+                    $this->blockData->setCoCorrection($arrayData[$i]['data'][12]);
+                    $this->blockData->setCategory();
+                    dd($this->blockData);
+                }
+            }
+
+            dd($arrayData);
+
+
+
+
             while (!feof($treatment)) {
                 /* Initialisation des variables qui me servent à boucler sur 3 lignes différentes
                 et instantiation de Data  */
@@ -86,8 +122,6 @@ class ImportController extends AbstractController
                 }
                 $entityManager->flush();
             }
-            fclose($treatment);
-            unlink(__DIR__ . self::LOCATION_FILE . $nameFile);
             $this->addFlash('success', 'L\'importation à bien été effectuée');
             return $this->redirectToRoute('home');
         }

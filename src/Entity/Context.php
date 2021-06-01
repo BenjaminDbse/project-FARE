@@ -20,12 +20,6 @@ class Context
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ImportContext::class, inversedBy="contexts")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $import;
-
-    /**
      * @ORM\Column(type="integer")
      */
     private $number;
@@ -125,24 +119,12 @@ class Context
         $this->contextData = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getImport(): ?ImportContext
-    {
-        return $this->import;
-    }
-
-    public function setImport(?ImportContext $import): self
-    {
-        $this->import = $import;
-
-        return $this;
-    }
-
-    public function getNumber(): ?int
+    public function getNumber(): int
     {
         return $this->number;
     }
@@ -154,7 +136,7 @@ class Context
         return $this;
     }
 
-    public function getAdr(): ?int
+    public function getAdr(): int
     {
         return $this->adr;
     }
@@ -214,7 +196,7 @@ class Context
         return $this;
     }
 
-    public function getAlgo(): ?int
+    public function getAlgo(): int
     {
         return $this->algo;
     }
@@ -226,7 +208,7 @@ class Context
         return $this;
     }
 
-    public function getEvalutionCase(): ?int
+    public function getEvalutionCase(): int
     {
         return $this->evalutionCase;
     }
@@ -238,7 +220,7 @@ class Context
         return $this;
     }
 
-    public function getHalfContext(): ?int
+    public function getHalfContext(): int
     {
         return $this->halfContext;
     }
@@ -250,7 +232,7 @@ class Context
         return $this;
     }
 
-    public function getProductIdentifier(): ?int
+    public function getProductIdentifier(): int
     {
         return $this->productIdentifier;
     }
@@ -274,7 +256,7 @@ class Context
         return $this;
     }
 
-    public function getVelocimeter(): ?float
+    public function getVelocimeter(): float
     {
         return $this->velocimeter;
     }
@@ -286,7 +268,7 @@ class Context
         return $this;
     }
 
-    public function getEncrOne(): ?float
+    public function getEncrOne(): float
     {
         return $this->encrOne;
     }
@@ -298,7 +280,7 @@ class Context
         return $this;
     }
 
-    public function getEncrTwo(): ?float
+    public function getEncrTwo(): float
     {
         return $this->encrTwo;
     }
@@ -310,7 +292,7 @@ class Context
         return $this;
     }
 
-    public function getRatioAlarm(): ?float
+    public function getRatioAlarm(): float
     {
         return $this->ratioAlarm;
     }
@@ -322,7 +304,7 @@ class Context
         return $this;
     }
 
-    public function getDeltaSeuil(): ?float
+    public function getDeltaSeuil(): float
     {
         return $this->deltaSeuil;
     }
@@ -334,7 +316,7 @@ class Context
         return $this;
     }
 
-    public function getTempAlarm(): ?float
+    public function getTempAlarm(): float
     {
         return $this->tempAlarm;
     }
@@ -346,7 +328,7 @@ class Context
         return $this;
     }
 
-    public function getSlopeSeuil(): ?float
+    public function getSlopeSeuil(): float
     {
         return $this->slopeSeuil;
     }

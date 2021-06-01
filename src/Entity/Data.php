@@ -61,11 +61,6 @@ class Data
     private DateTimeInterface $datetime;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Import::class, inversedBy="data")
-     */
-    private Import $import;
-
-    /**
      * @ORM\Column(type="integer")
      */
     private int $adr;
@@ -79,6 +74,12 @@ class Data
      * @ORM\Column(type="integer", nullable=true)
      */
     private ?int $alarm;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="data")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
 
     public function getId(): int
     {
@@ -181,18 +182,6 @@ class Data
         return $this;
     }
 
-    public function getImport(): Import
-    {
-        return $this->import;
-    }
-
-    public function setImport(Import $import): self
-    {
-        $this->import = $import;
-
-        return $this;
-    }
-
     public function getAdr(): int
     {
         return $this->adr;
@@ -225,6 +214,18 @@ class Data
     public function setAlarm(?int $alarm): self
     {
         $this->alarm = $alarm;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }

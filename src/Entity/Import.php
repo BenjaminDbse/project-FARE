@@ -59,16 +59,6 @@ class Import
     private User $author;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     */
-    private ?string $type;
-
-    public function __construct()
-    {
-        $this->data = new ArrayCollection();
-    }
-
-    /**
      * @return mixed
      */
     public function getId()
@@ -117,36 +107,6 @@ class Import
         return $this;
     }
 
-    /**
-     * @return Collection|Data[]
-     */
-    public function getData(): Collection
-    {
-        return $this->data;
-    }
-
-    public function addData(Data $data): self
-    {
-        if (!$this->data->contains($data)) {
-            $this->data[] = $data;
-            $data->setImport($this);
-        }
-
-        return $this;
-    }
-
-    public function removeData(Data $data): self
-    {
-        if ($this->data->removeElement($data)) {
-            // set the owning side to null (unless already changed)
-            if ($data->getImport() === $this) {
-                $data->setImport(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getAuthor(): User
     {
         return $this->author;
@@ -155,22 +115,6 @@ class Import
     public function setAuthor(User $author): self
     {
         $this->author = $author;
-
-        return $this;
-    }
-    public function __toString(): string
-    {
-        return $this->author;
-    }
-
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    public function setType(?string $type): self
-    {
-        $this->type = $type;
 
         return $this;
     }

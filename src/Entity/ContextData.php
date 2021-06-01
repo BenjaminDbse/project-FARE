@@ -63,6 +63,12 @@ class ContextData
      */
     private float $co;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="contextData")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
+
     public function getId(): int
     {
         return $this->id;
@@ -172,6 +178,18 @@ class ContextData
     public function setCo(float $co): self
     {
         $this->co = $co;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }

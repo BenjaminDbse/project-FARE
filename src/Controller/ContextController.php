@@ -5,9 +5,8 @@ namespace App\Controller;
 use App\Entity\Context;
 use App\Entity\ContextData;
 use App\Entity\Data;
-use App\Entity\ImportContext;
+use App\Entity\Import;
 use App\Entity\User;
-use App\Form\ImportContextType;
 use App\Form\ImportType;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,7 +24,6 @@ class ContextController extends AbstractController
     const LOCATION_FILE = '/../../public/imports/';
     const NUMBER_OF_CONTEXT = 2;
     const NUMBER_OF_ELEMENTARY = 15;
-    private ImportContext $import;
     private Context $context;
     private ContextData $data;
     private string $nameFile;
@@ -45,8 +43,8 @@ class ContextController extends AbstractController
         if (!($this->getUser())) {
             return $this->redirectToRoute('app_login');
         }
-        $this->import = new ImportContext;
-        $form = $this->createForm(ImportContextType::class, $this->import);
+        $this->import = new Import;
+        $form = $this->createForm(ImportType::class, $this->import);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

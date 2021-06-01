@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\ImportContext;
 use App\Form\SearchImportType;
 use App\Repository\ImportContextRepository;
 use App\Repository\ImportRepository;
@@ -13,12 +12,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/archives", name="archive_")
+ * @Route("/archives")
  * */
 class ArchiveController extends AbstractController
 {
     /**
-     * @Route("/enregistrements", name="recorder", methods={"GET", "POST"})
+     * @Route("/enregistrements", name="archive", methods={"GET", "POST"})
      * @param Request $request
      * @param ImportRepository $importRepository
      * @return Response
@@ -38,31 +37,6 @@ class ArchiveController extends AbstractController
             }
         }
         return $this->render('archive/recorder.html.twig', [
-            'form' => $form->createView(),
-            'imports' => $imports,
-        ]);
-    }
-    /**
-     * @Route("/contextes", name="context", methods={"GET", "POST"})
-     * @param Request $request
-     * @param ImportContextRepository $importContextRepository
-     * @return Response
-     */
-    public function context(
-        Request $request,
-        ImportContextRepository $importContextRepository
-    ): Response
-    {
-        $form = $this->createForm(SearchImportType::class);
-        $form->handleRequest($request);
-        $imports = $importContextRepository->findAll();
-        if ($form->isSubmitted() && $form->isValid()) {
-            $search = $form->getData()['search'];
-            if (!empty($search)) {
-                $imports = $importContextRepository->findLikeName($search);
-            }
-        }
-        return $this->render('archive/context.html.twig', [
             'form' => $form->createView(),
             'imports' => $imports,
         ]);
