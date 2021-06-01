@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use DateTime;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -244,6 +245,7 @@ class ImportController extends AbstractController
      * @Route("/{id}", name="delete", methods={"DELETE"})
      * @param Request $request
      * @param Import $import
+     * @ParamConverter("import", class="App\Entity\Import", options={"mapping": {"id": "id"}})
      * @return Response
      */
     public function delete(Request $request, Import $import): Response
@@ -252,8 +254,8 @@ class ImportController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($import);
             $entityManager->flush();
+            $this->addFlash('danger', 'L\'Archive à bien été supprimée');
         }
-        $this->addFlash('danger', 'L\'Archive à bien été supprimée');
-        return $this->redirectToRoute('archive');
+        return $this->redirectToRoute('archive_recorder');
     }
 }
