@@ -46,4 +46,21 @@ class AdminUserController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * @Route("/{id}", name="delete", methods={"DELETE"})
+     * @param Request $request
+     * @param User $user
+     * @return Response
+     */
+    public function delete(Request $request, User $user): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($user);
+            $entityManager->flush();
+            $this->addFlash('danger', 'L\'utilisateur à bien été supprimé.');
+        }
+        return $this->redirectToRoute('account');
+    }
 }
