@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\AdminUserType;
+use App\Repository\ImportRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,5 +46,27 @@ class AdminUserController extends AbstractController
             'user' => $user,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/{id}", name="delete", methods={"DELETE"})
+     * @param Request $request
+     * @param User $user
+     * @param ImportRepository $importRepository
+     * @return Response
+     */
+    public function delete(Request $request, User $user, ImportRepository $importRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $importsUser = $importRepository->findBy(['author' => $user]);
+            foreach ($importsUser as $import) {
+                $import->setAuthor(null);
+            }
+            $entityManager->remove($user);
+            $entityManager->flush();
+            $this->addFlash('danger', 'L\'utilisateur à bien été supprimé.');
+        }
+        return $this->redirectToRoute('account');
     }
 }

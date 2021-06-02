@@ -79,7 +79,7 @@ class Data
      * @ORM\ManyToOne(targetEntity=Import::class, inversedBy="datas")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $import;
+    private Import $import;
 
     public function getId(): int
     {
@@ -218,12 +218,12 @@ class Data
         return $this;
     }
 
-    public function getImport(): ?Import
+    public function getImport(): Import
     {
         return $this->import;
     }
 
-    public function setImport(?Import $import): self
+    public function setImport(Import $import): self
     {
         $this->import = $import;
 

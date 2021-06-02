@@ -48,9 +48,9 @@ class Import
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="imports")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
-    private User $author;
+    private ?User $author;
 
     /**
      * @ORM\OneToMany(targetEntity=Data::class, mappedBy="import", orphanRemoval=true)
@@ -123,12 +123,12 @@ class Import
         return $this;
     }
 
-    public function getAuthor(): User
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    public function setAuthor(User $author): self
+    public function setAuthor(?User $author): self
     {
         $this->author = $author;
 

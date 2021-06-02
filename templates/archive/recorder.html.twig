@@ -31,7 +31,7 @@
                     <td class="tdTime">{{ import.datetime|format_datetime('full', 'short', locale='fr') }}</td>
                     <td>{{ import.title }}</td>
                     <td class="tdTime">{{ import.category.name }}</td>
-                    <td>{{ import.author.lastname ?? '' }} {{ import.author.firstname ?? '' }}</td>
+                    <td>{{ import.author.lastname ?? 'Utilisateur' }} {{ import.author.firstname ?? 'supprimé' }}</td>
                     <td>
                         <a class="no-responsive-button btn btn-secondary"
                            href="{{ path('graph_recorder', {'id': import.id }) }}">
@@ -47,7 +47,7 @@
                             {{ include('import/_delete_form.html.twig') }}
                             </div>
                             <div class="responsive-button">
-                                <a class="" href="{{ path('import_delete', {'id': import.id }) }}">
+                                <a href="{{ path('import_delete', {'id': import.id }) }}">
                                     <img src="{{ asset('build/images/delete.png') }}" alt="trashcan"></a>
                             </div>
                         {% endif %}
