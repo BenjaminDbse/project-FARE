@@ -11,7 +11,7 @@
                 <tr>
                     <td class="tdTime">{{ import.datetime|format_datetime('short', 'none', locale='fr') }}</td>
                     <td>{{ import.title }}</td>
-                    <td>{{ import.type }}</td>
+                    <td>{{ import.category.name }}</td>
                     <td>{{ import.author.lastname ?? '' }} {{ import.author.firstname ?? '' }}</td>
                     <td>
                         <a class="no-responsive-button btn btn-secondary" href="{{ path('graph_recorder', {'id': import.id }) }}">

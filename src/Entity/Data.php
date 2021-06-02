@@ -76,10 +76,10 @@ class Data
     private ?int $alarm;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="data")
+     * @ORM\ManyToOne(targetEntity=Import::class, inversedBy="datas")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $category;
+    private $import;
 
     public function getId(): int
     {
@@ -218,14 +218,14 @@ class Data
         return $this;
     }
 
-    public function getCategory(): ?Category
+    public function getImport(): ?Import
     {
-        return $this->category;
+        return $this->import;
     }
 
-    public function setCategory(?Category $category): self
+    public function setImport(?Import $import): self
     {
-        $this->category = $category;
+        $this->import = $import;
 
         return $this;
     }

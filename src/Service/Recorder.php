@@ -16,9 +16,10 @@ class Recorder
     const ALARM_DETECTED = 'STATUS_ALARM';
     const LR_TRIM = ', ';
     const NOT_CALCULATED = 60000;
-    const ERROR_DETECT = 64609;
+    const ERROR_DETECT = 60000;
     const RESULT_ERROR = 2048;
     const DIVISION_DATA = 10;
+    const TEMP_ERROR = 6000;
     const RATIO_NOT_CALCULATED = 10;
     private int $counter = 1;
     public array $data = [];
@@ -38,7 +39,8 @@ class Recorder
                         $this->counter++;
                     } catch (\Exception $e) {
 
-                        $this->data['errors'][] = 'Une erreur est survenue à la ligne ' . $i . ' du fichier. ->'. $e->getMessage();
+                        $this->data['errors'][] = 'Une erreur est survenue à la ligne ' . ($i + 1) . ' du fichier. 
+                        Erreur rencontrée :' . $e->getMessage();
                     }
 
                 } elseif ($this->counter === 2) {
@@ -47,7 +49,8 @@ class Recorder
                         $this->counter++;
                     } catch (\Exception $e) {
 
-                        $this->data['errors'][] = 'Une erreur est survenue à la ligne ' . $i . ' du fichier. ->'. $e->getMessage();
+                        $this->data['errors'][] = 'Une erreur est survenue à la ligne ' . ($i + 1) . ' du fichier. 
+                        Erreur rencontrée =>' . $e->getMessage();
                     }
                 } elseif ($this->counter === 3) {
                     try {
@@ -56,11 +59,12 @@ class Recorder
                         $this->counter = 1;
                     } catch (\Exception $e) {
 
-                        $this->data['errors'][] = 'Une erreur est survenue à la ligne ' . $i . ' du fichier. ->'. $e->getMessage();
+                        $this->data['errors'][] = 'Une erreur est survenue à la ligne ' . ($i + 1) . ' du fichier.
+                        Erreur rencontrée =>' . $e->getMessage();
                     }
                 }
 
-            }else {
+            } else {
                 $this->counter = 1;
             }
             $this->loop++;
@@ -81,6 +85,7 @@ class Recorder
         if (str_contains($rowData, self::ALARM_DETECTED)) {
             $data['alarm'] = intval(rtrim(substr($rowData, 61, 2)));
             $data['data'] = $this->recoveryDataAlarm($data['adr']);
+            $data['status'] = $data['alarm'];
             $this->counter = 0;
             $this->loop += 2;
         }
@@ -98,9 +103,9 @@ class Recorder
     private function thirdTreatment(string $rowData): array
     {
         $data = ltrim($rowData, 'FONCTIONAL_STATUS, ');
-        $dataClean = explode(self::LR_TRIM,$data);
+        $dataClean = explode(self::LR_TRIM, $data);
         $data = $dataClean[13];
-        $clean = explode(' ',$data);
+        $clean = explode(' ', $data);
         $dataClean[13] = $clean[0];
         if (array_key_exists(14, $dataClean)) {
             unset($dataClean[14]);
@@ -108,7 +113,7 @@ class Recorder
         for ($i = 0; $i < count($dataClean); $i += 2) {
             $dataClean[$i] = $dataClean[$i] + (256 * $dataClean[$i + 1]);
         }
-        for ($i = 0 ; $i < 14 ; $i += 2) {
+        for ($i = 0; $i < 14; $i += 2) {
             unset($dataClean[$i + 1]);
         }
         return $dataClean;
@@ -117,7 +122,7 @@ class Recorder
     private function recoveryDataAlarm(int $adr): array
     {
         $data = [];
-        for ($i = $this->loop - 3 ; $i > 1 ; $i -= 3) {
+        for ($i = $this->loop - 3; $i > 1; $i -= 3) {
             if ($this->data[$i]['adr'] === $adr) {
                 $data = $this->data[$i]['data'];
                 $i = 1;
@@ -134,13 +139,13 @@ class Recorder
         if ($data[4] > self::NOT_CALCULATED) {
             $data[4] = self::RATIO_NOT_CALCULATED;
         }
-        if ($data[4] != self::RATIO_NOT_CALCULATED) {
-            $data[4] = $data[4] / self::DIVISION_DATA;
-        }
         for ($i = 0; $i < count($data) * 2; $i += 2) {
-            if (($i != 4 && ($data[$i] < self::ERROR_DETECT)) || ($i === 4 && $data[$i] != self::RATIO_NOT_CALCULATED)) {
+            if ($i != 4 && ($data[$i] > self::ERROR_DETECT)) {
+                $data[$i] = 0;
+            } elseif (($i != 4 && ($data[$i] < self::ERROR_DETECT)) || ($i === 4 && $data[$i] != self::RATIO_NOT_CALCULATED)) {
                 $data[$i] = $data[$i] / self::DIVISION_DATA;
-            } elseif ($i != 4 && ($data[$i] > self::ERROR_DETECT)) {
+            }
+            if ($i === 10 || $i === 12 && ($data[$i] > self::TEMP_ERROR)) {
                 $data[$i] = 0;
             }
         }

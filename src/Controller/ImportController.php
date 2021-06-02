@@ -76,57 +76,51 @@ class ImportController extends AbstractController
             $arrayData = [];
 
             if ($type === 1) {
-                while (($line = fgets($treatment,137)) !== false) {
+                while (($line = fgets($treatment, 137)) !== false) {
                     $arrayData[] = trim($line);
                 }
                 fclose($treatment);
                 unlink(__DIR__ . self::LOCATION_FILE . $nameFile);
                 $arrayData = $recorder->treatment($arrayData);
-            }
-            if (empty($arrayData['errors'])) {
-                $this->blockData = new Data;
-                for ($i = 1 ; $i < count($arrayData) ; $i += 3){
-                    $this->blockData->setAdr($arrayData[$i]['adr']);
-                    $this->blockData->setDatetime($arrayData[$i]['date']);
-                    $this->blockData->setStatus($arrayData[$i]['status']);
-                    $this->blockData->setDelta1($arrayData[$i]['data'][0]);
-                    $this->blockData->setDelta2($arrayData[$i]['data'][2]);
-                    $this->blockData->setFilterRatio($arrayData[$i]['data'][4]);
-                    $this->blockData->setTemperatureCorrection($arrayData[$i]['data'][6]);
-                    $this->blockData->setSlopeTemperatureCorrection($arrayData[$i]['data'][8]);
-                    $this->blockData->setRawCo($arrayData[$i]['data'][10]);
-                    $this->blockData->setCoCorrection($arrayData[$i]['data'][12]);
-                    $this->blockData->setCategory();
-                    dd($this->blockData);
-                }
-            }
-
-            dd($arrayData);
-
-
-
-
-            while (!feof($treatment)) {
-                /* Initialisation des variables qui me servent à boucler sur 3 lignes différentes
-                et instantiation de Data  */
-                $this->blockData = new Data;
-                $line = fgets($treatment);
-                if (!(stristr($line, self::START_TREATMENT) || (substr(nl2br($line), 0, 3) == "<br"))) {
-                    if ($this->loopTreatment == 1) {
-                        $this->firstTreatment($line, $entityManager);
-                    } elseif ($this->loopTreatment == 2) {
-                        $this->secondTreatment($line);
-                    } elseif ($this->loopTreatment == 3) {
-                        $this->thirdTreatment($line, $entityManager);
+                if (!(key_exists('errors', $arrayData))) {
+                    for ($i = 1; $i < count($arrayData) * 3; $i += 3) {
+                        try {
+                            $this->blockData = new Data;
+                            $this->blockData->setAdr($arrayData[$i]['adr']);
+                            $this->blockData->setDatetime($arrayData[$i]['date']);
+                            $this->blockData->setStatus($arrayData[$i]['status']);
+                            $this->blockData->setDelta1($arrayData[$i]['data'][0]);
+                            $this->blockData->setDelta2($arrayData[$i]['data'][2]);
+                            $this->blockData->setFilterRatio($arrayData[$i]['data'][4]);
+                            $this->blockData->setTemperatureCorrection($arrayData[$i]['data'][6]);
+                            $this->blockData->setSlopeTemperatureCorrection($arrayData[$i]['data'][8]);
+                            $this->blockData->setRawCo($arrayData[$i]['data'][10]);
+                            $this->blockData->setCoCorrection($arrayData[$i]['data'][12]);
+                            if (key_exists('alarm', $arrayData[$i])) {
+                                $this->blockData->setAlarm($arrayData[$i]['alarm']);
+                            }
+                            $this->blockData->setImport($this->import);
+                            $entityManager->persist($this->blockData);
+                            $entityManager->flush();
+                        } catch (\Exception $e) {
+                            unset($this->blockData);
+                        }
                     }
+                    $this->addFlash('success', 'L\'importation à bien été effectuée');
+                    return $this->redirectToRoute('home');
                 }
-                $entityManager->flush();
+            } elseif ($type === 2) {
+                throw new \Exception('En cours de traitement.');
+
+                $this->addFlash('success', 'L\'importation à bien été effectuée');
+                return $this->redirectToRoute('home');
             }
-            $this->addFlash('success', 'L\'importation à bien été effectuée');
-            return $this->redirectToRoute('home');
+
+
         }
         return $this->render('import/import.html.twig', [
             'form' => $form->createView(),
+            'errors' => $arrayData['errors'] ?? '',
         ]);
     }
 

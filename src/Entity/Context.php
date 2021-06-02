@@ -114,6 +114,12 @@ class Context
      */
     private $contextData;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Import::class, inversedBy="contexts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $import;
+
     public function __construct()
     {
         $this->contextData = new ArrayCollection();
@@ -366,6 +372,18 @@ class Context
                 $contextData->setContext(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImport(): ?Import
+    {
+        return $this->import;
+    }
+
+    public function setImport(?Import $import): self
+    {
+        $this->import = $import;
 
         return $this;
     }

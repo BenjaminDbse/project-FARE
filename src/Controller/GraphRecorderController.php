@@ -59,7 +59,7 @@ class GraphRecorderController extends AbstractController
     ): Response
     {
         $adr = [];
-        foreach ($import->getData() as $data) {
+        foreach ($import->getDatas() as $data) {
             $adr[] = $data->getAdr();
         }
         $adr = array_unique($adr);

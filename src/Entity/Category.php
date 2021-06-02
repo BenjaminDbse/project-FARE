@@ -24,6 +24,16 @@ class Category
      */
     private $name;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Import::class, mappedBy="category", orphanRemoval=true)
+     */
+    private $imports;
+
+    public function __construct()
+    {
+        $this->imports = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -37,6 +47,36 @@ class Category
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Import[]
+     */
+    public function getImports(): Collection
+    {
+        return $this->imports;
+    }
+
+    public function addImport(Import $import): self
+    {
+        if (!$this->imports->contains($import)) {
+            $this->imports[] = $import;
+            $import->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImport(Import $import): self
+    {
+        if ($this->imports->removeElement($import)) {
+            // set the owning side to null (unless already changed)
+            if ($import->getCategory() === $this) {
+                $import->setCategory(null);
+            }
+        }
 
         return $this;
     }
