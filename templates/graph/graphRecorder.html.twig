@@ -5,37 +5,31 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container mt-5 my-5">
-        <div class="d-flex justify-content-center my-5">
-            <h2 class="text-secondary mt-1 font-weight-bold">{{ import.title }} </h2>
-            <p class="mt-3 ml-2"><small class="text-muted font-italic"> (Importé
-                    par {{ import.author.firstname ?? 'un Utilisateur'}} {{ import.author.lastname?? 'Supprimé' }})</small></p>
+    <div class="d-flex justify-content-center my-5">
+        <h2 class="text-secondary text-center mt-1 font-weight-bold">{{ import.title }} </h2>
+        <p class="mt-3 ml-2 tdTime"><small class="text-muted font-italic"> (Importé
+                par {{ import.author.firstname ?? 'un Utilisateur' }} {{ import.author.lastname?? 'Supprimé' }})</small>
+        </p>
+    </div>
+    <div class="filters d-flex justify-content-around py-2 ">
+        <div class="card p-3 align-self-center filterBorder">
+            {% include '/_include/_formAdr.html.twig' %}
         </div>
-        <div class="filters d-flex justify-content-around">
-            <div>
-                <div class="card p-3">
-                    {% include '/_include/_formAdr.html.twig' %}
-                </div>
-            </div>
-            <div>
-                <div class="card p-3">
-                    {% include '/_include/_formDateChoice.html.twig' %}
-                </div>
-            </div>
-            <div>
-                <div class="card p-3">
-                    {% include '/_include/_formAlgo.html.twig' %}
-                </div>
-            </div>
+        <div class="card p-3 filterBorder">
+            {% include '/_include/_formDateChoice.html.twig' %}
+        </div>
+        <div class="card p-3 align-self-center filterBorder">
+            {% include '/_include/_formAlgo.html.twig' %}
         </div>
     </div>
     <div class="chart-container mt-5">
         {% include '/_include/_graphique.html.twig' %}
     </div>
-    <div class="d-flex flex-wrap">
+    <div class="d-flex flex-wrap justify-content-center">
         {% for condition in conditions %}
-            <div class="card p-5 m-2">
-                Le détecteur {{ adrChoice ?? '' }} est passé du status {{ condition|join(' à  ','   le  ') }}
+            {% dump(condition) %}
+            <div class="card p-5 m-2 condition {{ condition.0 == 0 ? 'text-primary' : 'text-success' }}">
+                Le détecteur {{ adrChoice ?? '' }} est passé du statut {{ condition|join(' à  ','   le  ') }}
             </div>
         {% endfor %}
     </div>

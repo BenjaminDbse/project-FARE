@@ -142,7 +142,11 @@ class Recorder
         for ($i = 0; $i < count($data) * 2; $i += 2) {
             if ($i != 4 && ($data[$i] > self::ERROR_DETECT)) {
                 $data[$i] = 0;
-            } elseif (($i != 4 && ($data[$i] < self::ERROR_DETECT)) || ($i === 4 && $data[$i] != self::RATIO_NOT_CALCULATED)) {
+            } elseif
+            (
+                ($i != 4 && ($data[$i] < self::ERROR_DETECT)) ||
+                ($i === 4 && $data[$i] != self::RATIO_NOT_CALCULATED)
+            ) {
                 $data[$i] = $data[$i] / self::DIVISION_DATA;
             }
             if ($i === 10 || $i === 12 && ($data[$i] > self::TEMP_ERROR)) {

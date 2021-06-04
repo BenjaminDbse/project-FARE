@@ -63,6 +63,9 @@ class ContextController extends AbstractController
             while (!feof($treatment)) {
                 $this->firstTreatment($treatment);
             }
+            for ($i = 0 ; $i < 6 ; $i++) {
+
+            }
             for ($i = 0 ; $i < self::NUMBER_OF_CONTEXT; $i++) {
                 $this->saveContext($entityManager);
                 $this->loop++;

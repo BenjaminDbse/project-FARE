@@ -53,12 +53,12 @@ class Import
     private ?User $author;
 
     /**
-     * @ORM\OneToMany(targetEntity=Data::class, mappedBy="import", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Data::class, mappedBy="import", orphanRemoval=true, cascade="all")
      */
     private $datas;
 
     /**
-     * @ORM\OneToMany(targetEntity=Context::class, mappedBy="import", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Context::class, mappedBy="import", orphanRemoval=true, cascade="all")
      */
     private $contexts;
 

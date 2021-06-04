@@ -1,4 +1,19 @@
-$widthtrait: 1px;
-$heighttrait: 24px;
+// Variables Bootstrap
+$primary: #e53d18;
+$secondary: #2c2c2c;
+$dark: #0f0f0f;
+$light: #d2d2d2;
+
+// Variables générales
+$widthTrait: 1px;
+$heightTrait: 24px;
 $height-graph: 600px;
+$width-graph: 100%;
+$brightnessHover: 1.75;
+$fontWeightHover : bold;
+$border-radius: 5px;
+
+// Variables media Querry
 $responsive-space: 5vw;
+$mediaScreenMax: 420px;
+$sizeChartContainerMedia : 100vw;
