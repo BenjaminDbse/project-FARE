@@ -1,4 +1,4 @@
-<div class="container mb-5">
+<div class="container mb-5 p-0">
     <nav class="navbar navbar-dark bg-secondary mb-5 mt-5 justify-content-around">
         {% if app.user %}
         <div class="dropdown">
@@ -8,13 +8,8 @@
             </a>
             <ul class="dropdown-menu bg-secondary" aria-labelledby="navbarDropdownMenuLink">
                 <li>
-                    <a class="text-light dropdown-item bg-secondary" href="{{ path('import_import') }}">Fichier
-                        d'enregistrement
-                    </a>
-                </li>
-                <li>
-                    <a class="text-light dropdown-item bg-secondary" href="{{ path('context_context') }}">
-                        Fichier de contexte
+                    <a class="text-light dropdown-item bg-secondary" href="{{ path('import_import') }}">
+                        Importer un fichier
                     </a>
                 </li>
                 <li>
@@ -26,8 +21,6 @@
         </div>
         <div class="trait"></div>
         {% endif %}
-        <a class="text-light" href="{{ path('archive_recorder') }}">Archives enregistrements</a>
-        <div class="trait"></div>
-        <a class="text-light" href="{{ path('archive_context') }}">Archives contexte</a>
+        <a class="text-light" href="{{ path('archive') }}">Archives</a>
     </nav>
 </div>

@@ -1,21 +1,27 @@
 @import "app.scss";
 
 .graph {
-  width: 100%;
+  width: $width-graph;
   height: $height-graph;
 }
-@media screen and (max-width: 420px) {
+.filterBorder, .condition {
+  border-radius: $border-radius;
+  box-shadow: ($border-radius * 2) $border-radius $border-radius $light;
+}
+
+@media screen and (max-width: $mediaScreenMax) {
   .filters {
     display: flex;
     flex-direction: column;
-  }
-  .timeEnd {
-    display: flex;
-    flex-direction: column;
+    align-items: center;
   }
   .chart-container {
     position: relative;
-    width: 100vw;
-    height: 100vw;
+    width: $sizeChartContainerMedia;
+    height: $sizeChartContainerMedia;
+  }
+  .filterBorder {
+    margin-top: $responsive-space;
+    width: $sizeFilterResponsive;
   }
 }

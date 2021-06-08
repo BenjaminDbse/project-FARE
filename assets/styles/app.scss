@@ -1,10 +1,4 @@
 @import "variable.scss";
-
-$primary: #e53d18;
-$secondary: #2c2c2c;
-$dark: #0f0f0f;
-$light: #d2d2d2;
-
 @import "~bootstrap/scss/bootstrap";
 
 .dropdown-menu {
@@ -13,25 +7,26 @@ $light: #d2d2d2;
 
 .trait {
   background-color: $light;
-  height: $heighttrait;
-  width: $widthtrait;
+  height: $heightTrait;
+  width: $widthTrait;
 }
 
 a {
   text-decoration: none;
 }
 
-.hover:hover {
-  text-decoration: none;
-  filter: brightness(1.75);
-  font-weight: bold;
+.hover {
+  &:hover {
+    text-decoration: none;
+    filter: brightness($brightnessHover);
+    font-weight: $fontWeightHover;
+  }
 }
-
 .responsive-button {
   display: none;
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: $mediaScreenMax) {
   .sloganTitle {
     display: none;
   }

@@ -4,10 +4,14 @@
 
 {% block body %}
     <div class="container">
-        <h2 class="text-center my-5">Importer un enregistrement</h2>
+        <h2 class="text-center my-5">Importer un fichier</h2>
+        {% for error in errors %}
+        <p class="text-danger">{{ error }}</p>
+        {% endfor %}
 
         {{ form_start(form) }}
         {{ form_row(form.title) }}
+        {{ form_row(form.category) }}
         {{ form_row(form.file, {
             attr: {
                 'placeholder': 'Sélectionner un fichier'

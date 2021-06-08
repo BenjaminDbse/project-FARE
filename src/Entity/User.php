@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @UniqueEntity(fields={"email"}, message="Un compte est déjà associé à cette adresse mail.")
  */
 class User implements UserInterface
 {
@@ -20,33 +20,33 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    private $email;
+    private string $email;
 
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
-    private $password;
+    private string $password;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $firstname;
+    private string $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $lastname;
+    private string $lastname;
 
     /**
      * @ORM\OneToMany(targetEntity=Import::class, mappedBy="author")
@@ -56,22 +56,16 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $verified;
-
-    /**
-     * @ORM\OneToMany(targetEntity=ImportContext::class, mappedBy="author")
-     */
-    private $importContexts;
+    private ?bool $verified;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $token;
+    private ?string $token;
 
     public function __construct()
     {
         $this->imports = new ArrayCollection();
-        $this->importContexts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -155,7 +149,7 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function getFirstname(): ?string
+    public function getFirstname(): string
     {
         return $this->firstname;
     }
@@ -167,7 +161,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getLastname(): ?string
+    public function getLastname(): string
     {
         return $this->lastname;
     }
@@ -216,36 +210,6 @@ class User implements UserInterface
     public function setVerified(?bool $verified): self
     {
         $this->verified = $verified;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|ImportContext[]
-     */
-    public function getImportContexts(): Collection
-    {
-        return $this->importContexts;
-    }
-
-    public function addImportContext(ImportContext $importContext): self
-    {
-        if (!$this->importContexts->contains($importContext)) {
-            $this->importContexts[] = $importContext;
-            $importContext->setAuthor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeImportContext(ImportContext $importContext): self
-    {
-        if ($this->importContexts->removeElement($importContext)) {
-            // set the owning side to null (unless already changed)
-            if ($importContext->getAuthor() === $this) {
-                $importContext->setAuthor(null);
-            }
-        }
 
         return $this;
     }

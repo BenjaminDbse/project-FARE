@@ -9,7 +9,7 @@
                 <p>Nom : {{ app.user.lastname }}</p>
                 <p>Prénom : {{ app.user.firstname }}</p>
                 <p>Email : {{ app.user.email }}</p>
-                <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-around">
                     <div class="btn">
                         <a href="{{ path('user_edit', {'id': app.user.id }) }}">
                             <img src="{{ asset('build/images/setting.png') }}" alt="setting">
@@ -27,7 +27,8 @@
     <h3 class="text-center my-5 text-secondary font-italic">Mes Importations</h3>
     <ul class="row mb-5">
         {% for import in imports %}
-            <li class="col-3 ml-2"><a href="{{ path('graph_recorder', {'id': import.id }) }}">{{ import.title }}</a>
+            <li class="col-3 ml-2">
+                <a href="{{ path('graph_recorder', {'id': import.id }) }}">{{ import.title }}</a>
             </li>
         {% endfor %}
     </ul>
@@ -35,7 +36,6 @@
     <div class="text-center mt-5">
         <h3 class="text-center my-5 text-secondary font-italic">Gestion des Comptes</h3>
     </div>
-    <div class="row">
         <div class="d-flex flex-wrap justify-content-around">
             {% for user in users %}
                 <div class="card p-2 mb-4 d-flex flex-wrap ml-2 justify-content-between">
@@ -68,5 +68,4 @@
             {% endfor %}
         </div>
         {% endif %}
-    </div>
 {% endblock %}

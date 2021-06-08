@@ -13,8 +13,8 @@ class ContextFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('number',EntityType::class,[
-                'label' => 'Choix du contexte :',
+            ->add('number', EntityType::class,[
+                'label' => 'Choix du context :',
                 'class' => Context::class,
                 'choice_label' => 'number',
             ])

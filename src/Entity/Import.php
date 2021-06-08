@@ -47,25 +47,36 @@ class Import
     private ?DateTimeInterface $Datetime;
 
     /**
-     * @ORM\OneToMany(targetEntity=Data::class, mappedBy="import", cascade="All")
-     *
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="imports")
+     * @ORM\JoinColumn(nullable=true)
      */
-    private Collection $data;
+    private ?User $author;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="imports")
+     * @ORM\OneToMany(targetEntity=Data::class, mappedBy="import", orphanRemoval=true, cascade="all")
+     */
+    private $datas;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Context::class, mappedBy="import", orphanRemoval=true, cascade="all")
+     */
+    private $contexts;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="imports")
      * @ORM\JoinColumn(nullable=false)
      */
-    private User $author;
+    private $category;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
+     * @ORM\OneToOne(targetEntity=Leading::class, mappedBy="import", cascade={"persist", "remove"})
      */
-    private ?string $type;
+    private $leadding;
 
     public function __construct()
     {
-        $this->data = new ArrayCollection();
+        $this->datas = new ArrayCollection();
+        $this->contexts = new ArrayCollection();
     }
 
     /**
@@ -117,18 +128,30 @@ class Import
         return $this;
     }
 
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Data[]
      */
-    public function getData(): Collection
+    public function getDatas(): Collection
     {
-        return $this->data;
+        return $this->datas;
     }
 
     public function addData(Data $data): self
     {
-        if (!$this->data->contains($data)) {
-            $this->data[] = $data;
+        if (!$this->datas->contains($data)) {
+            $this->datas[] = $data;
             $data->setImport($this);
         }
 
@@ -137,7 +160,7 @@ class Import
 
     public function removeData(Data $data): self
     {
-        if ($this->data->removeElement($data)) {
+        if ($this->datas->removeElement($data)) {
             // set the owning side to null (unless already changed)
             if ($data->getImport() === $this) {
                 $data->setImport(null);
@@ -147,30 +170,61 @@ class Import
         return $this;
     }
 
-    public function getAuthor(): User
+    /**
+     * @return Collection|Context[]
+     */
+    public function getContexts(): Collection
     {
-        return $this->author;
+        return $this->contexts;
     }
 
-    public function setAuthor(User $author): self
+    public function addContext(Context $context): self
     {
-        $this->author = $author;
+        if (!$this->contexts->contains($context)) {
+            $this->contexts[] = $context;
+            $context->setImport($this);
+        }
 
         return $this;
     }
-    public function __toString(): string
+
+    public function removeContext(Context $context): self
     {
-        return $this->author;
+        if ($this->contexts->removeElement($context)) {
+            // set the owning side to null (unless already changed)
+            if ($context->getImport() === $this) {
+                $context->setImport(null);
+            }
+        }
+
+        return $this;
     }
 
-    public function getType(): ?string
+    public function getCategory(): ?Category
     {
-        return $this->type;
+        return $this->category;
     }
 
-    public function setType(?string $type): self
+    public function setCategory(?Category $category): self
     {
-        $this->type = $type;
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getLeadding(): ?Leading
+    {
+        return $this->leadding;
+    }
+
+    public function setLeadding(Leading $leadding): self
+    {
+        // set the owning side of the relation if necessary
+        if ($leadding->getImport() !== $this) {
+            $leadding->setImport($this);
+        }
+
+        $this->leadding = $leadding;
 
         return $this;
     }

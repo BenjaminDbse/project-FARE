@@ -2,8 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Context;
+use App\Entity\ContextData;
+use App\Entity\Leading;
 use App\Entity\User;
+use App\Service\ContextService;
+use App\Service\Recorder;
 use DateTime;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,81 +25,147 @@ use App\Entity\Data;
 class ImportController extends AbstractController
 {
     const LOCATION_FILE = '/../../public/imports/';
-    const START_TREATMENT = '*********';
-    const TRIM_ALARM = " \n\r\t\v\0";
-    const NOT_CALCULATED = 60000;
-    const ERROR_DETECT = 64609;
-    const RESULT_ERROR = 2048;
-    const DIVISION_DATA = 10;
-    const RATIO_NOT_CALCULATED = 10;
-    private Import $import;
-    private Data $blockData;
-    private int $loopTreatment = 1;
-    private int $counter = 0;
-    private int $adr;
-    private DateTime $date;
-    private array $dataClean;
-    private array $arrayData;
-    private array $data1;
-    private array $data2;
-    private array $data3;
-    private array $data4;
-    private array $data5;
-    private array $data6;
-    private array $data7;
-
+    const NUMBER_OF_CONTEXT = 4;
+    const NUMBER_OF_ELEMENTARY = 15;
 
     /**
      * @Route("/", name="import", methods={"GET", "POST"})
      * @param Request $request
+     * @param Recorder $recorder
+     * @param ContextService $contextService
      * @return Response
      */
-    public function import(Request $request): Response
+    public function import(Request $request, Recorder $recorder, ContextService $contextService): Response
     {
         if (!($this->getUser())) {
             return $this->redirectToRoute('app_login');
         }
-        $this->import = new import;
-        $form = $this->createForm(ImportType::class, $this->import);
+        $import = new import;
+        $form = $this->createForm(ImportType::class, $import);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            $this->import->setTitle($form->get('title')->getData());
-            $this->import->setType('Enregistrement');
-            $this->import->setDatetime(new DateTime('now'));
+            $import->setTitle($form->get('title')->getData());
+            $import->setDatetime(new DateTime('now'));
             /** La variable user est une instance de l'entité User
              * @var User $user
              */
             $user = $this->getUser();
-            $this->import->setAuthor($user);
-            $entityManager->persist($this->import);
+            $import->setAuthor($user);
+            $import->setCategory($form->get('category')->getData());
+            $entityManager->persist($import);
             $dataFile = $form->get('file')->getData();
             $nameFile = $this->moveAndNameFile($dataFile);
             $treatment = fopen(__DIR__ . self::LOCATION_FILE . $nameFile, 'r');
-            while (!feof($treatment)) {
-                /* Initialisation des variables qui me servent à boucler sur 3 lignes différentes
-                et instantiation de Data  */
-                $this->blockData = new Data;
-                $line = fgets($treatment);
-                if (!(stristr($line, self::START_TREATMENT) || (substr(nl2br($line), 0, 3) == "<br"))) {
-                    if ($this->loopTreatment == 1) {
-                        $this->firstTreatment($line, $entityManager);
-                    } elseif ($this->loopTreatment == 2) {
-                        $this->secondTreatment($line);
-                    } elseif ($this->loopTreatment == 3) {
-                        $this->thirdTreatment($line, $entityManager);
-                    }
+            $type = $form->get('category')->getData()->getid();
+            $arrayData = [];
+
+            if ($type === 1) {
+                while (($line = fgets($treatment, 137)) !== false) {
+                    $arrayData[] = trim($line);
                 }
-                $entityManager->flush();
+                fclose($treatment);
+                unlink(__DIR__ . self::LOCATION_FILE . $nameFile);
+                $arrayData = $recorder->treatment($arrayData);
+                if (!(key_exists('errors', $arrayData))) {
+                    for ($i = 1; $i < count($arrayData) * 3; $i += 3) {
+                        try {
+                            $blockData = new Data;
+                            $blockData->setAdr($arrayData[$i]['adr']);
+                            $blockData->setDatetime($arrayData[$i]['date']);
+                            $blockData->setStatus($arrayData[$i]['status']);
+                            $blockData->setDelta1($arrayData[$i]['data'][0]);
+                            $blockData->setDelta2($arrayData[$i]['data'][2]);
+                            $blockData->setFilterRatio($arrayData[$i]['data'][4]);
+                            $blockData->setTemperatureCorrection($arrayData[$i]['data'][6]);
+                            $blockData->setSlopeTemperatureCorrection($arrayData[$i]['data'][8]);
+                            $blockData->setRawCo($arrayData[$i]['data'][10]);
+                            $blockData->setCoCorrection($arrayData[$i]['data'][12]);
+                            if (key_exists('alarm', $arrayData[$i])) {
+                                $blockData->setAlarm($arrayData[$i]['alarm']);
+                            }
+                            $blockData->setImport($import);
+                            $entityManager->persist($blockData);
+                            $entityManager->flush();
+                        } catch (Exception $e) {
+                            unset($blockData);
+                        }
+                    }
+                    $this->addFlash('success', 'L\'importation à bien été effectuée');
+                    return $this->redirectToRoute('home');
+                }
+            } elseif ($type === 2) {
+                while (($line = fgetcsv($treatment, 50, ';')) !== false) {
+                    $arrayData[] = trim($line[1]);
+                }
+                fclose($treatment);
+                unlink(__DIR__ . self::LOCATION_FILE . $nameFile);
+                $lead = $contextService->leadingTreatment($arrayData);
+                if (empty($lead['errors'])) {
+                    $leading = new Leading;
+                    $leading->setEcs($lead[0]);
+                    $leading->setEquipment($lead[1]);
+                    $leading->setModule($lead[2]);
+                    $leading->setLooping($lead[3]);
+                    $leading->setAdr($lead[4]);
+                    $leading->setZone($lead[5]);
+                    $leading->setImport($import);
+                    $entityManager->persist($leading);
+
+                    $loop = 0;
+                    $primary = 11;
+                    for ($i = 1; $i <= self::NUMBER_OF_CONTEXT; $i++) {
+                        $lead = $contextService->contextTreatment($arrayData, $primary);
+                        if (empty($lead['errors'])) {
+                            $context = new Context;
+                            $context->setImport($import);
+                            $context->setNumber(($i));
+                            $context->setAlgo($lead['algo']);
+                            $context->setEvalutionCase($lead['caseEvaluation']);
+                            $context->setHalfContext($lead['halfContext']);
+                            $context->setProductIdentifier($lead['productIdentifier']);
+                            $context->setDatetime($lead['date']);
+                            $context->setEncrOne($lead['encr1']);
+                            $context->setEncrTwo($lead['encr2']);
+                            $context->setSlopeSeuil($lead['slopeTemp']);
+                            $context->setRatioAlarm($lead['ratio']);
+                            $context->setDeltaSeuil($lead['delta2']);
+                            $context->setTempAlarm($lead['tempAlarm']);
+                            $context->setVelocimeter($lead['velocimeter']);
+                            $entityManager->persist($context);
+                            $primary += 30;
+
+                            for ($j = 0; $j < self::NUMBER_OF_ELEMENTARY; $j++) {
+                                $lead = $contextService->elementaryTreatment($arrayData, $primary);
+                                if (empty($lead['errors'])) {
+                                    $contextData = new ContextData;
+                                    $contextData->setRatio($lead['ratio']);
+                                    $contextData->setDelta1($lead['delta1']);
+                                    $contextData->setPulse1($lead['pulse1']);
+                                    $contextData->setDelta2($lead['delta2']);
+                                    $contextData->setPulse2($lead['pulse2']);
+                                    $contextData->setTempRaw($lead['rawTemp']);
+                                    $contextData->setTempCorrected($lead['slopeTemp']);
+                                    $contextData->setCo($lead['co']);
+                                    $contextData->setContext($context);
+                                    $entityManager->persist($contextData);
+                                    $entityManager->flush();
+                                    $primary += 15;
+                                }
+                            }
+                        }
+                    }
+                    $this->addFlash('success', 'L\'importation à bien été effectuée');
+                    return $this->redirectToRoute('home');
+                } else {
+                    $arrayData['errors'] = $lead['errors'];
+                }
             }
-            fclose($treatment);
-            unlink(__DIR__ . self::LOCATION_FILE . $nameFile);
-            $this->addFlash('success', 'L\'importation à bien été effectuée');
-            return $this->redirectToRoute('home');
         }
         return $this->render('import/import.html.twig', [
             'form' => $form->createView(),
+            'errors' => $arrayData['errors'] ?? '',
         ]);
     }
 
@@ -103,142 +175,6 @@ class ImportController extends AbstractController
         move_uploaded_file($dataFile->getPathName(), __DIR__ . self::LOCATION_FILE . $nameFile);
 
         return $nameFile;
-    }
-
-    private function firstTreatment($line, $entityManager)
-    {
-        if (!stristr($line, 'ID_BLOC_ENCR') || !stristr($line, 'BLOC_DATAS')) {
-            $date = substr($line, 1, 19);
-            $this->adr = intval(substr(strpbrk($line, '='), 1, 3));
-            $this->adr = rtrim($this->adr, ", ");
-            $date = str_replace('/', '-', $date);
-            $this->arrayData[$this->counter]['date'] = $date;
-            $date = new Datetime($this->arrayData[$this->counter]['date']);
-            $this->arrayData[$this->counter]['adr'] = $this->adr;
-            $this->loopTreatment += 1;
-            $this->blockData->setDatetime($date);
-            $this->blockData->setAdr($this->arrayData[$this->counter]['adr']);
-            $this->blockData->setImport($this->import);
-            if (stristr($line, 'STATUS_ALARM')) {
-                $this->TreatmentAlarm($line, $entityManager);
-            }
-        } else {
-            $this->loopTreatment = 1;
-        }
-    }
-
-    private function TreatmentAlarm($line, $entityManager)
-    {
-        $alarm = substr($line, 62, 2);
-        $alarm = trim($alarm, self::TRIM_ALARM);
-        $this->arrayData[$this->counter]['alarm'] = intval($alarm);
-        $this->blockData->setAlarm($this->arrayData[$this->counter]['alarm']);
-        $this->blockData->setStatus($this->blockData->getAlarm());
-
-        if (($this->arrayData[$this->counter]['adr'] == $this->adr) && (isset($this->arrayData[$this->counter]['adr']))) {
-            $this->saveDataAlarm($entityManager);
-            $this->loopTreatment = 1;
-            $this->counter += 1;
-        }
-    }
-
-    private function saveDataAlarm($entityManager)
-    {
-        $this->blockData->setDelta1($this->data1[$this->arrayData[$this->counter]['adr']]);
-        $this->blockData->setDelta2($this->data2[$this->arrayData[$this->counter]['adr']]);
-        $this->blockData->setFilterRatio($this->data3[$this->arrayData[$this->counter]['adr']]);
-        $this->blockData->setTemperatureCorrection($this->data4[$this->arrayData[$this->counter]['adr']]);
-        $this->blockData->setSlopeTemperatureCorrection($this->data5[$this->arrayData[$this->counter]['adr']]);
-        $this->blockData->setRawCo($this->data6[$this->arrayData[$this->counter]['adr']]);
-        $this->blockData->setCoCorrection($this->data7[$this->arrayData[$this->counter]['adr']]);
-        $entityManager->persist($this->blockData);
-    }
-
-    private function secondTreatment($line)
-    {
-        $status = substr($line, -4);
-        $status = trim($status);
-        $this->arrayData[$this->counter]['status'] = $status;
-        $this->loopTreatment += 1;
-    }
-
-    private function thirdTreatment($line, $entityManager)
-    {
-        if (!stristr($line, 'BLOC_DATA') || !stristr($line, 'ID_BLOC_ENCR')) {
-            $data = substr($line, 46, 69);
-            $data = explode(', ', $data);
-            $data[13] = explode(' ', $data[13]);
-            $data[13] = $data[13][0];
-            $data[13] = trim($data[13], self::TRIM_ALARM);
-            if (array_key_exists(14, $data)) {
-                unset($data[14]);
-            }
-            for ($i = 0; $i < count($data); $i++) {
-                $data[$i] = intval($data[$i]);
-            }
-            $this->arrayData[$this->counter]['data'] = str_replace("/", "-", $data);
-            if (count($this->arrayData[$this->counter]['data']) == 14) {
-                $this->calculateData($this->arrayData[$this->counter]['data']);
-            }
-            $this->date = new DateTime($this->arrayData[$this->counter]['date']);
-            $this->saveData();
-            if (isset($this->arrayData[$this->counter]['alarm'])) {
-                $this->blockData->setAdr($this->arrayData[$this->counter]['adr']);
-                $this->blockData->setDatetime($this->arrayData[$this->counter]['date']);
-                $this->blockData->setAlarm($this->arrayData[$this->counter]['alarm']);
-            }
-            $entityManager->persist($this->blockData);
-            $this->data1[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta1();
-            $this->data2[$this->arrayData[$this->counter]['adr']] = $this->blockData->getDelta2();
-            $this->data3[$this->arrayData[$this->counter]['adr']] = $this->blockData->getFilterRatio();
-            $this->data4[$this->arrayData[$this->counter]['adr']] = $this->blockData->getTemperatureCorrection();
-            $this->data5[$this->arrayData[$this->counter]['adr']] = $this->blockData->getSlopeTemperatureCorrection();
-            $this->data6[$this->arrayData[$this->counter]['adr']] = $this->blockData->getRawCo();
-            $this->data7[$this->arrayData[$this->counter]['adr']] = $this->blockData->getCoCorrection();
-            if (!empty($this->dataClean)) {
-                $this->dataClean = [];
-            }
-            $this->loopTreatment = 1;
-            $this->counter += 1;
-        } else {
-            $this->loopTreatment = 1;
-        }
-    }
-
-    private function calculateData(array $arrayData)
-    {
-        for ($j = 0; $j < count($arrayData); $j += 2) {
-            $this->dataClean[$j] = ($arrayData[$j] + (256 * $arrayData[$j + 1]));
-        }
-        if ($this->dataClean[2] > self::ERROR_DETECT) {
-            $this->dataClean[2] = self::RESULT_ERROR;
-        }
-        if ($this->dataClean[4] > self::NOT_CALCULATED) {
-            $this->dataClean[4] = self::RATIO_NOT_CALCULATED;
-        }
-        if ($this->dataClean[4] != self::RATIO_NOT_CALCULATED) {
-            $this->dataClean[4] = $this->dataClean[4] / self::DIVISION_DATA;
-        }
-        for ($i = 6; $i < count($this->dataClean) * 2; $i += 2) {
-            if ($this->dataClean[$i] > self::ERROR_DETECT) {
-                $this->dataClean[$i] = 0;
-            }
-        }
-    }
-
-    private function saveData()
-    {
-        $this->blockData->setDatetime($this->date);
-        $this->blockData->setAdr($this->arrayData[$this->counter]['adr']);
-        $this->blockData->setStatus(intval($this->arrayData[$this->counter]['status']));
-        $this->blockData->setDelta1(($this->dataClean[0] / self::DIVISION_DATA));
-        $this->blockData->setDelta2(($this->dataClean[2] / self::DIVISION_DATA));
-        $this->blockData->setFilterRatio(($this->dataClean[4]));
-        $this->blockData->setTemperatureCorrection(($this->dataClean[6] / self::DIVISION_DATA));
-        $this->blockData->setSlopeTemperatureCorrection(($this->dataClean[8] / self::DIVISION_DATA));
-        $this->blockData->setRawCo(($this->dataClean[10]));
-        $this->blockData->setCoCorrection(($this->dataClean[12]));
-        $this->blockData->setImport($this->import);
     }
 
     /**
@@ -256,6 +192,6 @@ class ImportController extends AbstractController
             $entityManager->flush();
             $this->addFlash('danger', 'L\'Archive à bien été supprimée');
         }
-        return $this->redirectToRoute('archive_recorder');
+        return $this->redirectToRoute('archive');
     }
 }

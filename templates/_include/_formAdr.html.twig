@@ -1,18 +1,13 @@
 <form action="{{ path('graph_recorder',{'id' : import.id}) }}" method="POST">
-    <div class=" d-flex justify-content-center">
-        <div class="timeEnd">
-            <div class="label">
-                <label for="adr" id="adr">Adresse du détecteur</label>
-            </div>
-            <select class="mb-3" name="adr" id="adr">
-                <option class="bg-secondary" value="">-Choix-</option>
-                {% for adr in adrs %}
-                    <option class="bg-secondary text-light" value="{{ adr }}"{{ adr == adrChoice ? 'selected' : ''}}>{{ adr }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-    <div class="text-center">
+    <div class="d-flex flex-column align-items-center">
+        <label for="adr" id="adr">Adresse du détecteur</label>
+        <select class="mb-3" name="adr" id="adr">
+            <option class="bg-secondary" value="">-Choix-</option>
+            {% for adr in adrs %}
+                <option class="bg-secondary text-light"
+                        value="{{ adr }}"{{ adr == adrChoice ? 'selected' : '' }}>{{ adr }}</option>
+            {% endfor %}
+        </select>
         <button class="btn btn-dark">Voir</button>
     </div>
 </form>

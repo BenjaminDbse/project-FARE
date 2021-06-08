@@ -1,18 +1,12 @@
 <form action="{{ path('graph_recorder',{'id' : import.id}) }}" method="POST">
-    <div class=" d-flex justify-content-center">
-        <div class="timeEnd">
-            <div class="label">
+        <div class="d-flex flex-column align-items-center">
                 <label for="algo" id="algo">Algorithme</label>
-            </div>
             <select class="mb-3" name="algo" id="algo">
                 <option class="bg-secondary" value="">-Choix-</option>
                 {% for algo in algos %}
                     <option class="bg-secondary text-light" value="{{ algo.id }}"{{ algo.name == algoSelected ? 'selected' : ''}}>{{ algo.name }}</option>
                 {% endfor %}
             </select>
-        </div>
-    </div>
-    <div class="text-center">
         <button class="btn btn-dark">Voir</button>
     </div>
 </form>

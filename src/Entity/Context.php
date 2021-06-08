@@ -20,129 +20,91 @@ class Context
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ImportContext::class, inversedBy="contexts")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="integer")
      */
-    private $import;
+    private int $number;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private int $algo;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $number;
+    private int $evalutionCase;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $adr;
-
-    /**
-     * @ORM\Column(type="string", length=10, nullable=true)
-     */
-    private $choiceOne;
-
-    /**
-     * @ORM\Column(type="string", length=10, nullable=true)
-     */
-    private $choiceTwo;
-
-    /**
-     * @ORM\Column(type="string", length=10, nullable=true)
-     */
-    private $choiceThree;
-
-    /**
-     * @ORM\Column(type="string", length=10, nullable=true)
-     */
-    private $choiceFour;
+    private int $halfContext;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $algo;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $evalutionCase;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $halfContext;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $productIdentifier;
+    private int $productIdentifier;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $datetime;
+    private ?\DateTimeInterface $datetime;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private float $velocimeter;
 
     /**
      * @ORM\Column(type="float")
      */
-    private $velocimeter;
+    private float $encrOne;
 
     /**
      * @ORM\Column(type="float")
      */
-    private $encrOne;
+    private float $encrTwo;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private float $ratioAlarm;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private float $deltaSeuil;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private float $tempAlarm;
 
     /**
      * @ORM\Column(type="float")
      */
-    private $encrTwo;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $ratioAlarm;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $deltaSeuil;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $tempAlarm;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $slopeSeuil;
+    private float $slopeSeuil;
 
     /**
      * @ORM\OneToMany(targetEntity=ContextData::class, mappedBy="context")
      */
     private $contextData;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Import::class, inversedBy="contexts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private Import $import;
+
     public function __construct()
     {
         $this->contextData = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getImport(): ?ImportContext
-    {
-        return $this->import;
-    }
-
-    public function setImport(?ImportContext $import): self
-    {
-        $this->import = $import;
-
-        return $this;
-    }
-
-    public function getNumber(): ?int
+    public function getNumber(): int
     {
         return $this->number;
     }
@@ -154,67 +116,7 @@ class Context
         return $this;
     }
 
-    public function getAdr(): ?int
-    {
-        return $this->adr;
-    }
-
-    public function setAdr(int $adr): self
-    {
-        $this->adr = $adr;
-
-        return $this;
-    }
-
-    public function getChoiceOne(): ?string
-    {
-        return $this->choiceOne;
-    }
-
-    public function setChoiceOne(?string $choiceOne): self
-    {
-        $this->choiceOne = $choiceOne;
-
-        return $this;
-    }
-
-    public function getChoiceTwo(): ?string
-    {
-        return $this->choiceTwo;
-    }
-
-    public function setChoiceTwo(?string $choiceTwo): self
-    {
-        $this->choiceTwo = $choiceTwo;
-
-        return $this;
-    }
-
-    public function getChoiceThree(): ?string
-    {
-        return $this->choiceThree;
-    }
-
-    public function setChoiceThree(?string $choiceThree): self
-    {
-        $this->choiceThree = $choiceThree;
-
-        return $this;
-    }
-
-    public function getChoiceFour(): ?string
-    {
-        return $this->choiceFour;
-    }
-
-    public function setChoiceFour(?string $choiceFour): self
-    {
-        $this->choiceFour = $choiceFour;
-
-        return $this;
-    }
-
-    public function getAlgo(): ?int
+    public function getAlgo(): int
     {
         return $this->algo;
     }
@@ -226,7 +128,7 @@ class Context
         return $this;
     }
 
-    public function getEvalutionCase(): ?int
+    public function getEvalutionCase(): int
     {
         return $this->evalutionCase;
     }
@@ -238,7 +140,7 @@ class Context
         return $this;
     }
 
-    public function getHalfContext(): ?int
+    public function getHalfContext(): int
     {
         return $this->halfContext;
     }
@@ -250,7 +152,7 @@ class Context
         return $this;
     }
 
-    public function getProductIdentifier(): ?int
+    public function getProductIdentifier(): int
     {
         return $this->productIdentifier;
     }
@@ -274,7 +176,7 @@ class Context
         return $this;
     }
 
-    public function getVelocimeter(): ?float
+    public function getVelocimeter(): float
     {
         return $this->velocimeter;
     }
@@ -286,7 +188,7 @@ class Context
         return $this;
     }
 
-    public function getEncrOne(): ?float
+    public function getEncrOne(): float
     {
         return $this->encrOne;
     }
@@ -298,7 +200,7 @@ class Context
         return $this;
     }
 
-    public function getEncrTwo(): ?float
+    public function getEncrTwo(): float
     {
         return $this->encrTwo;
     }
@@ -310,48 +212,48 @@ class Context
         return $this;
     }
 
-    public function getRatioAlarm(): ?float
+    public function getRatioAlarm(): float
     {
         return $this->ratioAlarm;
     }
 
-    public function setRatioAlarm(?float $ratioAlarm): self
+    public function setRatioAlarm(float $ratioAlarm): self
     {
         $this->ratioAlarm = $ratioAlarm;
 
         return $this;
     }
 
-    public function getDeltaSeuil(): ?float
+    public function getDeltaSeuil(): float
     {
         return $this->deltaSeuil;
     }
 
-    public function setDeltaSeuil(?float $deltaSeuil): self
+    public function setDeltaSeuil(float $deltaSeuil): self
     {
         $this->deltaSeuil = $deltaSeuil;
 
         return $this;
     }
 
-    public function getTempAlarm(): ?float
+    public function getTempAlarm(): float
     {
         return $this->tempAlarm;
     }
 
-    public function setTempAlarm(?float $tempAlarm): self
+    public function setTempAlarm(float $tempAlarm): self
     {
         $this->tempAlarm = $tempAlarm;
 
         return $this;
     }
 
-    public function getSlopeSeuil(): ?float
+    public function getSlopeSeuil(): float
     {
         return $this->slopeSeuil;
     }
 
-    public function setSlopeSeuil(?float $slopeSeuil): self
+    public function setSlopeSeuil(float $slopeSeuil): self
     {
         $this->slopeSeuil = $slopeSeuil;
 
@@ -384,6 +286,18 @@ class Context
                 $contextData->setContext(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImport(): Import
+    {
+        return $this->import;
+    }
+
+    public function setImport(Import $import): self
+    {
+        $this->import = $import;
 
         return $this;
     }

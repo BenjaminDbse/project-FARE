@@ -3,8 +3,8 @@
 {% block title %}{{ parent() }} Enregistrement{% endblock %}
 
 {% block body %}
-    <div class="container mb-5">
-        <h2 class="text-center my-5 justify-content-center font-weight-bold">Archives enregistrements</h2>
+    <div class="container mb-5 p-0">
+        <h2 class="text-center my-5 justify-content-center font-weight-bold">Archives</h2>
         <div class="d-flex justify-content-center">
             <div class="w-50 text-center">
                 {{ form_start(form) }}
@@ -19,8 +19,8 @@
             <thead class="thead-light">
             <tr>
                 <th class="tdTime">Date d'importation</th>
-                <th class="tdTime">Titre</th>
-                <th>Type</th>
+                <th>Titre</th>
+                <th class="tdTime">Type</th>
                 <th>Importé par</th>
                 <th>Actions</th>
             </tr>
@@ -30,26 +30,45 @@
                 <tr>
                     <td class="tdTime">{{ import.datetime|format_datetime('full', 'short', locale='fr') }}</td>
                     <td>{{ import.title }}</td>
-                    <td class="tdTime">{{ import.type }}</td>
-                    <td>{{ import.author.lastname ?? '' }} {{ import.author.firstname ?? '' }}</td>
+                    <td class="tdTime">{{ import.category.name }}</td>
+                    <td>{{ import.author.lastname ?? 'Utilisateur' }} {{ import.author.firstname ?? 'supprimé' }}</td>
                     <td>
+                        {% if import.category.id == 1 %}
                         <a class="no-responsive-button btn btn-secondary"
                            href="{{ path('graph_recorder', {'id': import.id }) }}">
                             Voir le graphique
                         </a>
+                            <a class="responsive-button"
+                               href="{{ path('graph_recorder', {'id': import.id }) }}">
+                                <img src="{{ asset('build/images/eye.png') }}" alt="eye"></a>
 
-                        <a class="responsive-button"
-                           href="{{ path('graph_recorder', {'id': import.id }) }}">
-                            <img src="{{ asset('build/images/eye.png') }}" alt="eye"></a>
+                            {% if is_granted("ROLE_ADMIN") or import.author == app.user %}
+                                <div class="no-responsive-button btn btn-white sm-2">
+                                    {{ include('import/_delete_form.html.twig') }}
+                                </div>
+                                <div class="responsive-button">
+                                    <a href="{{ path('import_delete', {'id': import.id }) }}">
+                                        <img src="{{ asset('build/images/delete.png') }}" alt="trashcan"></a>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <a class="no-responsive-button btn btn-secondary"
+                               href="{{ path('graph_context', {'id': import.id }) }}">
+                                Voir le graphique
+                            </a>
+                            <a class="responsive-button"
+                               href="{{ path('graph_context', {'id': import.id }) }}">
+                                <img src="{{ asset('build/images/eye.png') }}" alt="eye"></a>
 
-                        {% if is_granted("ROLE_ADMIN") or import.author == app.user %}
-                            <div class="no-responsive-button btn btn-white sm-2">
-                            {{ include('import/_delete_form.html.twig') }}
-                            </div>
-                            <div class="responsive-button">
-                                <a href="{{ path('import_delete', {'id': import.id }) }}">
-                                    <img src="{{ asset('build/images/delete.png') }}" alt="trashcan"></a>
-                            </div>
+                            {% if is_granted("ROLE_ADMIN") or import.author == app.user %}
+                                <div class="no-responsive-button btn btn-white sm-2">
+                                    {{ include('import/_delete_form.html.twig') }}
+                                </div>
+                                <div class="responsive-button">
+                                    <a href="{{ path('import_delete', {'id': import.id }) }}">
+                                        <img src="{{ asset('build/images/delete.png') }}" alt="trashcan"></a>
+                                </div>
+                            {% endif %}
                         {% endif %}
                     </td>
                 </tr>

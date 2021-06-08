@@ -5,14 +5,14 @@
 {% block body %}
     <h2 class="text-center m-5">Dernières données importées</h2>
     <div class="container card">
-        <table class="table table-responsive-lg text-dark text-center">
+        <table class="table text-dark text-center">
             <tbody>
             {% for import in imports %}
                 <tr>
                     <td class="tdTime">{{ import.datetime|format_datetime('short', 'none', locale='fr') }}</td>
                     <td>{{ import.title }}</td>
-                    <td>{{ import.type }}</td>
-                    <td>{{ import.author.lastname ?? '' }} {{ import.author.firstname ?? '' }}</td>
+                    <td class="tdTime">{{ import.category.name }}</td>
+                    <td>{{ import.author.lastname ?? 'Utilisateur' }} {{ import.author.firstname ?? 'Supprimé' }}</td>
                     <td>
                         <a class="no-responsive-button btn btn-secondary" href="{{ path('graph_recorder', {'id': import.id }) }}">
                             Voir
