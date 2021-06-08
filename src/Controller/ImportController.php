@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Context;
+use App\Entity\ContextData;
+use App\Entity\Leading;
 use App\Entity\User;
-use App\Service\Context;
+use App\Service\ContextService;
+use App\Service\Recorder;
 use DateTime;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -14,7 +18,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Form\ImportType;
 use App\Entity\Import;
 use App\Entity\Data;
-use App\Service\Recorder;
 
 /**
  * @Route("/import", name="import_")
@@ -22,16 +25,17 @@ use App\Service\Recorder;
 class ImportController extends AbstractController
 {
     const LOCATION_FILE = '/../../public/imports/';
-
+    const NUMBER_OF_CONTEXT = 4;
+    const NUMBER_OF_ELEMENTARY = 15;
 
     /**
      * @Route("/", name="import", methods={"GET", "POST"})
      * @param Request $request
      * @param Recorder $recorder
-     * @param Context $context
+     * @param ContextService $contextService
      * @return Response
      */
-    public function import(Request $request, Recorder $recorder, Context $context): Response
+    public function import(Request $request, Recorder $recorder, ContextService $contextService): Response
     {
         if (!($this->getUser())) {
             return $this->redirectToRoute('app_login');
@@ -92,16 +96,72 @@ class ImportController extends AbstractController
                     return $this->redirectToRoute('home');
                 }
             } elseif ($type === 2) {
-                while (($line = fgetcsv($treatment, 50,';')) !== false) {
+                while (($line = fgetcsv($treatment, 50, ';')) !== false) {
                     $arrayData[] = trim($line[1]);
                 }
-                $arrayData = $context->treatment($arrayData);
-                dd($arrayData);
-                $this->addFlash('success', 'L\'importation à bien été effectuée');
-                return $this->redirectToRoute('home');
+                fclose($treatment);
+                unlink(__DIR__ . self::LOCATION_FILE . $nameFile);
+                $lead = $contextService->leadingTreatment($arrayData);
+                if (empty($lead['errors'])) {
+                    $leading = new Leading;
+                    $leading->setEcs($lead[0]);
+                    $leading->setEquipment($lead[1]);
+                    $leading->setModule($lead[2]);
+                    $leading->setLooping($lead[3]);
+                    $leading->setAdr($lead[4]);
+                    $leading->setZone($lead[5]);
+                    $leading->setImport($import);
+                    $entityManager->persist($leading);
+
+                    $loop = 0;
+                    $primary = 11;
+                    for ($i = 1; $i <= self::NUMBER_OF_CONTEXT; $i++) {
+                        $lead = $contextService->contextTreatment($arrayData, $primary);
+                        if (empty($lead['errors'])) {
+                            $context = new Context;
+                            $context->setImport($import);
+                            $context->setNumber(($i));
+                            $context->setAlgo($lead['algo']);
+                            $context->setEvalutionCase($lead['caseEvaluation']);
+                            $context->setHalfContext($lead['halfContext']);
+                            $context->setProductIdentifier($lead['productIdentifier']);
+                            $context->setDatetime($lead['date']);
+                            $context->setEncrOne($lead['encr1']);
+                            $context->setEncrTwo($lead['encr2']);
+                            $context->setSlopeSeuil($lead['slopeTemp']);
+                            $context->setRatioAlarm($lead['ratio']);
+                            $context->setDeltaSeuil($lead['delta2']);
+                            $context->setTempAlarm($lead['tempAlarm']);
+                            $context->setVelocimeter($lead['velocimeter']);
+                            $entityManager->persist($context);
+                            $primary += 30;
+
+                            for ($j = 0; $j < self::NUMBER_OF_ELEMENTARY; $j++) {
+                                $lead = $contextService->elementaryTreatment($arrayData, $primary);
+                                if (empty($lead['errors'])) {
+                                    $contextData = new ContextData;
+                                    $contextData->setRatio($lead['ratio']);
+                                    $contextData->setDelta1($lead['delta1']);
+                                    $contextData->setPulse1($lead['pulse1']);
+                                    $contextData->setDelta2($lead['delta2']);
+                                    $contextData->setPulse2($lead['pulse2']);
+                                    $contextData->setTempRaw($lead['rawTemp']);
+                                    $contextData->setTempCorrected($lead['slopeTemp']);
+                                    $contextData->setCo($lead['co']);
+                                    $contextData->setContext($context);
+                                    $entityManager->persist($contextData);
+                                    $entityManager->flush();
+                                    $primary += 15;
+                                }
+                            }
+                        }
+                    }
+                    $this->addFlash('success', 'L\'importation à bien été effectuée');
+                    return $this->redirectToRoute('home');
+                } else {
+                    $arrayData['errors'] = $lead['errors'];
+                }
             }
-
-
         }
         return $this->render('import/import.html.twig', [
             'form' => $form->createView(),

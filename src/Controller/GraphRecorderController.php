@@ -39,16 +39,21 @@ class GraphRecorderController extends AbstractController
     private Import $import;
     private array $dataFilter;
     private array $curveEstimateAlarm = [];
+    const ERRORS = [
+        "Cette adresse n'existe pas.",
+        "La date de début ne doit pas être supérieur ou égale à la date de fin.",
+        "Cet algorithme n'existe pas.",
+    ];
 
     /**
      * @Route("/{id}", name="recorder", methods={"GET","POST"})
      * @param Import $import
-     * @ParamConverter("import", class="App\Entity\Import", options={"mapping": {"id": "id"}})
      * @param ChartBuilderInterface $chartBuilder
      * @param DataRepository $dataRepository
      * @param AlgoRepository $algoRepository
      * @param Request $request
      * @return Response
+     * @ParamConverter("import", class="App\Entity\Import", options={"mapping": {"id": "id"}})
      */
     public function graph(
         Import $import,
@@ -59,34 +64,48 @@ class GraphRecorderController extends AbstractController
     ): Response
     {
         $adr = [];
+        $error = '';
         foreach ($import->getDatas() as $data) {
             $adr[] = $data->getAdr();
         }
         $adr = array_unique($adr);
         $algo = $algoRepository->findAll();
         $this->import = $import;
+
         if (isset($_POST['adr'])) {
-            $this->postAdr($request, $dataRepository);
-            $this->treatmentDataFilter($this->dataFilter);
+            if (in_array($_POST['adr'], $adr)) {
+                $this->postAdr($request, $dataRepository);
+                $this->treatmentDataFilter($this->dataFilter);
+            } else {
+                $error = self::ERRORS[0];
+            }
+
         }
         if (isset($_POST['date']) && !empty($_POST['toDate'])) {
-            $startDate = $_POST['date'];
-            $endDate = $_POST['toDate'];
-
-            $this->postDate($request, $dataRepository, $startDate, $endDate);
-            $this->treatmentDataFilter($this->dataFilter);
+            if ($_POST['date'] < $_POST['toDate']) {
+                $startDate = $_POST['date'];
+                $endDate = $_POST['toDate'];
+                $this->postDate($request, $dataRepository, $startDate, $endDate);
+                $this->treatmentDataFilter($this->dataFilter);
+            } else {
+                $error = self::ERRORS[1];
+            }
         }
 
         if (isset($_POST['algo'])) {
             $nbAlgo = $_POST['algo'];
-            $session = $request->getSession()->all();
-            $this->dataFilter = $session['filter'];
-            $this->filterAdr = $session['adr'];
-            $algoChoice = $this->treatmentDataAlgo($algoRepository, $nbAlgo);
-            $this->treatmentDataFilter($this->dataFilter);
-            $algoCalculated = $this->calculatedAlgo($algoChoice);
-            $this->resultAlgo = $this->curveAlgo($algoCalculated, $nbAlgo);
-            $this->estimateAlarm();
+            if (in_array($nbAlgo, $algo)) {
+                $session = $request->getSession()->all();
+                $this->dataFilter = $session['filter'];
+                $this->filterAdr = $session['adr'];
+                $algoChoice = $this->treatmentDataAlgo($algoRepository, $nbAlgo);
+                $this->treatmentDataFilter($this->dataFilter);
+                $algoCalculated = $this->calculatedAlgo($algoChoice);
+                $this->resultAlgo = $this->curveAlgo($algoCalculated, $nbAlgo);
+                $this->estimateAlarm();
+            } else {
+                $error = self::ERRORS[2];
+            }
         }
         if (isset($_POST['algo']) || isset($_POST['adr']) || isset($_POST['date'])) {
             $this->treatmentAlarm();
@@ -195,6 +214,7 @@ class GraphRecorderController extends AbstractController
             'algoSelected' => $this->algoName,
             'startDate' => $startDate ?? '',
             'endDate' => $endDate ?? '',
+            'error' => $error ?? '',
         ]);
     }
 
@@ -301,7 +321,7 @@ class GraphRecorderController extends AbstractController
             if ($this->slopeTemperatureCorrection[$i] * 2 < $algo['xtmp']) {
                 $sdt [] = $algo['coef1tmp'] * $this->slopeTemperatureCorrection[$i] * 2 + $algo['ordnance1tmp'];
             } else {
-                $sdt [] = $algo['coef2tmp'] * $this->slopeTemperatureCorrection[$i] * 2 + $algo['coef2tmp'];
+                $sdt [] = $algo['coef2tmp'] * $this->slopeTemperatureCorrection[$i] * 2 + $algo['$ordnance2tmp'];
             }
         }
         for ($i = 0; $i < count($this->ratioFilter); $i++) {
@@ -341,11 +361,12 @@ class GraphRecorderController extends AbstractController
             }
         }
     }
+
     private function estimateAlarm()
     {
-        for ($i = 0 ; $i < count($this->delta2) ; $i++) {
+        for ($i = 0; $i < count($this->delta2); $i++) {
             if ($this->delta2[$i] > $this->resultAlgo[$i]) {
-                $this->curveEstimateAlarm[$i] = max($this->delta2) +  self::VALUE_ALARM ;
+                $this->curveEstimateAlarm[$i] = max($this->delta2) + self::VALUE_ALARM;
             } else {
                 $this->curveEstimateAlarm[$i] = null;
             }

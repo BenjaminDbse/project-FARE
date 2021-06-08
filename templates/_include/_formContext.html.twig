@@ -1,0 +1,13 @@
+<form action="{{ path('graph_context',{'id' : import.id}) }}" method="POST">
+    <div class="d-flex flex-column align-items-center">
+        <label for="context" id="context">Numéro du contexte</label>
+        <select class="mb-3" name="context" id="context">
+            <option class="bg-secondary" value="">-Choix-</option>
+            {% for contextChoice in contextChoices %}
+                <option class="bg-secondary text-light"
+                        value="{{ contextChoice }}"{{ contextChoice == contextChoiceSelected ? 'selected' : ''}}>{{ contextChoice }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-dark">Voir</button>
+    </div>
+</form>

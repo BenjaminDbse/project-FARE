@@ -2,11 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Context;
 use App\Entity\ContextData;
-use App\Entity\ImportContext;
+use App\Entity\Import;
+use App\Entity\Leading;
 use App\Form\ContextFilterType;
 use App\Repository\AlgoRepository;
 use App\Repository\ContextDataRepository;
+use App\Repository\ContextRepository;
+use App\Repository\LeadingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,19 +27,23 @@ class GraphContextController extends AbstractController
 {
     /**
      * @Route("/{id}", name="context", methods={"GET","POST"})
-     * @param ImportContext $import
-     * @ParamConverter("import", class="App\Entity\ImportContext", options={"mapping": {"id": "id"}})
+     * @param Import $import
      * @param ChartBuilderInterface $chartBuilder
      * @param ContextDataRepository $contextDataRepository
      * @param AlgoRepository $algoRepository
+     * @param LeadingRepository $leading
+     * @param ContextRepository $contextRepository
      * @param Request $request
      * @return Response
+     * @throws \Exception
      */
     public function graph(
-        ImportContext $import,
+        Import $import,
         ChartBuilderInterface $chartBuilder,
         ContextDataRepository $contextDataRepository,
         AlgoRepository $algoRepository,
+        LeadingRepository $leading,
+        ContextRepository $contextRepository,
         Request $request
     ): Response
     {
@@ -48,13 +56,49 @@ class GraphContextController extends AbstractController
         $tempRaw = [];
         $tempCorrected = [];
         $co = [];
-        $form = $this->createForm(ContextFilterType::class);
-        $form->handleRequest($request);
+        $contextChoiceSelected = 0;
+        $contextInfo = [];
+        $timeStamps = [];
+        $date = [];
+
         foreach ($import->getContexts() as $allContext) {
-            $context[] = 'context ' . $allContext->getNumber();
+            $context[] = $allContext->getNumber();
         }
-        foreach ($import->getContexts() as $allContext) {
-            foreach ($allContext->getContextData() as $data) {
+        if (isset($_POST['context'])) {
+            $contextChoiceSelected = $_POST['context'];
+            $contextChoice = $contextRepository->findBy(['number' => $contextChoiceSelected, 'import' => $import->getId()]);
+            foreach ($contextChoice as $data) {
+                $contextInfo['id'] = $data->getId();
+                $contextInfo['date'] = $data->getDatetime();
+                $contextInfo['algo'] = $data->getAlgo();
+                $contextInfo['evaluation'] = $data->getEvalutionCase();
+                $contextInfo['halfcontext'] = $data->getHalfContext();
+                $contextInfo['identifiant'] = $data->getProductIdentifier();
+                $contextInfo['encr1'] = $data->getEncrOne();
+                $contextInfo['encr2'] = $data->getEncrTwo();
+                $contextInfo['slope'] = $data->getSlopeSeuil();
+                $contextInfo['ratio'] = $data->getRatioAlarm() ?? null;
+                $contextInfo['delta'] = $data->getDeltaSeuil() ?? null;
+                $contextInfo['temp'] = $data->getTempAlarm() ?? null;
+                $contextInfo['velocimeter'] = $data->getVelocimeter() ?? null;
+            }
+            $timeStamp = $contextInfo['date']->getTimestamp();
+            for ($i = 0; $i <= 28; $i += 2) {
+                $timeStamps[$i] = $timeStamp + $i;
+                $timeStamps[$i] = getdate($timeStamps[$i]);
+                $timeStamps[$i] =
+                    $timeStamps[$i]['year'] . '-' .
+                    $timeStamps[$i]['mon'] . '-' .
+                    $timeStamps[$i]['mday'] . ' ' .
+                    $timeStamps[$i]['hours'] . ':' .
+                    $timeStamps[$i]['minutes'] . ':' .
+                    $timeStamps[$i]['seconds'];
+                $timeStamps[$i] = new \DateTime($timeStamps[$i]);
+                $timeStamps[$i] = date_format($timeStamps[$i],'d-m-Y  /  H:i:s');
+                $date[] = $timeStamps[$i];
+            }
+            $contextData = $contextDataRepository->findBy(['context' => $contextInfo['id']]);
+            foreach ($contextData as $data) {
                 $ratio[] = $data->getRatio();
                 $pulse1[] = $data->getPulse1();
                 $pulse2[] = $data->getPulse2();
@@ -65,10 +109,9 @@ class GraphContextController extends AbstractController
                 $co[] = $data->getCo();
             }
         }
-        $max = max($ratio);
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
         $chart->setData([
-            'labels' => [$max],
+            'labels' => $date,
             'datasets' => [
                 [
                     'label' => 'Delta 1',
@@ -82,6 +125,13 @@ class GraphContextController extends AbstractController
                     'backgroundColor' => 'rgba(2, 2, 200,0)',
                     'borderColor' => 'rgb(2, 2, 200)',
                     'data' => $delta2,
+                    'yAxisID' => 'left-y-axis',
+                ],
+                [
+                    'label' => 'Température brut',
+                    'backgroundColor' => 'rgba(255, 99, 132,0)',
+                    'borderColor' => 'rgb( 203, 11, 198)',
+                    'data' => $tempRaw,
                     'yAxisID' => 'left-y-axis',
                 ],
                 [
@@ -138,7 +188,10 @@ class GraphContextController extends AbstractController
             "chart" => $chart,
             "import" => $import,
             "contexts" => $import->getContexts(),
-            'form' => $form->createView(),
+            'contextChoices' => $context,
+            'contextChoiceSelected' => $contextChoiceSelected,
+            'leadings' => $leading->findBy(['import' => $import]),
+            'contextInfo' => $contextInfo ?? '',
         ]);
     }
 }

@@ -14,22 +14,46 @@
                 </small>
             </p>
         </div>
-        <div class="d-flex card w-25">
-                {{ form_start(form) }}
-                {{ form_widget(form) }}
-            <div class="text-center m-4">
-                <button class="btn btn-secondary">{{ 'Filtrer' }}</button>
+        <div class="d-flex justify-content-around">
+            <div class="card p-4">
+                {% include '/_include/_formContext.html.twig' %}
             </div>
-            {{ form_end(form) }}
+            <div class="card p-4">
+                {% for leading in leadings %}
+                    <p>ECS : {{ leading.ecs }}</p>
+                    <p>Equipement : {{ leading.equipment }}</p>
+                    <p>Module : {{ leading.module }}</p>
+                    <p>Adresse : {{ leading.adr }}</p>
+                    <p>Boucle : {{ leading.looping }}</p>
+                    <p>Zone : {{ leading.zone }}</p>
+                {% endfor %}
+            </div>
         </div>
+        <div class="text-center mt-3">
+            <div class="card">
+                <p>Algo : {{ contextInfo.algo ?? '' }}</p>
+                <p>Evaluation : {{ contextInfo.evaluation ?? '' }}</p>
+                <p>Demi contexte : {{ contextInfo.halfcontext ?? '' }}</p>
+                <p>Identifiant Produit : {{ contextInfo.identifiant ?? '' }}</p>
+                <p>Encrassement 1 : {{ contextInfo.encr1 ?? '' }}</p>
+                <p>Encrassement 2 : {{ contextInfo.encr2 ?? '' }}</p>
+                <p>Seuil Pente : {{ contextInfo.slope ?? '' }}</p>
+                <p>Seuil Ratio : {{ contextInfo.ratio ?? '' }}</p>
+                <p>Seuil Delta : {{ contextInfo.delta ?? '' }}</p>
+                <p>Seuil Température : {{ contextInfo.temp ?? '' }}</p>
+                <p>Vélocimetrie : {{ contextInfo.velocimeter ?? '' }}</p>
+            </div>
+
+        </div>
+
     </div>
     <div class="chart-container mt-5">
         {% include '/_include/_graphique.html.twig' %}
     </div>
     <div class="button d-flex justify-content-around mb-5">
         {% if is_granted("ROLE_ADMIN") or import.author == app.user %}
-           {# {{ include('import/_delete_form.html.twig') }} #}
+            {# {{ include('import/_delete_form.html.twig') }} #}
         {% endif %}
-        <a class="btn btn-secondary text-white ml-2" href="{{ path('archive_context') }}">Retour</a>
+        <a class="btn btn-secondary text-white ml-2" href="{{ path('archive') }}">Retour</a>
     </div>
 {% endblock %}

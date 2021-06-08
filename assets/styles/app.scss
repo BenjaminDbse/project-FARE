@@ -15,12 +15,13 @@ a {
   text-decoration: none;
 }
 
-.hover:hover {
-  text-decoration: none;
-  filter: brightness($brightnessHover);
-  font-weight: $fontWeightHover;
+.hover {
+  &:hover {
+    text-decoration: none;
+    filter: brightness($brightnessHover);
+    font-weight: $fontWeightHover;
+  }
 }
-
 .responsive-button {
   display: none;
 }

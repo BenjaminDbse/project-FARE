@@ -68,6 +68,11 @@ class Import
      */
     private $category;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Leading::class, mappedBy="import", cascade={"persist", "remove"})
+     */
+    private $leadding;
+
     public function __construct()
     {
         $this->datas = new ArrayCollection();
@@ -203,6 +208,23 @@ class Import
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getLeadding(): ?Leading
+    {
+        return $this->leadding;
+    }
+
+    public function setLeadding(Leading $leadding): self
+    {
+        // set the owning side of the relation if necessary
+        if ($leadding->getImport() !== $this) {
+            $leadding->setImport($this);
+        }
+
+        $this->leadding = $leadding;
 
         return $this;
     }
