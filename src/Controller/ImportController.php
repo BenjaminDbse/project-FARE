@@ -132,7 +132,6 @@ class ImportController extends AbstractController
                             $context->setVelocimeter($lead['velocimeter']);
                             $entityManager->persist($context);
                             $primary += 30;
-
                             for ($j = 0; $j < self::NUMBER_OF_ELEMENTARY; $j++) {
                                 $lead = $contextService->elementaryTreatment($arrayData, $primary);
                                 if (empty($lead['errors']) && empty($arrayData['errors'])) {
@@ -153,6 +152,7 @@ class ImportController extends AbstractController
                                     $arrayData['errors'][] = $lead['errors'];
                                 }
                             }
+                            $primary++;
                         } else {
                             $arrayData['errors'][] = $lead['errors'];
                         }
