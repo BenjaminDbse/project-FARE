@@ -46,15 +46,15 @@ class ContextService
             $dataClean['encr1'] = $data[$primary + 9];
             $dataClean['encr2'] = $data[$primary + 10];
             if ($data[$primary] >= 10) {
-                $dataClean['ratio'] = $data[$primary + 11];
-                $dataClean['delta2'] = $data[$primary + 12] + (256 * $data[$primary + 13]);
+                $dataClean['ratio'] = $data[$primary + 11] /10;
+                $dataClean['delta2'] = ($data[$primary + 12] + (256 * $data[$primary + 13])) /10;
                 $dataClean['tempAlarm'] = 0;
                 $dataClean['velocimeter'] =  0;
             } else {
                 $dataClean['ratio'] = 0;
                 $dataClean['delta2'] = 0;
-                $dataClean['tempAlarm'] = $data[$primary + 11] + (256 *  $data[$primary + 12]);
-                $dataClean['velocimeter'] =  $data[$primary + 13] + ( 256 *  $data[$primary + 14]);
+                $dataClean['tempAlarm'] = ($data[$primary + 11] + (256 *  $data[$primary + 12])) /10;
+                $dataClean['velocimeter'] =  ($data[$primary + 13] + ( 256 *  $data[$primary + 14])) /10;
             }
             $dataClean['slopeTemp'] =  $data[$primary + 15];
         } catch (\Exception $e) {
@@ -73,7 +73,7 @@ class ContextService
         $dataClean['delta2'] = ($data[$primary + 5] / 10) + ( 256 * ($data[$primary + 6] /10));
         $dataClean['pulse2'] = $data[$primary + 7] + ( 256 * $data[$primary + 8]);
         $dataClean['rawTemp'] = $data[$primary + 9] + ( 256 * $data[$primary + 10]);
-        $dataClean['slopeTemp'] = $data[$primary + 11] + ( 256 * $data[$primary + 12]);
+        $dataClean['slopeTemp'] = ($data[$primary + 11] + ( 256 * $data[$primary + 12]))/10;
         $dataClean['co'] = $data[$primary + 13] + ( 256 * $data[$primary + 14]);
 
         } catch (\Exception $e) {
