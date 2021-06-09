@@ -111,11 +111,10 @@ class ImportController extends AbstractController
                     $leading->setImport($import);
                     $entityManager->persist($leading);
 
-                    $loop = 0;
                     $primary = 11;
                     for ($i = 1; $i <= self::NUMBER_OF_CONTEXT; $i++) {
                         $lead = $contextService->contextTreatment($arrayData, $primary);
-                        if (empty($lead['errors'])) {
+                        if (empty($lead['errors']) && empty($arrayData['errors'])) {
                             $context = new Context;
                             $context->setImport($import);
                             $context->setNumber(($i));
@@ -136,7 +135,7 @@ class ImportController extends AbstractController
 
                             for ($j = 0; $j < self::NUMBER_OF_ELEMENTARY; $j++) {
                                 $lead = $contextService->elementaryTreatment($arrayData, $primary);
-                                if (empty($lead['errors'])) {
+                                if (empty($lead['errors']) && empty($arrayData['errors'])) {
                                     $contextData = new ContextData;
                                     $contextData->setRatio($lead['ratio']);
                                     $contextData->setDelta1($lead['delta1']);
@@ -150,14 +149,20 @@ class ImportController extends AbstractController
                                     $entityManager->persist($contextData);
                                     $entityManager->flush();
                                     $primary += 15;
+                                } else {
+                                    $arrayData['errors'][] = $lead['errors'];
                                 }
                             }
+                        } else {
+                            $arrayData['errors'][] = $lead['errors'];
                         }
                     }
-                    $this->addFlash('success', 'L\'importation à bien été effectuée');
-                    return $this->redirectToRoute('home');
+                    if (empty($arrayData['errors'])) {
+                        $this->addFlash('success', 'L\'importation à bien été effectuée');
+                        return $this->redirectToRoute('home');
+                    }
                 } else {
-                    $arrayData['errors'] = $lead['errors'];
+                    $arrayData['errors'][] = $lead['errors'];
                 }
             }
         }

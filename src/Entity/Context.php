@@ -84,7 +84,7 @@ class Context
     private float $slopeSeuil;
 
     /**
-     * @ORM\OneToMany(targetEntity=ContextData::class, mappedBy="context")
+     * @ORM\OneToMany(targetEntity=ContextData::class, mappedBy="context", cascade="all")
      */
     private $contextData;
 
