@@ -58,7 +58,7 @@ class ContextService
             }
             $dataClean['slopeTemp'] =  $data[$primary + 15];
         } catch (\Exception $e) {
-            $dataClean['errors'] = 'Une erreur est survenue entre la ligne ' . $primary . 'et' . ($primary + 15);
+            $dataClean['errors'] = 'Une erreur est survenue entre la ligne ' . $primary . ' et ' . ($primary + 15);
         }
         return $dataClean;
     }
@@ -75,8 +75,9 @@ class ContextService
         $dataClean['rawTemp'] = $data[$primary + 9] + ( 256 * $data[$primary + 10]);
         $dataClean['slopeTemp'] = $data[$primary + 11] + ( 256 * $data[$primary + 12]);
         $dataClean['co'] = $data[$primary + 13] + ( 256 * $data[$primary + 14]);
+
         } catch (\Exception $e) {
-            $dataClean['errors'] = 'Une erreur est survenue entre la ligne ' . $primary . 'et' . ($primary + 14);
+            $dataClean['errors'] = 'Une erreur est survenue entre la ligne ' . $primary . ' et ' . ($primary + 14);
         }
         return $dataClean;
     }
