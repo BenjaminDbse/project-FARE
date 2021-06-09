@@ -34,7 +34,6 @@ final class Version20210607080742 extends AbstractMigration
         $this->addSql('ALTER TABLE import ADD CONSTRAINT FK_9D4ECE1DF675F31B FOREIGN KEY (author_id) REFERENCES user (id)');
         $this->addSql('ALTER TABLE import ADD CONSTRAINT FK_9D4ECE1D12469DE2 FOREIGN KEY (category_id) REFERENCES category (id)');
         $this->addSql('ALTER TABLE `leading` ADD CONSTRAINT FK_F6FB1BD2B6A263D9 FOREIGN KEY (import_id) REFERENCES import (id)');
-        $this->addSql('INSER INTO category (name) VALUES ("Enregistrement"),("Contexte")');
     }
 
     public function down(Schema $schema) : void
@@ -54,6 +53,5 @@ final class Version20210607080742 extends AbstractMigration
         $this->addSql('DROP TABLE import');
         $this->addSql('DROP TABLE `leading`');
         $this->addSql('DROP TABLE user');
-        $this->addSql('TRUNCATE TABLE category');
     }
 }
