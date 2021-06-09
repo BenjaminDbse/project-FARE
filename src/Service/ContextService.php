@@ -67,10 +67,10 @@ class ContextService
     {
         $dataClean = [];
         try {
-        $dataClean['ratio'] = intval($data[$primary]);
-        $dataClean['delta1'] = $data[$primary + 1] + ( 256 * $data[$primary + 2]);
+        $dataClean['ratio'] = intval($data[$primary] /10);
+        $dataClean['delta1'] = ($data[$primary + 1]/10 )+ ( 256 * ($data[$primary + 2] / 10));
         $dataClean['pulse1'] = $data[$primary + 3] + ( 256 * $data[$primary + 4]);
-        $dataClean['delta2'] = $data[$primary + 5] + ( 256 * $data[$primary + 6]);
+        $dataClean['delta2'] = ($data[$primary + 5] / 10) + ( 256 * ($data[$primary + 6] /10));
         $dataClean['pulse2'] = $data[$primary + 7] + ( 256 * $data[$primary + 8]);
         $dataClean['rawTemp'] = $data[$primary + 9] + ( 256 * $data[$primary + 10]);
         $dataClean['slopeTemp'] = $data[$primary + 11] + ( 256 * $data[$primary + 12]);
