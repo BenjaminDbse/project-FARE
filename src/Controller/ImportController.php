@@ -70,7 +70,7 @@ class ImportController extends AbstractController
                 $arrayData = $recorder->treatment($arrayData);
                 if (!(key_exists('errors', $arrayData))) {
                     for ($i = 1; $i < count($arrayData) * 3; $i += 3) {
-                        try {
+                        if (count($arrayData[$i]) >= 4) {
                             $blockData = new Data;
                             $blockData->setAdr($arrayData[$i]['adr']);
                             $blockData->setDatetime($arrayData[$i]['date']);
@@ -88,8 +88,6 @@ class ImportController extends AbstractController
                             $blockData->setImport($import);
                             $entityManager->persist($blockData);
                             $entityManager->flush();
-                        } catch (Exception $e) {
-                            unset($blockData);
                         }
                     }
                     $this->addFlash('success', 'L\'importation à bien été effectuée');
@@ -169,7 +167,8 @@ class ImportController extends AbstractController
         ]);
     }
 
-    private function moveAndNameFile(object $dataFile): string
+    private
+    function moveAndNameFile(object $dataFile): string
     {
         $nameFile = pathinfo($dataFile->getClientOriginalName(), PATHINFO_FILENAME) . '.txt';
         move_uploaded_file($dataFile->getPathName(), __DIR__ . self::LOCATION_FILE . $nameFile);
@@ -184,7 +183,8 @@ class ImportController extends AbstractController
      * @ParamConverter("import", class="App\Entity\Import", options={"mapping": {"id": "id"}})
      * @return Response
      */
-    public function delete(Request $request, Import $import): Response
+    public
+    function delete(Request $request, Import $import): Response
     {
         if ($this->isCsrfTokenValid('delete' . $import->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
