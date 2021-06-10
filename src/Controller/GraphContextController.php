@@ -96,6 +96,7 @@ class GraphContextController extends AbstractController
                 $timeStamps[$i] = new \DateTime($timeStamps[$i]);
                 $timeStamps[$i] = date_format($timeStamps[$i],'d-m-Y  /  H:i:s');
                 $date[] = $timeStamps[$i];
+             //   $date = array_reverse($date);
             }
             $contextData = $contextDataRepository->findBy(['context' => $contextInfo['id']]);
             foreach ($contextData as $data) {
