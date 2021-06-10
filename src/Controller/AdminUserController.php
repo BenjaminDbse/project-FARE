@@ -31,7 +31,7 @@ class AdminUserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $choiceUser = $form->get('verified')->getData();
+            $choiceUser = $form->get('roleChoice')->getData();
             $user->setRoles(["ROLE_USER"]);
             if ($choiceUser === true) {
                 $user->setRoles(["ROLE_ADMIN"]);

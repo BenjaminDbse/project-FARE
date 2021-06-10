@@ -34,12 +34,12 @@ class ContextService
             $dataClean['halfContext'] = $data[$primary + 2];
             $dataClean['productIdentifier'] = $data[$primary + 3] + (256 * $data[$primary + 4]);
             date_default_timezone_set('Europe/London');
-                        $timeStamp = (
-                            ($data[$primary + 8] * 16777216) +
-                            ($data[$primary + 7] * 65536) +
-                            ($data[$primary + 6] * 256) +
-                            $data[$primary + 5]
-                        );
+            $timeStamp = (
+                ($data[$primary + 8] * 16777216) +
+                ($data[$primary + 7] * 65536) +
+                ($data[$primary + 6] * 256) +
+                $data[$primary + 5]
+            );
             $date = getdate(self::TIMESTAMP_1970_2010 + $timeStamp);
             $date = $date['year'] . '-' . $date['mon'] . '-' . $date['mday'] . ' ' . $date['hours'] . ':' . $date['minutes'] . ':' . $date['seconds'];
             $dataClean['date'] = new datetime($date);
@@ -49,14 +49,14 @@ class ContextService
                 $dataClean['ratio'] = $data[$primary + 11] /10;
                 $dataClean['delta2'] = ($data[$primary + 12] + (256 * $data[$primary + 13])) /10;
                 $dataClean['tempAlarm'] = 0;
-                $dataClean['velocimeter'] =  0;
+                $dataClean['velocimeter'] = 0;
             } else {
                 $dataClean['ratio'] = 0;
                 $dataClean['delta2'] = 0;
                 $dataClean['tempAlarm'] = ($data[$primary + 11] + (256 *  $data[$primary + 12])) /10;
                 $dataClean['velocimeter'] =  ($data[$primary + 13] + ( 256 *  $data[$primary + 14])) /10;
             }
-            $dataClean['slopeTemp'] =  $data[$primary + 15];
+            $dataClean['slopeTemp'] = $data[$primary + 15];
         } catch (\Exception $e) {
             $dataClean['errors'] = 'Une erreur est survenue entre la ligne ' . $primary . ' et ' . ($primary + 15);
         }
@@ -79,6 +79,41 @@ class ContextService
         } catch (\Exception $e) {
             $dataClean['errors'] = 'Une erreur est survenue entre la ligne ' . $primary . ' et ' . ($primary + 14);
         }
-        return $dataClean;
+        return $this->calculatedData($dataClean, $primary);
+    }
+
+    private function calculatedData(array $data, int $primary): array
+    {
+        try {
+        if ($data['delta2'] >= Recorder::ERROR_DETECT) {
+            $data['delta2'] = Recorder::RESULT_ERROR;
+        } else {
+            $data['delta2'] = $data['delta2'] / Recorder::DIVISION_DATA;
+        }
+            if ($data['ratio'] > Recorder::NOT_CALCULATED) {
+            $data['ratio'] = Recorder::RATIO_NOT_CALCULATED;
+        } elseif ($data['ratio'] != Recorder::RATIO_NOT_CALCULATED) {
+            $data['ratio'] = $data['ratio'] / Recorder::DIVISION_DATA;
+        }
+        if ($data['delta1'] > Recorder::ERROR_DETECT) {
+            $data['delta1'] = 0;
+        } else {
+            $data['delta1'] = $data['delta1'] / Recorder::DIVISION_DATA;
+        }
+            $data['rawTemp'] =  ($data['rawTemp'] / 2) * 5;
+        if ($data['rawTemp'] > Recorder::ERROR_DETECT) {
+            $data['rawTemp'] = 0;
+        } else {
+            $data['rawTemp'] = $data['rawTemp'] /Recorder::DIVISION_DATA;
+        }
+        if ($data['slopeTemp'] > Recorder::ERROR_DETECT) {
+            $data['slopeTemp'] = 0;
+        } else {
+            $data['slopeTemp'] = $data['slopeTemp'] / Recorder::DIVISION_DATA;
+        }
+        } catch (\Exception $e) {
+            $data['errors'] = 'Une erreur est survenue lors du traitement des données de la ligne '. $primary . ' à ' . ($primary + 14);
+        }
+        return $data;
     }
 }

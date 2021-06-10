@@ -83,8 +83,8 @@ class GraphContextController extends AbstractController
                 $contextInfo['velocimeter'] = $data->getVelocimeter() ?? null;
             }
             $timeStamp = $contextInfo['date']->getTimestamp();
-            for ($i = 0; $i <= 28; $i += 2) {
-                $timeStamps[$i] = $timeStamp + $i;
+            for ($i = 0; $i <= 28 ; $i += 2) {
+                $timeStamps[$i] = $timeStamp - $i;
                 $timeStamps[$i] = getdate($timeStamps[$i]);
                 $timeStamps[$i] =
                     $timeStamps[$i]['year'] . '-' .
@@ -97,6 +97,7 @@ class GraphContextController extends AbstractController
                 $timeStamps[$i] = date_format($timeStamps[$i],'d-m-Y  /  H:i:s');
                 $date[] = $timeStamps[$i];
             }
+             $date = array_reverse($date);
             $contextData = $contextDataRepository->findBy(['context' => $contextInfo['id']]);
             foreach ($contextData as $data) {
                 $ratio[] = $data->getRatio();

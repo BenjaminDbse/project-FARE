@@ -42,7 +42,6 @@ class GraphRecorderController extends AbstractController
     const ERRORS = [
         "Cette adresse n'existe pas.",
         "La date de début ne doit pas être supérieur ou égale à la date de fin.",
-        "Cet algorithme n'existe pas.",
     ];
 
     /**
@@ -73,13 +72,8 @@ class GraphRecorderController extends AbstractController
         $this->import = $import;
 
         if (isset($_POST['adr'])) {
-            if (in_array($_POST['adr'], $adr)) {
-                $this->postAdr($request, $dataRepository);
-                $this->treatmentDataFilter($this->dataFilter);
-            } else {
-                $error = self::ERRORS[0];
-            }
-
+            $this->postAdr($request, $dataRepository);
+            $this->treatmentDataFilter($this->dataFilter);
         }
         if (isset($_POST['date']) && !empty($_POST['toDate'])) {
             if ($_POST['date'] < $_POST['toDate']) {
@@ -91,21 +85,16 @@ class GraphRecorderController extends AbstractController
                 $error = self::ERRORS[1];
             }
         }
-
         if (isset($_POST['algo'])) {
             $nbAlgo = $_POST['algo'];
-            if (in_array($nbAlgo, $algo)) {
-                $session = $request->getSession()->all();
-                $this->dataFilter = $session['filter'];
-                $this->filterAdr = $session['adr'];
-                $algoChoice = $this->treatmentDataAlgo($algoRepository, $nbAlgo);
-                $this->treatmentDataFilter($this->dataFilter);
-                $algoCalculated = $this->calculatedAlgo($algoChoice);
-                $this->resultAlgo = $this->curveAlgo($algoCalculated, $nbAlgo);
-                $this->estimateAlarm();
-            } else {
-                $error = self::ERRORS[2];
-            }
+            $session = $request->getSession()->all();
+            $this->dataFilter = $session['filter'];
+            $this->filterAdr = $session['adr'];
+            $algoChoice = $this->treatmentDataAlgo($algoRepository, $nbAlgo);
+            $this->treatmentDataFilter($this->dataFilter);
+            $algoCalculated = $this->calculatedAlgo($algoChoice);
+            $this->resultAlgo = $this->curveAlgo($algoCalculated, $nbAlgo);
+            $this->estimateAlarm();
         }
         if (isset($_POST['algo']) || isset($_POST['adr']) || isset($_POST['date'])) {
             $this->treatmentAlarm();

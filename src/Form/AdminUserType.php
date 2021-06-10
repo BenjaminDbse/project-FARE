@@ -24,9 +24,10 @@ class AdminUserType extends AbstractType
             ->add('lastname', TextType::class, [
                 'label' => 'Nom'
             ])
-            ->add('verified', CheckboxType::class, [
+            ->add('roleChoice', CheckboxType::class, [
                 'label' => 'Passer le compte en administrateur',
                 'required' => false,
+                'mapped' => false,
             ])
         ;
     }

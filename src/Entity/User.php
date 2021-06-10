@@ -53,16 +53,6 @@ class User implements UserInterface
      */
     private Collection $imports;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private ?bool $verified;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private ?string $token;
-
     public function __construct()
     {
         $this->imports = new ArrayCollection();
@@ -199,30 +189,6 @@ class User implements UserInterface
                 $import->setAuthor(null);
             }
         }
-        return $this;
-    }
-
-    public function getVerified(): ?bool
-    {
-        return $this->verified;
-    }
-
-    public function setVerified(?bool $verified): self
-    {
-        $this->verified = $verified;
-
-        return $this;
-    }
-
-    public function getToken(): ?string
-    {
-        return $this->token;
-    }
-
-    public function setToken(?string $token): self
-    {
-        $this->token = $token;
-
         return $this;
     }
 }
