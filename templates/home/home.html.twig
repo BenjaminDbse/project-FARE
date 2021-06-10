@@ -14,12 +14,25 @@
                     <td class="tdTime">{{ import.category.name }}</td>
                     <td>{{ import.author.lastname ?? 'Utilisateur' }} {{ import.author.firstname ?? 'Supprimé' }}</td>
                     <td>
-                        <a class="no-responsive-button btn btn-secondary" href="{{ path('graph_recorder', {'id': import.id }) }}">
-                            Voir
+                        {% if import.category.id == 1 %}
+                        <a class="no-responsive-button btn btn-secondary"
+                           href="{{ path('graph_recorder', {'id': import.id }) }}">
+                            Voir le graphique
                         </a>
-                        <a class="responsive-button" href="{{ path('graph_recorder', {'id': import.id }) }}">
+                        <a class="responsive-button"
+                           href="{{ path('graph_recorder', {'id': import.id }) }}">
                             <img src="{{ asset('build/images/eye.png') }}" alt="eye">
                         </a>
+                        {% else %}
+                            <a class="no-responsive-button btn btn-secondary"
+                               href="{{ path('graph_context', {'id': import.id }) }}">
+                                Voir le graphique
+                            </a>
+                            <a class="responsive-button"
+                               href="{{ path('graph_context', {'id': import.id }) }}">
+                                <img src="{{ asset('build/images/eye.png') }}" alt="eye">
+                            </a>
+                            {% endif %}
                     </td>
                 </tr>
             {% else %}

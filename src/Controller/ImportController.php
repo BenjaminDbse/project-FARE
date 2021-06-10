@@ -70,7 +70,7 @@ class ImportController extends AbstractController
                 $arrayData = $recorder->treatment($arrayData);
                 if (!(key_exists('errors', $arrayData))) {
                     for ($i = 1; $i < count($arrayData) * 3; $i += 3) {
-                        try {
+                        if (count($arrayData[$i]) >= 4) {
                             $blockData = new Data;
                             $blockData->setAdr($arrayData[$i]['adr']);
                             $blockData->setDatetime($arrayData[$i]['date']);
@@ -88,8 +88,6 @@ class ImportController extends AbstractController
                             $blockData->setImport($import);
                             $entityManager->persist($blockData);
                             $entityManager->flush();
-                        } catch (Exception $e) {
-                            unset($blockData);
                         }
                     }
                     $this->addFlash('success', 'L\'importation à bien été effectuée');
@@ -113,11 +111,10 @@ class ImportController extends AbstractController
                     $leading->setImport($import);
                     $entityManager->persist($leading);
 
-                    $loop = 0;
                     $primary = 11;
                     for ($i = 1; $i <= self::NUMBER_OF_CONTEXT; $i++) {
                         $lead = $contextService->contextTreatment($arrayData, $primary);
-                        if (empty($lead['errors'])) {
+                        if (empty($lead['errors']) && empty($arrayData['errors'])) {
                             $context = new Context;
                             $context->setImport($import);
                             $context->setNumber(($i));
@@ -135,10 +132,9 @@ class ImportController extends AbstractController
                             $context->setVelocimeter($lead['velocimeter']);
                             $entityManager->persist($context);
                             $primary += 30;
-
                             for ($j = 0; $j < self::NUMBER_OF_ELEMENTARY; $j++) {
                                 $lead = $contextService->elementaryTreatment($arrayData, $primary);
-                                if (empty($lead['errors'])) {
+                                if (empty($lead['errors']) && empty($arrayData['errors'])) {
                                     $contextData = new ContextData;
                                     $contextData->setRatio($lead['ratio']);
                                     $contextData->setDelta1($lead['delta1']);
@@ -152,14 +148,21 @@ class ImportController extends AbstractController
                                     $entityManager->persist($contextData);
                                     $entityManager->flush();
                                     $primary += 15;
+                                } else {
+                                    $arrayData['errors'][] = $lead['errors'];
                                 }
                             }
+                            $primary++;
+                        } else {
+                            $arrayData['errors'][] = $lead['errors'];
                         }
                     }
-                    $this->addFlash('success', 'L\'importation à bien été effectuée');
-                    return $this->redirectToRoute('home');
+                    if (empty($arrayData['errors'])) {
+                        $this->addFlash('success', 'L\'importation à bien été effectuée');
+                        return $this->redirectToRoute('home');
+                    }
                 } else {
-                    $arrayData['errors'] = $lead['errors'];
+                    $arrayData['errors'][] = $lead['errors'];
                 }
             }
         }
@@ -169,7 +172,8 @@ class ImportController extends AbstractController
         ]);
     }
 
-    private function moveAndNameFile(object $dataFile): string
+    private
+    function moveAndNameFile(object $dataFile): string
     {
         $nameFile = pathinfo($dataFile->getClientOriginalName(), PATHINFO_FILENAME) . '.txt';
         move_uploaded_file($dataFile->getPathName(), __DIR__ . self::LOCATION_FILE . $nameFile);
@@ -184,7 +188,8 @@ class ImportController extends AbstractController
      * @ParamConverter("import", class="App\Entity\Import", options={"mapping": {"id": "id"}})
      * @return Response
      */
-    public function delete(Request $request, Import $import): Response
+    public
+    function delete(Request $request, Import $import): Response
     {
         if ($this->isCsrfTokenValid('delete' . $import->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();

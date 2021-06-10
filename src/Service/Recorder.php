@@ -38,9 +38,7 @@ class Recorder
                         $this->data[$this->loop] = $this->firstTreatment($recorder[$i]);
                         $this->counter++;
                     } catch (\Exception $e) {
-
-                        $this->data['errors'][] = 'Une erreur est survenue à la ligne ' . ($i + 1) . ' du fichier. 
-                        Erreur rencontrée :' . $e->getMessage();
+                        $this->data['errors'][] = 'Une erreur est survenue à la ligne ' . ($i + 1) . ' du fichier. ';
                     }
 
                 } elseif ($this->counter === 2) {
@@ -48,9 +46,7 @@ class Recorder
                         $this->data[$this->loop - 1]['status'] = $this->secondTreatment($recorder[$i]);
                         $this->counter++;
                     } catch (\Exception $e) {
-
-                        $this->data['errors'][] = 'Une erreur est survenue à la ligne ' . ($i + 1) . ' du fichier. 
-                        Erreur rencontrée =>' . $e->getMessage();
+                        $this->data['errors'][] = 'Une erreur est survenue à la ligne ' . ($i + 1) . ' du fichier. ';
                     }
                 } elseif ($this->counter === 3) {
                     try {
@@ -58,12 +54,9 @@ class Recorder
                         $this->data[$this->loop - 2]['data'] = $this->calculatedData($arrayData);
                         $this->counter = 1;
                     } catch (\Exception $e) {
-
-                        $this->data['errors'][] = 'Une erreur est survenue à la ligne ' . ($i + 1) . ' du fichier.
-                        Erreur rencontrée =>' . $e->getMessage();
+                        $this->data['errors'][] = 'Une erreur est survenue à la ligne ' . ($i + 1) . ' du fichier. ';
                     }
                 }
-
             } else {
                 $this->counter = 1;
             }
