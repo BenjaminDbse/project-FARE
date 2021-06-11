@@ -126,6 +126,9 @@ class Recorder
 
     private function calculatedData(array $data): array
     {
+        if ($data[0] >=  self::ERROR_DETECT) {
+            $data[0] =  self::RESULT_ERROR ;
+        }
         if ($data[2] >=  self::ERROR_DETECT) {
             $data[2] =  self::RESULT_ERROR ;
         }
@@ -138,8 +141,7 @@ class Recorder
             } elseif
             (
                 ($i != 4 && ($data[$i] < self::ERROR_DETECT)) ||
-                ($i === 4 && $data[$i] != self::RATIO_NOT_CALCULATED) ||
-                ($i === 2 && $data[$i] <= self::RESULT_ERROR)
+                ($i === 4 && $data[$i] != self::RATIO_NOT_CALCULATED)
             ) {
                 $data[$i] = $data[$i] / self::DIVISION_DATA;
             }
