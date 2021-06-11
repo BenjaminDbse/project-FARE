@@ -17,7 +17,7 @@ class Recorder
     const LR_TRIM = ', ';
     const NOT_CALCULATED = 60000;
     const ERROR_DETECT = 60000;
-    const RESULT_ERROR = 2048;
+    const RESULT_ERROR = 20480;
     const DIVISION_DATA = 10;
     const TEMP_ERROR = 6000;
     const RATIO_NOT_CALCULATED = 10;
@@ -126,19 +126,20 @@ class Recorder
 
     private function calculatedData(array $data): array
     {
-        if ($data[2] > self::ERROR_DETECT) {
-            $data[2] = self::RESULT_ERROR;
+        if ($data[2] >=  self::ERROR_DETECT) {
+            $data[2] =  self::RESULT_ERROR ;
         }
         if ($data[4] > self::NOT_CALCULATED) {
             $data[4] = self::RATIO_NOT_CALCULATED;
         }
         for ($i = 0; $i < count($data) * 2; $i += 2) {
-            if ($i != 4 && ($data[$i] > self::ERROR_DETECT)) {
+            if ($i != 4 && ($data[$i] >= self::ERROR_DETECT)) {
                 $data[$i] = 0;
             } elseif
             (
                 ($i != 4 && ($data[$i] < self::ERROR_DETECT)) ||
-                ($i === 4 && $data[$i] != self::RATIO_NOT_CALCULATED)
+                ($i === 4 && $data[$i] != self::RATIO_NOT_CALCULATED) ||
+                ($i === 2 && $data[$i] <= self::RESULT_ERROR)
             ) {
                 $data[$i] = $data[$i] / self::DIVISION_DATA;
             }

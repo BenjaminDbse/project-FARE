@@ -255,7 +255,7 @@ class GraphRecorderController extends AbstractController
         return join(' ', $date);
     }
 
-    private function treatmentDataFilter(array $dataFilter)
+    public function treatmentDataFilter(array $dataFilter)
     {
         foreach ($dataFilter as $data) {
             $this->delta1[] = $data->getDelta1();
@@ -271,13 +271,13 @@ class GraphRecorderController extends AbstractController
         }
     }
 
-    private function treatmentDataAlgo(AlgoRepository $algoRepository, $nbAlgo): array
+    public function treatmentDataAlgo(AlgoRepository $algoRepository, $nbAlgo): array
     {
 
         return $algoRepository->findBy(['id' => $nbAlgo]);
     }
 
-    private function calculatedAlgo(array $algo): array
+    public function calculatedAlgo(array $algo): array
     {
         $algoCalculated = [];
         foreach ($algo as $value) {
@@ -300,12 +300,10 @@ class GraphRecorderController extends AbstractController
         return $algoCalculated;
     }
 
-    private function curveAlgo(array $algo, $nbAlgo): array
+    public function curveAlgo(array $algo, $nbAlgo): array
     {
         $sdt = [];
         $resultAlgo = [];
-
-
         for ($i = 0; $i < count($this->temperatureCorrection); $i++) {
             if ($this->slopeTemperatureCorrection[$i] * 2 < $algo['xtmp']) {
                 $sdt [] = $algo['coef1tmp'] * $this->slopeTemperatureCorrection[$i] * 2 + $algo['ordnance1tmp'];
@@ -330,7 +328,7 @@ class GraphRecorderController extends AbstractController
         return $resultAlgo;
     }
 
-    private function treatmentAlarm()
+    public function treatmentAlarm()
     {
         for ($i = 0; $i < count($this->alarm); $i++) {
             if ($this->alarm[$i] >= 1) {
@@ -341,7 +339,7 @@ class GraphRecorderController extends AbstractController
         }
     }
 
-    private function treatmentStatus()
+    public function treatmentStatus()
     {
         for ($i = 0; $i < count($this->status); $i++) {
             if ((key_exists($i + 1, $this->status)) && ($this->status[$i] != $this->status[$i + 1])) {
@@ -351,7 +349,7 @@ class GraphRecorderController extends AbstractController
         }
     }
 
-    private function estimateAlarm()
+    public function estimateAlarm()
     {
         for ($i = 0; $i < count($this->delta2); $i++) {
             if ($this->delta2[$i] > $this->resultAlgo[$i]) {
